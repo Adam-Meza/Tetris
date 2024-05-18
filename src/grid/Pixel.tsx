@@ -1,10 +1,7 @@
-import React from "react";
-import { inflateRaw } from "zlib";
-
 /**
  * Props for Pixel component
  */
-interface PixelProps {
+export interface PixelProps {
   /**
    * x value of the Pixel relative to the parent Grid
    */

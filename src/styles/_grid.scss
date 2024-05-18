@@ -1,0 +1,16 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--pixel-count), 1fr);  height: fit-content;
+  width: fit-content;
+  border: 1px black solid;
+
+  .pixel {
+    height: 5em;
+    width: 5em;
+    border: black 1px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+}

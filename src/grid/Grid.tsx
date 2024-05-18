@@ -1,5 +1,5 @@
-import React from "react";
-import { Pixel } from "./Pixel";
+import React, { CSSProperties } from "react";
+import { Pixel, PixelProps } from "./Pixel";
 
 /**
  * Props for Grid component
@@ -11,7 +11,7 @@ interface GridProps {
   width: number;
   /**
    * Optionalheight value
-   * If noheight value is provided the grid dimensions will be width * width
+   * If no height value is provided the grid dimensions will be width * width
    */
   height?: number;
 }
@@ -20,12 +20,15 @@ interface GridProps {
  * Interactive Grid component
  *
  * @example
- * <Grid width={3}height={12} />
+ * <Grid width={3} height={12} />
  */
 export const Grid = (props: GridProps) => {
   const { width, height = null } = props;
-
   const heightValue = height ?? width;
+  const pixelCount = React.useMemo(
+    () => ({ "--pixel-count": width }),
+    [width]
+  ) as CSSProperties;
 
   const initialize = () => {
     const grid = [];
@@ -34,7 +37,12 @@ export const Grid = (props: GridProps) => {
       const row = [];
 
       for (let j = 0; j < width; j++) {
-        row.push(<Pixel x={j} y={i} />);
+        const props: PixelProps = {
+          x: j,
+          y: i,
+        };
+
+        row.push(<Pixel {...props} />);
       }
 
       grid.push(row);
@@ -45,5 +53,9 @@ export const Grid = (props: GridProps) => {
 
   console.log(initialize());
 
-  return <div>{initialize()}</div>;
+  return (
+    <div className="grid" style={pixelCount}>
+      {initialize()}
+    </div>
+  );
 };

@@ -1,5 +1,4 @@
-import React from "react";
-import "./styles/main.scss";
+import "./main.scss";
 import { Grid } from "./grid/Grid";
 
 function App() {
