@@ -1,61 +1,70 @@
-import React, { CSSProperties } from "react";
-import { Pixel, PixelProps } from "./Pixel";
+import React from 'react';
+import { Pixel, PixelProps } from './Pixel';
 
 /**
  * Props for Grid component
+ * @param width number
+ * @param height number (optional)
+ * @param ref Ref Object
  */
-interface GridProps {
-  /**
-   * Number representing the width value of the final grid
-   */
+type GridProps = {
   width: number;
-  /**
-   * Optionalheight value
-   * If no height value is provided the grid dimensions will be width * width
-   */
   height?: number;
-}
+  ref: React.RefObject<HTMLSpanElement>;
+};
+
 
 /**
- * Interactive Grid component
- *
- * @example
- * <Grid width={3} height={12} />
+ * Grid React component
  */
-export const Grid = (props: GridProps) => {
-  const { width, height = null } = props;
-  const heightValue = height ?? width;
-  const pixelCount = React.useMemo(
-    () => ({ "--pixel-count": width }),
-    [width]
-  ) as CSSProperties;
+export const Grid = React.forwardRef(
+  (props: GridProps, ref) => {
+    const { width, height = null } = props;
+    const heightValue = height ?? width;
 
-  const initialize = () => {
-    const grid = [];
+    const gridRefs = React.useRef(
+      Array.from({ length: width * heightValue }, () =>
+        React.createRef<HTMLSpanElement>()
+      )
+    );
 
-    for (let i = 0; i < heightValue; i++) {
-      const row = [];
+    const styles = {
+      '--pixel-width': width,
+      '--pixel-height': heightValue,
+    } as React.CSSProperties;
 
-      for (let j = 0; j < width; j++) {
-        const props: PixelProps = {
-          x: j,
-          y: i,
-        };
+    React.useImperativeHandle(ref, () => ({
+      getCell: (x: number, y: number) =>
+        gridRefs.current[y * width + x],
+    }));
 
-        row.push(<Pixel {...props} />);
+    const pixels = React.useMemo(() => {
+      const grid = [];
+
+      for (let i = 0; i < heightValue; i++) {
+        const row = [];
+        for (let j = 0; j < width; j++) {
+          const key = i * width + j;
+
+          const props: PixelProps = {
+            x: j,
+            y: i,
+            ref: gridRefs.current[key],
+            id: key,
+          };
+
+          row.push(<Pixel key={key} {...props} />);
+        }
+        grid.push(row);
       }
 
-      grid.push(row);
-    }
+      return grid;
+    }, [width, heightValue]);
 
-    return grid;
-  };
-
-  console.log(initialize());
-
-  return (
-    <div className="grid" style={pixelCount}>
-      {initialize()}
-    </div>
-  );
-};
+    return (
+      <div className='grid' style={styles}>
+        {pixels}
+      </div>
+    );
+  }
+);

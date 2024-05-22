@@ -1,10 +1,9 @@
-import "./main.scss";
-import { Grid } from "./grid/Grid";
+import { GameBoard } from './components/GameBoard/GameBoard';
 
 function App() {
   return (
     <>
-      <Grid width={3}></Grid>
+      <GameBoard />
     </>
   );
 }
