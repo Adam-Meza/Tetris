@@ -5,14 +5,18 @@ import { Pixel, PixelProps } from './Pixel';
  * Props for Grid component
  * @param width number
  * @param height number (optional)
- * @param ref Ref Object
  */
 type GridProps = {
   width: number;
   height?: number;
-  ref: React.RefObject<HTMLSpanElement>;
 };
 
+export interface GridHandle {
+  getCell: (
+    x: number,
+    y: number
+  ) => React.RefObject<HTMLSpanElement>;
+}
 
 /**
  * Grid React component
@@ -49,11 +53,16 @@ export const Grid = React.forwardRef(
           const props: PixelProps = {
             x: j,
             y: i,
-            ref: gridRefs.current[key],
             id: key,
           };
 
-          row.push(<Pixel key={key} {...props} />);
+          row.push(
+            <Pixel
+              key={key}
+              ref={gridRefs.current[key]}
+              {...props}
+            />
+          );
         }
         grid.push(row);
       }

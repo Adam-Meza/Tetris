@@ -14,7 +14,6 @@ export interface PixelProps {
   y: number;
   id: number;
   piece?: TetrominoType;
-  ref: React.RefObject<HTMLSpanElement>;
 }
 
 /**
@@ -39,9 +38,7 @@ export const Pixel = forwardRef<
           { [`${piece?.id}-block`]: piece },
           'tetromino'
         )}
-      >
-        {id}
-      </span>
+      ></span>
     );
   }, [piece, id, ref]);
 
