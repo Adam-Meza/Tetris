@@ -9,13 +9,21 @@ export const GameBoard = () => {
   const boardHeight = 20;
   const boardWidth = 10;
   const gridRef = React.useRef<GridHandle>(null);
+  const refPoint = React.useRef<number[]>([3, 0]);
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      moveTetromino('down');
+    }, 1000);
+
+    return () => clearTimeout(interval);
+  });
 
   const [currentPiece, setPiece] =
     React.useState<TetrominoType>({
       shape: [[]],
       id: '',
     });
-  const refPoint = React.useRef<number[]>([3, 0]);
 
   const pickRandomPiece = (): TetrominoType => {
     const randomIndex = Math.floor(
@@ -31,7 +39,7 @@ export const GameBoard = () => {
     shape.forEach((row, rowIndex) => {
       row.forEach((cell, colIndex) => {
         if (cell) {
-          handleClassChange(colIndex, rowIndex, 'add');
+          handleClassChange(colIndex, rowIndex, id, 'add');
         }
       });
     });
@@ -40,7 +48,8 @@ export const GameBoard = () => {
   const handleClassChange = (
     column: number,
     row: number,
-    action: string
+    id: string,
+    action: 'add' | 'remove'
   ) => {
     const x = refPoint.current[0] + column;
     const y = refPoint.current[1] + row;
@@ -48,8 +57,8 @@ export const GameBoard = () => {
 
     if (cellRef?.current) {
       action === 'remove'
-        ? cellRef.current.classList.remove('test')
-        : cellRef.current.classList.add('test');
+        ? cellRef.current.classList.remove(`${id}-block`)
+        : cellRef.current.classList.add(`${id}-block`);
     }
   };
 
@@ -59,7 +68,12 @@ export const GameBoard = () => {
     shape.forEach((row, rowIndex) => {
       row.forEach((cell, colIndex) => {
         if (cell) {
-          handleClassChange(colIndex, rowIndex, 'remove');
+          handleClassChange(
+            colIndex,
+            rowIndex,
+            id,
+            'remove'
+          );
         }
       });
     });
@@ -87,7 +101,7 @@ export const GameBoard = () => {
     }
 
     refPoint.current = [x, y];
-    placeTetromino(currentPiece, x, y);
+    placeTetromino(currentPiece);
   };
 
   const clearBoard = () => {
@@ -97,6 +111,7 @@ export const GameBoard = () => {
 
   const makeNewPiece = () => {
     const newPiece = pickRandomPiece();
+
     setPiece(newPiece);
     placeTetromino(newPiece);
   };
