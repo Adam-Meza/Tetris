@@ -1,0 +1,12 @@
+.button-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  margin: 10px;
+
+  button {
+    border: 0px;
+    padding: 2% 4%
+  }
+}
+
