@@ -5,20 +5,6 @@ import {
   TetrominoType,
 } from '../Tetromino/Tetromino';
 
-/*
-random to do
-
-learn more avout refs figure out how to avoid the reredners when a new piece is made. its using state rn but would be better in the ref. need to better understand how this is working tbh
-
-Tetromino ROTATIOn!
-
-Somethings up with the landing logic. pieces will sotp early under some cases. probably need to conditionally check for null values in currentPiece.shape array as classes are placed. also OTHER STUFFFFFF
-
-remove row on completion logic
-
-
-*/
-
 /**
  * Tetris GameBoardComponent
  *
@@ -35,27 +21,6 @@ export const GameBoard = () => {
   const [currentPiece, setPiece] =
     React.useState<TetrominoType>();
 
-  // kinda wanna abstract pickRandomPiece  out
-  // like maybe use a class to do this logic
-  // it would just need to return the object and maybe a way to do the randomization
-  // use case might look like
-  /*
-
-const tetro = new Tetromino() 
-
-returns:
-{
-  id: t3242123, - always new ID
-  shape: [
-          ['t', 't', 't'],
-          [null, 't', null],
-    ]
-  letter: l
-}
-
-maybe add methods too later idk.
-
- */
   const pickRandomPiece = (): TetrominoType => {
     const block =
       blocks[Math.floor(Math.random() * blocks.length)];
@@ -81,12 +46,6 @@ maybe add methods too later idk.
     [key: string]: React.RefObject<HTMLSpanElement>;
   }>({});
 
-  /**
-   *
-   * @param x - x coordinate of the pixel
-   * @param y - y coordinate of the pixel
-   * @param ref
-   */
   const setPixelRef = (
     x: number,
     y: number,
@@ -171,13 +130,6 @@ maybe add methods too later idk.
       let [x, y] = focalPointRef.current;
       const nextSquare = getNextSqaureData([x, y]);
 
-      // const nextYValue = y + currentPiece.shape.length + 1;
-      // const nextSquare =
-      //   pixelRefs.current[`${x}-${nextYValue}`];
-
-      // const nextSquareOccupied =
-      //   nextSquare?.current?.attributes[1];
-
       // Currently Tetrominos are adding their id to squares in addition to setting the Pixels `data-occupied` attribute.
       // Not doing anything with it at the moment but it seems like it'd be useful eventually.
       const nextSquareId =
@@ -197,11 +149,6 @@ maybe add methods too later idk.
           break;
       }
 
-      //Ideally want to make this into a single call
-      // Was gonna make it take a 'both' argument  and use recursion to call it but in the other direction.
-      // maybe default to adding since i use it more.
-      // or maybe remove since it always happens first idk
-      // focual point change needs to happen in between tho
       AddOrRemoveTetromino(currentPiece, 'remove');
       focalPointRef.current = [x, y];
       AddOrRemoveTetromino(currentPiece, 'add');
@@ -226,6 +173,7 @@ maybe add methods too later idk.
 
   //This is the timer which makes the piece move downward.
   //Currently the only use of useEffect which I hope to get rid of
+  // I have comment out because it annoys me when im testing stuff
 
   // React.useEffect(() => {
   //   if (currentPiece) {
