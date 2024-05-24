@@ -6,7 +6,6 @@ import {
 } from '../Tetromino/Tetromino';
 
 /*
-
 random to do
 
 learn more avout refs figure out how to avoid the reredners when a new piece is made. its using state rn but would be better in the ref. need to better understand how this is working tbh
