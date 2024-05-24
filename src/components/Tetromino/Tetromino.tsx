@@ -2,11 +2,12 @@ export interface TetrominoType {
   shape:
     | [string[], (string | null)[]]
     | (string | null)[][];
-  id: string;
+  id?: string;
+  letter: string;
 }
 
 const t_block: TetrominoType = {
-  id: 't',
+  letter: 't',
   shape: [
     ['t', 't', 't'],
     [null, 't', null],
@@ -14,7 +15,7 @@ const t_block: TetrominoType = {
 };
 
 const o_block = {
-  id: 'o',
+  letter: 'o',
   shape: [
     ['o', 'o'],
     ['o', 'o'],
@@ -22,7 +23,7 @@ const o_block = {
 };
 
 const l_block = {
-  id: 'l',
+  letter: 'l',
   shape: [
     [null, 'l'],
     [null, 'l'],
@@ -31,7 +32,7 @@ const l_block = {
 };
 
 const j_block = {
-  id: 'j',
+  letter: 'j',
   shape: [
     ['l', null],
     ['l', null],
@@ -40,12 +41,12 @@ const j_block = {
 };
 
 const i_block = {
-  id: 'i',
+  letter: 'i',
   shape: [['i'], ['i'], ['i'], ['i']],
 };
 
 const s_block = {
-  id: 's',
+  letter: 's',
   shape: [
     [null, 's', 's'],
     ['s', 's', null],
@@ -53,7 +54,7 @@ const s_block = {
 };
 
 const z_block = {
-  id: 'z',
+  letter: 'z',
   shape: [
     ['z', 'z', null],
     [null, 'z', 'z'],

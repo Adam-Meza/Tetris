@@ -17,7 +17,7 @@
     align-items: center;
     justify-content: center;
   }
-
+  
   @each $type, $color in $tetromino-colors {
     .#{$type}-block {
       background-color: $color;

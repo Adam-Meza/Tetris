@@ -1,159 +1,219 @@
 import React from 'react';
-import { Grid, GridHandle } from '../../grid/Grid';
+import { Grid } from '../../grid/Grid';
 import {
   blocks,
   TetrominoType,
 } from '../Tetromino/Tetromino';
 
+/**
+ * Tetris GameBoardComponent
+ *
+ * Handles almost all the logic for game playin including:
+ *
+ * creating Tetrominos
+ * moving, placing, and deleting them
+ */
 export const GameBoard = () => {
+  console.log('GameBoard render');
+
   const boardHeight = 20;
   const boardWidth = 10;
-  const gridRef = React.useRef<GridHandle>(null);
-  const refPoint = React.useRef<number[]>([3, 0]);
-
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      moveTetromino('down');
-    }, 1000);
-
-    return () => clearTimeout(interval);
-  });
-
+  const focalPointRef = React.useRef<number[]>([3, 0]);
   const [currentPiece, setPiece] =
-    React.useState<TetrominoType>({
-      shape: [[]],
-      id: '',
-    });
+    React.useState<TetrominoType>();
+
+  /**
+   * This is a mutable ref that will be used as the point of truth for game state logic
+   */
+  const pixelRefs = React.useRef<{
+    [key: string]: React.RefObject<HTMLSpanElement>;
+  }>({});
 
   const pickRandomPiece = (): TetrominoType => {
-    const randomIndex = Math.floor(
-      Math.random() * blocks.length
-    );
+    const block =
+      blocks[Math.floor(Math.random() * blocks.length)];
 
-    return blocks[randomIndex];
+    return {
+      id: block.letter + Date.now(),
+      shape: block.shape,
+      letter: block.letter,
+    };
   };
 
-  const placeTetromino = (tetromino: TetrominoType) => {
-    const { shape, id } = tetromino;
-
-    shape.forEach((row, rowIndex) => {
-      row.forEach((cell, colIndex) => {
-        if (cell) {
-          handleClassChange(colIndex, rowIndex, id, 'add');
-        }
-      });
-    });
+  /**
+   *
+   * @param x - x coordinate of the pixel
+   * @param y - y coordinate of the pixel
+   * @param ref
+   */
+  const setPixelRef = (
+    x: number,
+    y: number,
+    ref: React.RefObject<HTMLSpanElement>
+  ) => {
+    pixelRefs.current[`${x}-${y}`] = ref;
   };
 
   const handleClassChange = (
-    column: number,
-    row: number,
-    id: string,
-    action: 'add' | 'remove'
+    colIndex: number,
+    rowIndex: number,
+    action: 'add' | 'remove',
+    tetromino: TetrominoType
   ) => {
-    const x = refPoint.current[0] + column;
-    const y = refPoint.current[1] + row;
-    const cellRef = gridRef?.current?.getCell(x, y);
+    //Locates the desired new position
+    //based on current focal point and the index of the pixel relative to the tetromino shape
+    const x = focalPointRef.current[0] + colIndex;
+    const y = focalPointRef.current[1] + rowIndex;
 
-    if (cellRef?.current) {
-      action === 'remove'
-        ? cellRef.current.classList.remove(`${id}-block`)
-        : cellRef.current.classList.add(`${id}-block`);
+    const pixelRef = pixelRefs.current[`${x}-${y}`];
+    const { letter, id } = tetromino;
+
+    if (pixelRef?.current) {
+      if (action === 'add') {
+        pixelRef.current.setAttribute(
+          'data-occupied',
+          'true'
+        );
+        pixelRef.current.setAttribute('data-id', `${id}`);
+
+        pixelRef.current.classList.add(`${letter}-block`);
+      } else {
+        pixelRef.current.removeAttribute('data-occupied');
+        pixelRef.current.removeAttribute('data-id');
+
+        pixelRef.current.classList.remove(
+          `${letter}-block`
+        );
+      }
     }
   };
 
-  const clearTetromino = () => {
-    const { shape, id } = currentPiece;
-
-    shape.forEach((row, rowIndex) => {
-      row.forEach((cell, colIndex) => {
-        if (cell) {
-          handleClassChange(
-            colIndex,
-            rowIndex,
-            id,
-            'remove'
-          );
-        }
-      });
-    });
+  const AddOrRemoveTetromino = (
+    tetromino = currentPiece,
+    action: 'add' | 'remove'
+  ) => {
+    tetromino?.shape.forEach(
+      (row: TetrominoType[], rowIndex: number) => {
+        row.forEach(
+          (cell: TetrominoType, colIndex: number) => {
+            if (cell) {
+              handleClassChange(
+                colIndex,
+                rowIndex,
+                action,
+                tetromino
+              );
+            }
+          }
+        );
+      }
+    );
   };
 
   const moveTetromino = (
-    direction?: 'down' | 'left' | 'right'
+    direction: 'down' | 'left' | 'right'
   ) => {
-    let [x, y] = refPoint.current;
+    if (currentPiece) {
+      let [x, y] = focalPointRef.current;
+      const lowestYValue = y + currentPiece.shape.length;
+      const nextSquare =
+        pixelRefs.current[`${x}-${lowestYValue + 1}`]
+          ?.current?.attributes[1];
 
-    clearTetromino();
+      const nextId =
+        pixelRefs.current[`${x}-${lowestYValue + 1}`]
+          ?.current?.attributes[2];
 
-    switch (direction) {
-      case 'down':
-        if (y + currentPiece.shape.length < boardHeight)
+      console.log(
+        'x',
+        x,
+        'y;',
+        y,
+        'lowest',
+        lowestYValue,
+        'occupied',
+        nextSquare,
+        nextId
+      );
+
+      // console.log(
+      //   pixelRefs?.current[`${x}-${y}`]?.current?.attributes
+      // );
+
+      // Determines the changes in focal point desired
+      // based on direction argument and board state
+      switch (direction) {
+        case 'down':
           y += 1;
-        break;
-      case 'left':
-        if (x > 0) x -= 1;
-        break;
-      case 'right':
-        if (x + currentPiece.shape[0].length < boardWidth)
-          x += 1;
-        break;
+          break;
+        case 'left':
+          if (x > 0) x -= 1;
+          break;
+        case 'right':
+          if (x + currentPiece.shape[0].length < boardWidth)
+            x += 1;
+          break;
+      }
+
+      AddOrRemoveTetromino(currentPiece, 'remove');
+      focalPointRef.current = [x, y];
+      AddOrRemoveTetromino(currentPiece, 'add');
+
+      if (
+        lowestYValue + 1 >= boardHeight ||
+        !!pixelRefs.current[`${x}-${lowestYValue + 1}`]
+          ?.current?.attributes[1]
+      ) {
+        makeNewPiece();
+        return;
+      }
     }
-
-    refPoint.current = [x, y];
-    placeTetromino(currentPiece);
-  };
-
-  const clearBoard = () => {
-    clearTetromino();
-    refPoint.current = [3, 0];
   };
 
   const makeNewPiece = () => {
     const newPiece = pickRandomPiece();
-
     setPiece(newPiece);
-    placeTetromino(newPiece);
+
+    focalPointRef.current = [3, 0];
+    AddOrRemoveTetromino(newPiece, 'add');
   };
+
+  // React.useEffect(() => {
+  //   if (currentPiece) {
+  //     const interval = setInterval(() => {
+  //       moveTetromino('down');
+  //     }, 1000);
+  //     return () => clearInterval(interval);
+  //   }
+  // }, [currentPiece]);
+
+  // React.useEffect(() => {});
 
   return (
     <div>
       <Grid
-        ref={gridRef}
+        setPixelRef={setPixelRef}
         width={boardWidth}
         height={boardHeight}
+        ref={pixelRefs}
       />
       <button
         onClick={() => {
-          clearBoard();
           makeNewPiece();
         }}
       >
         Place Block
       </button>
-      <button
-        onClick={() => {
-          moveTetromino('down');
-        }}
-      >
-        Move Block to down
-      </button>
-
-      <button
-        onClick={() => {
-          moveTetromino('left');
-        }}
-      >
-        Move Block to left
-      </button>
-
-      <button
-        onClick={() => {
-          moveTetromino('right');
-        }}
-      >
-        Move Block to right
-      </button>
+      {['down', 'left', 'right'].map((direction) => (
+        <button
+          key={direction}
+          onClick={() => {
+            moveTetromino(direction);
+          }}
+        >
+          {direction}
+        </button>
+      ))}
     </div>
   );
 };
