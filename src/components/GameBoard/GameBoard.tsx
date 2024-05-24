@@ -1,10 +1,7 @@
 import React from 'react';
 import { Grid } from '../../grid/Grid';
-import {
-  blocks,
-  TetrominoType,
-} from '../Tetromino/Tetromino';
-
+import { Tetromino } from '../Tetromino/Tetromino';
+import { blocks } from '../Tetromino/block';
 /**
  * Tetris GameBoardComponent
  *
@@ -19,18 +16,7 @@ export const GameBoard = () => {
   const boardHeight = 20;
   const boardWidth = 10;
   const [currentPiece, setPiece] =
-    React.useState<TetrominoType>();
-
-  const pickRandomPiece = (): TetrominoType => {
-    const block =
-      blocks[Math.floor(Math.random() * blocks.length)];
-
-    return {
-      id: block.letter + Date.now(),
-      shape: block.shape,
-      letter: block.letter,
-    };
-  };
+    React.useState<Tetromino>();
 
   /**
    * Focal point determining the coordinates on the Grid that pieces are placed/oriented with
@@ -58,7 +44,7 @@ export const GameBoard = () => {
     colIndex: number,
     rowIndex: number,
     action: 'add' | 'remove',
-    tetromino: TetrominoType
+    tetromino: Tetromino
   ) => {
     //Locates the desired new position
     //based on current focal point and the index of the pixel relative to the tetromino shape
@@ -93,19 +79,17 @@ export const GameBoard = () => {
     action: 'add' | 'remove'
   ) => {
     tetromino?.shape.forEach(
-      (row: TetrominoType[], rowIndex: number) => {
-        row.forEach(
-          (cell: TetrominoType, colIndex: number) => {
-            if (cell) {
-              handleClassChange(
-                colIndex,
-                rowIndex,
-                action,
-                tetromino
-              );
-            }
+      (row: Tetromino[], rowIndex: number) => {
+        row.forEach((cell: Tetromino, colIndex: number) => {
+          if (cell) {
+            handleClassChange(
+              colIndex,
+              rowIndex,
+              action,
+              tetromino
+            );
           }
-        );
+        });
       }
     );
   };
@@ -164,7 +148,7 @@ export const GameBoard = () => {
   };
 
   const makeNewPiece = () => {
-    const newPiece = pickRandomPiece();
+    const newPiece = new Tetromino();
     setPiece(newPiece);
 
     focalPointRef.current = [3, 0];
