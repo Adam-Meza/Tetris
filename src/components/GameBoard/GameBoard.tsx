@@ -69,17 +69,21 @@ export const GameBoard = () => {
     const { letter, id } = tetromino;
 
     if (pixelRef?.current) {
-      if (action === 'add') {
+      if (action === 'add' && !isSquareOccupied(pixelRef)) {
         pixelRef.current.setAttribute(
           'data-occupied',
           'true'
         );
         pixelRef.current.setAttribute('data-id', `${id}`);
 
+        // is this bad practice?
+        pixelRef.current.id = currentPiece?.id as string;
+
         pixelRef.current.classList.add(`${letter}-block`);
       } else {
         pixelRef.current.removeAttribute('data-occupied');
         pixelRef.current.removeAttribute('data-id');
+        pixelRef.current.id = '';
 
         pixelRef.current.classList.remove(
           `${letter}-block`
@@ -110,17 +114,64 @@ export const GameBoard = () => {
     );
   };
 
-  const getNextSqaureData = (
-    currentPoint: [number, number]
+  const isSquareOccupied = (
+    ref: React.RefObject<HTMLSpanElement>
   ) => {
-    const [x, y] = currentPoint;
-    const yValue = y + currentPiece?.shape?.length + 1;
-    const nextSquare = pixelRefs.current[`${x}-${yValue}`];
+    const squareAttributes = ref?.current?.attributes;
+
+    if (squareAttributes)
+      for (let i = 0; i < squareAttributes.length; i++) {
+        if (
+          squareAttributes[i].value.includes('true') ||
+          squareAttributes[i].value.includes('block')
+        )
+          return true;
+      }
+
+    return false;
+  };
+
+  const getSqaureData = (startingPoint: number[]) => {
+    const [x, y] = startingPoint;
+    const square = pixelRefs.current[`${x}-${y}`];
 
     return {
-      yValue: yValue,
-      occupied: !!nextSquare?.current?.attributes[1],
+      x,
+      y,
+      occupied: isSquareOccupied(square),
+      id: square?.current?.id,
     };
+  };
+
+  const reformatData = () => {
+    return Object.keys(pixelRefs.current).map((key) => {
+      const [x, y] = key
+        .split('-')
+        .map((value) => Number(value));
+
+      return {
+        ...getSqaureData([x, y]),
+        nextSquare: getSqaureData([x, y + 1]),
+      };
+    });
+  };
+
+  const checkDownWardMove = () => {
+    return reformatData().some((square) => {
+      const { id, nextSquare } = square;
+
+      if (id === currentPiece?.id) {
+        //prettier-ignore
+        return (
+          (
+            nextSquare?.occupied &&
+            id !== nextSquare.id
+          ) || (
+            nextSquare.y >= boardHeight
+            )
+        );
+      }
+    });
   };
 
   const moveTetromino = (
@@ -128,12 +179,6 @@ export const GameBoard = () => {
   ) => {
     if (currentPiece) {
       let [x, y] = focalPointRef.current;
-      const nextSquare = getNextSqaureData([x, y]);
-
-      // Currently Tetrominos are adding their id to squares in addition to setting the Pixels `data-occupied` attribute.
-      // Not doing anything with it at the moment but it seems like it'd be useful eventually.
-      const nextSquareId =
-        nextSquare?.current?.attributes[2];
 
       // Determines the changes in focal point desired based on direction argument and board state
       switch (direction) {
@@ -152,14 +197,10 @@ export const GameBoard = () => {
       AddOrRemoveTetromino(currentPiece, 'remove');
       focalPointRef.current = [x, y];
       AddOrRemoveTetromino(currentPiece, 'add');
-
-      //This is how a piece knows it's landed
-      // if true, changes focal point, currentPiece State and
-      if (
-        nextSquare.yValue >= boardHeight ||
-        nextSquare.occupied
-      )
+      console.log(checkDownWardMove());
+      if (checkDownWardMove()) {
         makeNewPiece();
+      }
     }
   };
 
@@ -169,6 +210,7 @@ export const GameBoard = () => {
 
     focalPointRef.current = [3, 0];
     AddOrRemoveTetromino(newPiece, 'add');
+    console.log('last');
   };
 
   //This is the timer which makes the piece move downward.
@@ -179,7 +221,7 @@ export const GameBoard = () => {
   //   if (currentPiece) {
   //     const interval = setInterval(() => {
   //       moveTetromino('down');
-  //     }, 1000);
+  //     }, 700);
   //     return () => clearInterval(interval);
   //   }
   // }, [currentPiece]);
@@ -210,6 +252,18 @@ export const GameBoard = () => {
             {direction}
           </button>
         ))}
+        <button
+          onClick={() => {
+            console.log('current:', currentPiece);
+
+            // console.log('pixelrefs:', pixelRefs.current);
+          }}
+        >
+          console log stuff
+        </button>
+        <button onClick={() => makeNewPiece()}>
+          makeNewPiece
+        </button>
       </div>
     </div>
   );

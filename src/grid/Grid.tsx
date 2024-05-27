@@ -21,59 +21,65 @@ type GridProps = {
 /**
  * Grid React component
  */
-export const Grid = React.forwardRef((props: GridProps) => {
-  const { width, height = null, setPixelRef } = props;
-  const heightValue = height ?? width;
+export const Grid = React.forwardRef(
+  (props: GridProps, ref) => {
+    const { width, height = null, setPixelRef } = props;
+    const heightValue = height ?? width;
 
-  /**
-   * GridRef
-   * - Node List that's used as point of truth for pixel display
-   */
-  const gridRefs = React.useRef(
-    Array.from({ length: width * heightValue }, () =>
-      React.createRef<HTMLSpanElement>()
-    )
-  );
+    /**
+     * GridRef
+     * - Node List that's used as point of truth for pixel display
+     */
+    const gridRefs = React.useRef(
+      Array.from({ length: width * heightValue }, () =>
+        React.createRef<HTMLSpanElement>()
+      )
+    );
 
-  // console.log(gridRefs);
+    // console.log(gridRefs);
 
-  const styles = {
-    '--pixel-width': width,
-    '--pixel-height': heightValue,
-  } as React.CSSProperties;
+    const styles = {
+      '--pixel-width': width,
+      '--pixel-height': heightValue,
+    } as React.CSSProperties;
 
-  React.useMemo(() => {
-    for (let i = 0; i < heightValue; i++) {
-      for (let j = 0; j < width; j++) {
-        setPixelRef(j, i, gridRefs.current[i * width + j]);
+    React.useMemo(() => {
+      for (let i = 0; i < heightValue; i++) {
+        for (let j = 0; j < width; j++) {
+          setPixelRef(
+            j,
+            i,
+            gridRefs.current[i * width + j]
+          );
+        }
       }
-    }
-  }, [width, heightValue, setPixelRef]);
+    }, [width, heightValue, setPixelRef]);
 
-  const pixels = React.useMemo(() => {
-    const grid = [];
+    const pixels = React.useMemo(() => {
+      const grid = [];
 
-    for (let i = 0; i < heightValue; i++) {
-      const row = [];
-      for (let j = 0; j < width; j++) {
-        const key = i * width + j;
+      for (let i = 0; i < heightValue; i++) {
+        const row = [];
+        for (let j = 0; j < width; j++) {
+          const key = i * width + j;
 
-        row.push(
-          <Pixel key={key} ref={gridRefs.current[key]}>
-            {i}
-            {j}
-          </Pixel>
-        );
+          row.push(
+            <Pixel key={key} ref={gridRefs.current[key]}>
+              {i}
+              {j}
+            </Pixel>
+          );
+        }
+        grid.push(row);
       }
-      grid.push(row);
-    }
 
-    return grid;
-  }, [width, heightValue]);
+      return grid;
+    }, [width, heightValue]);
 
-  return (
-    <div className='grid' style={styles}>
-      {pixels}
-    </div>
-  );
-});
+    return (
+      <div className='grid' style={styles}>
+        {pixels}
+      </div>
+    );
+  }
+);
