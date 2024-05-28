@@ -1,5 +1,6 @@
 import React from 'react';
 import { Pixel, PixelProps } from './Pixel';
+import { PixelType } from '../components/GameBoard/GameBoard';
 
 /**
  * Props for Grid component
@@ -11,6 +12,12 @@ import { Pixel, PixelProps } from './Pixel';
 type GridProps = {
   width: number;
   height?: number;
+  pixelRefs: any;
+  testSetRef?: (
+    x: number,
+    y: number,
+    data: PixelType
+  ) => void;
   setPixelRef: (
     x: number,
     y: number,
@@ -23,8 +30,16 @@ type GridProps = {
  */
 export const Grid = React.forwardRef(
   (props: GridProps, ref) => {
-    const { width, height = null, setPixelRef } = props;
+    const {
+      width,
+      height = null,
+      setPixelRef,
+      pixelRefs,
+      testSetRef,
+    } = props;
     const heightValue = height ?? width;
+
+    console.log('grid render');
 
     /**
      * GridRef
@@ -36,26 +51,24 @@ export const Grid = React.forwardRef(
       )
     );
 
-    // console.log(gridRefs);
-
     const styles = {
       '--pixel-width': width,
       '--pixel-height': heightValue,
     } as React.CSSProperties;
 
-    React.useMemo(() => {
-      for (let i = 0; i < heightValue; i++) {
-        for (let j = 0; j < width; j++) {
-          setPixelRef(
-            j,
-            i,
-            gridRefs.current[i * width + j]
-          );
-        }
-      }
-    }, [width, heightValue, setPixelRef]);
+    // React.useMemo(() => {
+    //   for (let i = 0; i < heightValue; i++) {
+    //     for (let j = 0; j < width; j++) {
+    //       setPixelRef(
+    //         j,
+    //         i,
+    //         gridRefs.current[i * width + j]
+    //       );
+    //     }
+    //   }
+    // }, [width, heightValue, setPixelRef]);
 
-    const pixels = React.useMemo(() => {
+    const pixels = () => {
       const grid = [];
 
       for (let i = 0; i < heightValue; i++) {
@@ -64,21 +77,23 @@ export const Grid = React.forwardRef(
           const key = i * width + j;
 
           row.push(
-            <Pixel key={key} ref={gridRefs.current[key]}>
-              {i}
-              {j}
-            </Pixel>
+            <Pixel
+              key={key}
+              setPixelRef={setPixelRef}
+              x={j}
+              y={i}
+            />
           );
         }
         grid.push(row);
       }
 
       return grid;
-    }, [width, heightValue]);
+    };
 
     return (
       <div className='grid' style={styles}>
-        {pixels}
+        {pixels()}
       </div>
     );
   }

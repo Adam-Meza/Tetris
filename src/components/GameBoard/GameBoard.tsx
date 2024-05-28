@@ -5,16 +5,23 @@ import {
   TetrominoType,
 } from '../Tetromino/Tetromino';
 
+export type PixelType = {
+  occupied: boolean;
+  x: number;
+  y: number;
+  id?: string | undefined;
+  html?: React.RefObject<HTMLSpanElement>;
+  nextSquare?: PixelType | undefined;
+  _;
+};
+
 /**
- * Tetris GameBoardComponent
- *
- * Handles almost all the logic for game playin including:
- *
- * creating Tetrominos
- * moving, placing, and deleting them
+ * Tetris GameBoardComponent -
+ * Handles almost all the logic for game play including:
+ * moving, placing, and deleting Tetrominos.
  */
 export const GameBoard = () => {
-  // console.log('GameBoard render');
+  console.log('GameBoard render');
 
   const boardHeight = 20;
   const boardWidth = 10;
@@ -46,6 +53,18 @@ export const GameBoard = () => {
     [key: string]: React.RefObject<HTMLSpanElement>;
   }>({});
 
+  // const _TEST_REF = React.useRef<{
+  //   [key: string]: PixelType;
+  // }>({});
+
+  // const _TEST_SET_REF = (
+  //   x: number,
+  //   y: number,
+  //   data: PixelType
+  // ) => {
+  //   _TEST_REF.current[`${x}-${y}`] = data;
+  // };
+
   const setPixelRef = (
     x: number,
     y: number,
@@ -64,39 +83,36 @@ export const GameBoard = () => {
     //based on current focal point and the index of the pixel relative to the tetromino shape
     const x = focalPointRef.current[0] + colIndex;
     const y = focalPointRef.current[1] + rowIndex;
-
-    const pixelRef = pixelRefs.current[`${x}-${y}`];
+    console.log();
+    const pixelRef =
+      pixelRefs?.current[`${x}-${y}`]?.current;
     const { letter, id } = tetromino;
 
-    if (pixelRef?.current) {
+    if (pixelRef) {
       if (action === 'add' && !isSquareOccupied(pixelRef)) {
-        pixelRef.current.setAttribute(
-          'data-occupied',
-          'true'
-        );
-        pixelRef.current.setAttribute('data-id', `${id}`);
+        pixelRef.setAttribute('data-occupied', 'true');
+        pixelRef.setAttribute('data-id', `${id}`);
 
         // is this bad practice?
-        pixelRef.current.id = currentPiece?.id as string;
+        pixelRef.id = currentPiece?.id as string;
 
-        pixelRef.current.classList.add(`${letter}-block`);
+        pixelRef.classList.add(`${letter}-block`);
       } else {
-        pixelRef.current.removeAttribute('data-occupied');
-        pixelRef.current.removeAttribute('data-id');
-        pixelRef.current.id = '';
+        pixelRef.removeAttribute('data-occupied');
+        pixelRef.removeAttribute('data-id');
+        pixelRef.id = '';
 
-        pixelRef.current.classList.remove(
-          `${letter}-block`
-        );
+        pixelRef.classList.remove(`${letter}-block`);
       }
     }
   };
 
-  const AddOrRemoveTetromino = (
+  const addOrRemoveTetromino = (
     tetromino = currentPiece,
     action: 'add' | 'remove'
   ) => {
     tetromino?.shape.forEach(
+      //@ts-expect-error: I don't know but it wont go away
       (row: TetrominoType[], rowIndex: number) => {
         row.forEach(
           (cell: TetrominoType, colIndex: number) => {
@@ -115,9 +131,9 @@ export const GameBoard = () => {
   };
 
   const isSquareOccupied = (
-    ref: React.RefObject<HTMLSpanElement>
+    ref: HTMLSpanElement | null
   ) => {
-    const squareAttributes = ref?.current?.attributes;
+    const squareAttributes = ref?.attributes;
 
     if (squareAttributes)
       for (let i = 0; i < squareAttributes.length; i++) {
@@ -133,18 +149,19 @@ export const GameBoard = () => {
 
   const getSqaureData = (startingPoint: number[]) => {
     const [x, y] = startingPoint;
-    const square = pixelRefs.current[`${x}-${y}`];
+    const square = pixelRefs?.current[`${x}-${y}`]?.current;
 
     return {
       x,
       y,
       occupied: isSquareOccupied(square),
-      id: square?.current?.id,
+      id: square?.id,
     };
   };
 
-  const reformatData = () => {
-    return Object.keys(pixelRefs.current).map((key) => {
+  // this takes PixelRefs and make a
+  const reformatData = (): PixelType[] =>
+    Object.keys(pixelRefs.current).map((key) => {
       const [x, y] = key
         .split('-')
         .map((value) => Number(value));
@@ -154,17 +171,16 @@ export const GameBoard = () => {
         nextSquare: getSqaureData([x, y + 1]),
       };
     });
-  };
 
-  const checkDownWardMove = () => {
+  const nextSpaceOccupied = () => {
     return reformatData().some((square) => {
       const { id, nextSquare } = square;
 
-      if (id === currentPiece?.id) {
+      if (id === currentPiece?.id && nextSquare) {
         //prettier-ignore
         return (
           (
-            nextSquare?.occupied &&
+            nextSquare.occupied &&
             id !== nextSquare.id
           ) || (
             nextSquare.y >= boardHeight
@@ -194,14 +210,16 @@ export const GameBoard = () => {
           break;
       }
 
-      AddOrRemoveTetromino(currentPiece, 'remove');
+      addOrRemoveTetromino(currentPiece, 'remove');
       focalPointRef.current = [x, y];
-      AddOrRemoveTetromino(currentPiece, 'add');
-      console.log(checkDownWardMove());
-      if (checkDownWardMove()) {
-        makeNewPiece();
-      }
+      addOrRemoveTetromino(currentPiece, 'add');
+
+      if (nextSpaceOccupied()) handleBlockLanding();
     }
+  };
+
+  const handleBlockLanding = () => {
+    makeNewPiece();
   };
 
   const makeNewPiece = () => {
@@ -209,8 +227,7 @@ export const GameBoard = () => {
     setPiece(newPiece);
 
     focalPointRef.current = [3, 0];
-    AddOrRemoveTetromino(newPiece, 'add');
-    console.log('last');
+    addOrRemoveTetromino(newPiece, 'add');
   };
 
   //This is the timer which makes the piece move downward.
@@ -226,9 +243,28 @@ export const GameBoard = () => {
   //   }
   // }, [currentPiece]);
 
+  const handleKeyPress = (key: string) => {
+    switch (key) {
+      case 'ArrowDown':
+        moveTetromino('down');
+        return;
+      case 'ArrowLeft':
+        moveTetromino('left');
+        return;
+      case 'ArrowRight':
+        moveTetromino('right');
+        return;
+      case 'Enter':
+        makeNewPiece();
+        return;
+    }
+  };
+
   return (
-    <div>
+    <div onKeyDown={(event) => handleKeyPress(event.key)}>
       <Grid
+        pixelRefs={pixelRefs}
+        // testSetRef={_TEST_SET_REF}
         setPixelRef={setPixelRef}
         width={boardWidth}
         height={boardHeight}
@@ -242,27 +278,15 @@ export const GameBoard = () => {
         >
           Place Block
         </button>
-        {['down', 'left', 'right'].map((direction) => (
-          <button
-            key={direction}
-            onClick={() => {
-              moveTetromino(direction);
-            }}
-          >
-            {direction}
-          </button>
-        ))}
+
         <button
           onClick={() => {
             console.log('current:', currentPiece);
 
-            // console.log('pixelrefs:', pixelRefs.current);
+            console.log('pixelrefs:', pixelRefs.current);
           }}
         >
           console log stuff
-        </button>
-        <button onClick={() => makeNewPiece()}>
-          makeNewPiece
         </button>
       </div>
     </div>

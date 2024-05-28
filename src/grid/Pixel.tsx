@@ -1,4 +1,5 @@
 import React from 'react';
+import { PixelType } from '../components/GameBoard/GameBoard';
 
 /**
  * Pixel component
@@ -6,8 +7,27 @@ import React from 'react';
  *
  * @returns Basic Pixel Unit
  */
-export const Pixel = React.forwardRef<HTMLSpanElement>(
-  ({ children }, ref) => {
-    return <span ref={ref}>{children}</span>;
+
+type PixelProps = HTMLSpanElement &
+  PixelType & {
+    setPixelRef: (
+      x: number,
+      y: number,
+      ref: React.RefObject<HTMLSpanElement>
+    ) => void;
+  };
+
+export const Pixel = React.forwardRef<PixelProps>(
+  (props, ref) => {
+    //@ts-expect-error tes
+    const { setPixelRef, x, y } = props;
+
+    const test = React.createRef<HTMLSpanElement>();
+
+    React.useMemo(() => {
+      setPixelRef(x, y, test);
+    }, [x, y, setPixelRef, test]);
+
+    return <span ref={test}></span>;
   }
 );
