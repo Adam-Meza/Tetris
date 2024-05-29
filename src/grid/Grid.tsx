@@ -12,12 +12,6 @@ import { PixelType } from '../components/GameBoard/GameBoard';
 type GridProps = {
   width: number;
   height?: number;
-  pixelRefs: any;
-  testSetRef?: (
-    x: number,
-    y: number,
-    data: PixelType
-  ) => void;
   setPixelRef: (
     x: number,
     y: number,
@@ -30,43 +24,14 @@ type GridProps = {
  */
 export const Grid = React.forwardRef(
   (props: GridProps, ref) => {
-    const {
-      width,
-      height = null,
-      setPixelRef,
-      pixelRefs,
-      testSetRef,
-    } = props;
+    const { width, height = null, setPixelRef } = props;
+
     const heightValue = height ?? width;
-
-    console.log('grid render');
-
-    /**
-     * GridRef
-     * - Node List that's used as point of truth for pixel display
-     */
-    const gridRefs = React.useRef(
-      Array.from({ length: width * heightValue }, () =>
-        React.createRef<HTMLSpanElement>()
-      )
-    );
 
     const styles = {
       '--pixel-width': width,
       '--pixel-height': heightValue,
     } as React.CSSProperties;
-
-    // React.useMemo(() => {
-    //   for (let i = 0; i < heightValue; i++) {
-    //     for (let j = 0; j < width; j++) {
-    //       setPixelRef(
-    //         j,
-    //         i,
-    //         gridRefs.current[i * width + j]
-    //       );
-    //     }
-    //   }
-    // }, [width, heightValue, setPixelRef]);
 
     const pixels = () => {
       const grid = [];
