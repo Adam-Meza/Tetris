@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pixel, PixelProps } from './Pixel';
+import { Pixel } from './Pixel';
 import { PixelType } from '../components/GameBoard/GameBoard';
 
 /**
@@ -12,11 +12,7 @@ import { PixelType } from '../components/GameBoard/GameBoard';
 type GridProps = {
   width: number;
   height?: number;
-  setPixelRef: (
-    x: number,
-    y: number,
-    ref: React.RefObject<HTMLSpanElement>
-  ) => void;
+  setPixelRef: (pixel: PixelType) => void;
 };
 
 /**
@@ -26,29 +22,28 @@ export const Grid = React.forwardRef(
   (props: GridProps, ref) => {
     const { width, height = null, setPixelRef } = props;
 
-    const heightValue = height ?? width;
+    const trueHeight = height ?? width;
 
     const styles = {
       '--pixel-width': width,
-      '--pixel-height': heightValue,
+      '--pixel-height': trueHeight,
     } as React.CSSProperties;
 
     const pixels = () => {
       const grid = [];
 
-      for (let i = 0; i < heightValue; i++) {
+      for (let i = 0; i < trueHeight; i++) {
         const row = [];
         for (let j = 0; j < width; j++) {
           const key = i * width + j;
 
-          row.push(
-            <Pixel
-              key={key}
-              setPixelRef={setPixelRef}
-              x={j}
-              y={i}
-            />
-          );
+          const pixelProps = {
+            setPixelRef: setPixelRef,
+            x: j,
+            y: i,
+          };
+
+          row.push(<Pixel {...pixelProps} key={key} />);
         }
         grid.push(row);
       }

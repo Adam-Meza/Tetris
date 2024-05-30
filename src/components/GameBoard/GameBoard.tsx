@@ -6,12 +6,12 @@ import {
 } from '../Tetromino/Tetromino';
 
 export type PixelType = {
-  occupied: boolean;
   x: number;
   y: number;
   id?: string | undefined;
   html?: React.RefObject<HTMLSpanElement>;
   nextSquare?: PixelType | undefined;
+  letter?: string;
 };
 
 /**
@@ -20,8 +20,6 @@ export type PixelType = {
  * moving, placing, and deleting Tetrominos.
  */
 export const GameBoard = () => {
-  // console.log('GameBoard render');
-
   const boardHeight = 20;
   const boardWidth = 10;
   const [currentPiece, setPiece] =
@@ -52,17 +50,17 @@ export const GameBoard = () => {
     [key: string]: PixelType;
   }>({});
 
-  const setPixelRef = (
-    x: number,
-    y: number,
-    ref: React.RefObject<HTMLSpanElement>
-  ) => {
-    pixelRefs.current[`${x}-${y}`] = {
-      x,
-      y,
-      occupied: false,
-      html: ref,
-    };
+  const setPixelRef = (pixel: PixelType) => {
+    const key = `${pixel.x}-${pixel.y}`;
+
+    if (!pixelRefs.current[key]) {
+      pixelRefs.current[key] = pixel;
+    } else {
+      pixelRefs.current[key] = {
+        ...pixelRefs.current[key],
+        ...pixel,
+      };
+    }
   };
 
   const handleClassChange = (
@@ -71,39 +69,28 @@ export const GameBoard = () => {
     action: 'add' | 'remove',
     tetromino: TetrominoType
   ) => {
-    //Locates the desired new position
-    //based on current focal point and the index of the pixel relative to the tetromino shape
     const x = focalPointRef.current[0] + colIndex;
     const y = focalPointRef.current[1] + rowIndex;
-
-    const spanRef =
-      pixelRefs?.current[`${x}-${y}`]?.html?.current;
-
-    const dataRef = pixelRefs.current[`${x}-${y}`];
-
     const { letter, id } = tetromino;
+
+    const dataRef = pixelRefs.current[
+      `${x}-${y}`
+    ] as PixelType;
+
+    const spanRef = dataRef.html?.current as HTMLElement;
 
     if (!spanRef) return;
 
-    if (action === 'add' && !isSquareOccupied(spanRef)) {
-      dataRef.occupied = true;
-      dataRef.id = id;
-
-      spanRef.setAttribute('data-occupied', 'true');
-      spanRef.setAttribute('data-id', `${id}`);
-
-      // is this bad practice?
-      spanRef.id = currentPiece?.id as string;
-
+    if (action === 'add') {
       spanRef.classList.add(`${letter}-block`);
+      setPixelRef({ x, y, id: id });
     } else {
-      pixelRefs.current[`${x}-${y}`].occupied = false;
-
-      spanRef.removeAttribute('data-occupied');
-      spanRef.removeAttribute('data-id');
-      spanRef.id = '';
-
       spanRef.classList.remove(`${letter}-block`);
+      setPixelRef({
+        x,
+        y,
+        id: undefined,
+      });
     }
   };
 
@@ -112,7 +99,7 @@ export const GameBoard = () => {
     action: 'add' | 'remove'
   ) => {
     tetromino?.shape.forEach(
-      //@ts-expect-error: I don't know but it wont go away
+      //@ts-expect-error: unknown error
       (row: TetrominoType[], rowIndex: number) => {
         row.forEach(
           (cell: TetrominoType, colIndex: number) => {
@@ -130,57 +117,45 @@ export const GameBoard = () => {
     );
   };
 
-  const isSquareOccupied = (
-    ref: HTMLSpanElement | null | undefined
+  const nextSpaceOccupied = (
+    direction: 'down' | 'left' | 'right'
   ) => {
-    if (!ref) return;
+    if (!currentPiece) return;
 
-    const attributes = ref.attributes;
-
-    // console.log(attributes);
-
-    for (let i = 0; i < attributes.length; i++) {
-      if (
-        attributes[i].value.includes('true') ||
-        attributes[i].value.includes('block')
-      )
-        return true;
-    }
-
-    return false;
-  };
-
-  const getSqaureData = (startingPoint: number[]) => {
-    const [x, y] = startingPoint;
-    const square = pixelRefs?.current[`${x}-${y}`];
-
-    return {
-      x,
-      y,
-      occupied: isSquareOccupied(square?.html?.current),
-      id: square?.id,
-    };
-  };
-
-  const nextSpaceOccupied = () => {
     for (let i = 0; i < 20; i++) {
       for (let j = 0; j < 10; j++) {
-        const square = getSqaureData([j, i]);
-        const nextSquare = getSqaureData([j, i + 1]);
+        let x = j;
+        let y = i;
 
-        if (square.id === currentPiece?.id) {
+        const square = pixelRefs?.current[`${x}-${y}`];
+
+        switch (direction) {
+          case 'down':
+            y += 1;
+            break;
+          case 'left':
+            if (x > 0) x -= 1;
+            break;
+          case 'right':
+            if (
+              x + currentPiece.shape[0].length <
+              boardWidth
+            )
+              x += 1;
+            break;
+        }
+
+        const nextSquare = pixelRefs?.current[`${x}-${y}`];
+
+        if (square.id === currentPiece?.id)
           if (
-            (nextSquare.occupied &&
-              square.id !== nextSquare.id) ||
-            nextSquare.y >= boardHeight
+            !nextSquare ||
+            (square.id !== nextSquare.id && nextSquare.id)
           ) {
-            console.log('teste');
             return true;
           }
-        }
       }
     }
-
     return false;
   };
 
@@ -188,6 +163,7 @@ export const GameBoard = () => {
     direction: 'down' | 'left' | 'right'
   ) => {
     if (!currentPiece) return;
+
     let [x, y] = focalPointRef.current;
 
     switch (direction) {
@@ -195,10 +171,13 @@ export const GameBoard = () => {
         y += 1;
         break;
       case 'left':
-        if (x > 0) x -= 1;
+        if (x > 0 && !nextSpaceOccupied('left')) x -= 1;
         break;
       case 'right':
-        if (x + currentPiece.shape[0].length < boardWidth)
+        if (
+          x + currentPiece.shape[0].length < boardWidth &&
+          !nextSpaceOccupied('right')
+        )
           x += 1;
         break;
     }
@@ -207,7 +186,7 @@ export const GameBoard = () => {
     focalPointRef.current = [x, y];
     addOrRemoveTetromino(currentPiece, 'add');
 
-    if (nextSpaceOccupied()) handleBlockLanding();
+    if (nextSpaceOccupied('down')) handleBlockLanding();
   };
 
   const handleBlockLanding = () => {
@@ -222,18 +201,14 @@ export const GameBoard = () => {
     addOrRemoveTetromino(newPiece, 'add');
   };
 
-  //This is the timer which makes the piece move downward.
-  //Currently the only use of useEffect which I hope to get rid of
-  // I have comment out because it annoys me when im testing stuff
-
-  // React.useEffect(() => {
-  //   if (currentPiece) {
-  //     const interval = setInterval(() => {
-  //       moveTetromino('down');
-  //     }, 700);
-  //     return () => clearInterval(interval);
-  //   }
-  // }, [currentPiece]);
+  React.useEffect(() => {
+    if (currentPiece) {
+      const interval = setInterval(() => {
+        moveTetromino('down');
+      }, 700);
+      return () => clearInterval(interval);
+    }
+  }, [currentPiece]);
 
   const handleKeyPress = (key: string) => {
     switch (key) {
@@ -256,7 +231,7 @@ export const GameBoard = () => {
     <div onKeyDown={(event) => handleKeyPress(event.key)}>
       <Grid
         setPixelRef={setPixelRef}
-        width={boardWidth}
+        width={10}
         height={boardHeight}
         ref={pixelRefs}
       />
