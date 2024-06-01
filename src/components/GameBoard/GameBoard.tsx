@@ -182,25 +182,27 @@ export const GameBoard = () => {
     // put a timer here to wait for a side move if no move make new piece
 
     makeNewTetromino();
-    if (findCompletedRow()) removeRow(findCompletedRow());
+    if (findCompletedRows()) removeRow(findCompletedRows());
   };
 
-  const removeRow = (y: number | null) => {
-    if (!y) return;
+  const removeRow = (rows: number[] | null) => {
+    if (!rows) return;
 
-    for (let i = 0; i < 10; i++) {
-      if (!pixelRefs.current[`${i}-${y}`].id) return;
+    rows.forEach((y) => {
+      for (let i = 0; i < 10; i++) {
+        if (!pixelRefs.current[`${i}-${y}`].id) return;
 
-      const letter =
-        pixelRefs.current[`${i}-${y}`].id?.split('')[0];
+        const letter =
+          pixelRefs.current[`${i}-${y}`].id?.split('')[0];
 
-      addOrRemoveTetromino(i, y, 'remove', letter);
-    }
+        addOrRemoveTetromino(i, y, 'remove', letter);
+      }
+    });
   };
 
-  const findCompletedRow = () => {
+  const findCompletedRows = () => {
     const pixelsInRows = [];
-    let rowToRemove = null;
+    const rowsToRemove = [] as number[];
 
     for (let i = 0; i < 20; i++) {
       const row = [];
@@ -215,11 +217,11 @@ export const GameBoard = () => {
 
     pixelsInRows.forEach((row, index) => {
       if (row.every((pixel) => pixel.id)) {
-        rowToRemove = index;
+        rowsToRemove.push(index);
       }
     });
 
-    return rowToRemove;
+    return rowsToRemove;
   };
 
   const makeNewTetromino = () => {
