@@ -8,7 +8,14 @@ export type PixelProps = {
 };
 
 /**
- * Pixel component
+ * Pixel component - uses forwarded pixelRef to rerender itself
+ * 
+ * @example 
+ * <Pixel 
+ *    setPixelRef ={setPixelRef}
+      x={2}
+      y={6}
+  />
  */
 export const Pixel = React.forwardRef<
   HTMLSpanElement,
