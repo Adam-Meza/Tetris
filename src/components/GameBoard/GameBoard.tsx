@@ -20,6 +20,8 @@ export type PixelType = {
  * moving, placing, and deleting Tetrominos.
  */
 export const GameBoard = () => {
+  const boardWidth = 10;
+  const boardHeight = 20;
   const [currentTetromino, setTetromino] =
     React.useState<TetrominoType>();
 
@@ -58,7 +60,7 @@ export const GameBoard = () => {
       };
   };
 
-  const addOrRemoveTetromino = (
+  const addOrRemovePixel = (
     x: number,
     y: number,
     action: 'add' | 'remove',
@@ -100,13 +102,7 @@ export const GameBoard = () => {
 
               const { id, letter } = tetromino;
 
-              addOrRemoveTetromino(
-                x,
-                y,
-                action,
-                letter,
-                id
-              );
+              addOrRemovePixel(x, y, action, letter, id);
             }
           }
         );
@@ -119,8 +115,8 @@ export const GameBoard = () => {
   ) => {
     if (!currentTetromino) return;
 
-    for (let i = 0; i < 20; i++) {
-      for (let j = 0; j < 10; j++) {
+    for (let i = 0; i < boardHeight; i++) {
+      for (let j = 0; j < boardWidth; j++) {
         let x = j;
         let y = i;
 
@@ -161,7 +157,7 @@ export const GameBoard = () => {
 
     switch (direction) {
       case 'down':
-        y += 1;
+        if (isMovePossible('down')) y += 1;
         break;
       case 'left':
         if (isMovePossible('left')) x -= 1;
@@ -175,45 +171,65 @@ export const GameBoard = () => {
     focalPointRef.current = [x, y];
     updateCurrentTetromino(currentTetromino, 'add');
 
-    if (!isMovePossible('down')) handleBlockLanding();
+    console.log('ere');
+
+    if (!isMovePossible('down'))
+      setTimeout(() => {
+        handleBlockLanding();
+      }, 200);
+  };
+
+  const moveRowsDown = () => {
+    const pixelsInRows = reformattedRefs();
+
+    console.log(pixelsInRows);
   };
 
   const handleBlockLanding = () => {
     // put a timer here to wait for a side move if no move make new piece
 
     makeNewTetromino();
-    if (findCompletedRows()) removeRow(findCompletedRows());
+    if (findCompletedRows()) {
+      const rows = findCompletedRows();
+      removeRows(rows);
+    }
   };
 
-  const removeRow = (rows: number[] | null) => {
+  const removeRows = (rows: number[]) => {
     if (!rows) return;
 
     rows.forEach((y) => {
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < boardWidth; i++) {
         if (!pixelRefs.current[`${i}-${y}`].id) return;
 
-        const letter =
-          pixelRefs.current[`${i}-${y}`].id?.split('')[0];
+        const id = pixelRefs.current[`${i}-${y}`].id;
+        const letter = id?.split('')[0];
 
-        addOrRemoveTetromino(i, y, 'remove', letter);
+        addOrRemovePixel(i, y, 'remove', letter);
       }
     });
   };
 
-  const findCompletedRows = () => {
+  const reformattedRefs = () => {
     const pixelsInRows = [];
-    const rowsToRemove = [] as number[];
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < boardHeight; i++) {
       const row = [];
 
-      for (let j = 0; j < 10; j++) {
+      for (let j = 0; j < boardWidth; j++) {
         const pixel = pixelRefs.current[`${j}-${i}`];
         row.push(pixel);
       }
 
       pixelsInRows.push(row);
     }
+
+    return pixelsInRows;
+  };
+
+  const findCompletedRows = (): number[] => {
+    const pixelsInRows = reformattedRefs();
+    const rowsToRemove = [] as number[];
 
     pixelsInRows.forEach((row, index) => {
       if (row.every((pixel) => pixel.id)) {
@@ -225,6 +241,13 @@ export const GameBoard = () => {
   };
 
   const makeNewTetromino = () => {
+    if (
+      focalPointRef.current[0] === 3 &&
+      focalPointRef.current[1] === 0 &&
+      currentTetromino
+    )
+      return;
+
     const tetromino = randomTetromino();
     setTetromino(tetromino);
 
@@ -248,16 +271,17 @@ export const GameBoard = () => {
     if (!currentTetromino) return;
 
     const rotatedShape = rotateShapeClockwise(
-      currentTetromino?.shape
+      currentTetromino.shape
     );
-    const rotatedPiece = {
+
+    const rotated = {
       ...currentTetromino,
       shape: rotatedShape,
     };
 
     updateCurrentTetromino(currentTetromino, 'remove');
-    setTetromino(rotatedPiece);
-    updateCurrentTetromino(rotatedPiece, 'add');
+    setTetromino(rotated);
+    updateCurrentTetromino(rotated, 'add');
   };
 
   // React.useEffect(() => {
@@ -272,18 +296,18 @@ export const GameBoard = () => {
   const handleKeyPress = (key: string) => {
     switch (key) {
       case 'ArrowDown':
-        moveTetromino('down');
+        if (isMovePossible('down')) moveTetromino('down');
         return;
       case 'ArrowLeft':
-        moveTetromino('left');
+        if (isMovePossible('right')) moveTetromino('left');
         return;
       case 'ArrowRight':
-        moveTetromino('right');
+        if (isMovePossible('right')) moveTetromino('right');
         return;
       case 'Enter':
         makeNewTetromino();
         return;
-      case 'a':
+      case 'Shift':
         rotateTetromino();
         return;
     }
@@ -293,8 +317,8 @@ export const GameBoard = () => {
     <div onKeyDown={(event) => handleKeyPress(event.key)}>
       <Grid
         setPixelRef={setPixelRef}
-        width={10}
-        height={20}
+        width={boardWidth}
+        height={boardHeight}
         ref={pixelRefs}
       />
       <div className='button-container'>
