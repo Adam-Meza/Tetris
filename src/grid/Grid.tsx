@@ -18,43 +18,41 @@ type GridProps = {
 /**
  * Grid React component
  */
-export const Grid = React.forwardRef(
-  (props: GridProps, ref) => {
-    const { width, height = null, setPixelRef } = props;
+export const Grid = React.forwardRef((props: GridProps) => {
+  const { width, height = null, setPixelRef } = props;
 
-    const trueHeight = height ?? width;
+  const trueHeight = height ?? width;
 
-    const styles = {
-      '--pixel-width': width,
-      '--pixel-height': trueHeight,
-    } as React.CSSProperties;
+  const styles = {
+    '--pixel-width': width,
+    '--pixel-height': trueHeight,
+  } as React.CSSProperties;
 
-    const pixels = () => {
-      const grid = [];
+  const pixels = () => {
+    const grid = [];
 
-      for (let i = 0; i < trueHeight; i++) {
-        const row = [];
-        for (let j = 0; j < width; j++) {
-          const key = i * width + j;
+    for (let i = 0; i < trueHeight; i++) {
+      const row = [];
+      for (let j = 0; j < width; j++) {
+        const key = i * width + j;
 
-          const pixelProps = {
-            setPixelRef: setPixelRef,
-            x: j,
-            y: i,
-          };
+        const pixelProps = {
+          setPixelRef: setPixelRef,
+          x: j,
+          y: i,
+        };
 
-          row.push(<Pixel {...pixelProps} key={key} />);
-        }
-        grid.push(row);
+        row.push(<Pixel {...pixelProps} key={key} />);
       }
+      grid.push(row);
+    }
 
-      return grid;
-    };
+    return grid;
+  };
 
-    return (
-      <div className='grid' style={styles}>
-        {pixels()}
-      </div>
-    );
-  }
-);
+  return (
+    <div className='grid' style={styles}>
+      {pixels()}
+    </div>
+  );
+});
