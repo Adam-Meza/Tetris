@@ -1,5 +1,6 @@
 import React from 'react';
-import { Pixel, PixelProps } from './Pixel';
+import { Pixel } from './Pixel';
+import { PixelType } from '../components/GameBoard/GameBoard';
 
 /**
  * Props for Grid component
@@ -11,11 +12,7 @@ import { Pixel, PixelProps } from './Pixel';
 type GridProps = {
   width: number;
   height?: number;
-  setPixelRef: (
-    x: number,
-    y: number,
-    ref: React.RefObject<HTMLSpanElement>
-  ) => void;
+  setPixelRef: (pixel: PixelType) => void;
 };
 
 /**
@@ -23,57 +20,39 @@ type GridProps = {
  */
 export const Grid = React.forwardRef((props: GridProps) => {
   const { width, height = null, setPixelRef } = props;
-  const heightValue = height ?? width;
 
-  /**
-   * GridRef
-   * - Node List that's used as point of truth for pixel display
-   */
-  const gridRefs = React.useRef(
-    Array.from({ length: width * heightValue }, () =>
-      React.createRef<HTMLSpanElement>()
-    )
-  );
-
-  // console.log(gridRefs);
+  const trueHeight = height ?? width;
 
   const styles = {
     '--pixel-width': width,
-    '--pixel-height': heightValue,
+    '--pixel-height': trueHeight,
   } as React.CSSProperties;
 
-  React.useMemo(() => {
-    for (let i = 0; i < heightValue; i++) {
-      for (let j = 0; j < width; j++) {
-        setPixelRef(j, i, gridRefs.current[i * width + j]);
-      }
-    }
-  }, [width, heightValue, setPixelRef]);
-
-  const pixels = React.useMemo(() => {
+  const pixels = () => {
     const grid = [];
 
-    for (let i = 0; i < heightValue; i++) {
+    for (let i = 0; i < trueHeight; i++) {
       const row = [];
       for (let j = 0; j < width; j++) {
         const key = i * width + j;
 
-        row.push(
-          <Pixel key={key} ref={gridRefs.current[key]}>
-            {i}
-            {j}
-          </Pixel>
-        );
+        const pixelProps = {
+          setPixelRef: setPixelRef,
+          x: j,
+          y: i,
+        };
+
+        row.push(<Pixel {...pixelProps} key={key} />);
       }
       grid.push(row);
     }
 
     return grid;
-  }, [width, heightValue]);
+  };
 
   return (
     <div className='grid' style={styles}>
-      {pixels}
+      {pixels()}
     </div>
   );
 });

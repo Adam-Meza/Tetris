@@ -12,7 +12,7 @@
     height: 25px;
     width: 25px;
     font-size: 10px;
-    border: black 1px solid;
+    border: rgb(227, 227, 227) .5px solid;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -21,6 +21,7 @@
   @each $type, $color in $tetromino-colors {
     .#{$type}-block {
       background-color: $color;
+      border: .5px solid $color
     }
   }
 }
