@@ -51,8 +51,8 @@ export const Grid = React.forwardRef((props: GridProps) => {
   };
 
   return (
-    <div className='grid' style={styles}>
+    <section className='grid' style={styles}>
       {pixels()}
-    </div>
+    </section>
   );
 });

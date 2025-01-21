@@ -35,6 +35,7 @@ export const GameBoard = () => {
   const [currentTetromino, setTetromino] =
     React.useState<TetrominoType>();
   const [gameOver, setGameOver] = React.useState(false);
+  const [score, setScore] = React.useState(0);
 
   // this would be better abstracted out
   const randomTetromino = (): TetrominoType => {
@@ -57,7 +58,6 @@ export const GameBoard = () => {
 
   /**
    * This is a mutable ref object that will be used as the point of truth for game state logic
-   *
    */
   const pixelRefs = React.useRef<{
     [key: string]: PixelType;
@@ -98,7 +98,6 @@ export const GameBoard = () => {
       // right now we are both adding the class and setting the ref
       // shouldnt one be good enough?
       // Why isnt it enough?
-      // will i ever be enough?
       spanRef.classList.add(`${letter}-block`);
       setPixelRef({ x, y, id: id });
     } else {
@@ -137,10 +136,8 @@ export const GameBoard = () => {
 
   const isMovePossible = (
     direction: Direction,
-    tetromino?: TetrominoType
+    current = currentTetromino
   ) => {
-    const current = tetromino ?? currentTetromino;
-
     for (let i = 0; i < boardHeight; i++) {
       for (let j = 0; j < boardWidth; j++) {
         let x = j,
@@ -208,10 +205,10 @@ export const GameBoard = () => {
     focalPointRef.current = [x, y];
     updateCurrentTetromino('add');
 
-    if (!isMovePossible('down'))
-      setTimeout(() => {
-        if (!isMovePossible('down')) handleBlockLanding();
-      }, 150);
+    // if (!isMovePossible('down'))
+    //   setTimeout(() => {
+    if (!isMovePossible('down')) handleBlockLanding();
+    // }, 150);
   };
 
   const moveRowsDown = (rows: number[]) => {
@@ -236,15 +233,24 @@ export const GameBoard = () => {
     });
   };
 
-  const handleBlockLanding = async () => {
+  const handleBlockLanding = () => {
     const completedRowIndexes = findCompletedRows();
 
     if (completedRowIndexes) {
       removeRows(completedRowIndexes);
       moveRowsDown(completedRowIndexes);
+      calculateScore(completedRowIndexes.length);
     }
 
     makeNewTetromino();
+  };
+
+  const calculateScore = (multiplier: number) => {
+    const newScore =
+      score +
+      multiplier * (150 * Math.floor(Math.random() * 2));
+
+    setScore(newScore);
   };
 
   const removeRows = (rows: number[]) => {
@@ -299,9 +305,10 @@ export const GameBoard = () => {
 
   const makeNewTetromino = () => {
     if (
-      focalPointRef.current[0] === 3 &&
-      focalPointRef.current[1] === 0 &&
-      currentTetromino
+      (focalPointRef.current[0] === 3 &&
+        focalPointRef.current[1] === 0 &&
+        currentTetromino) ||
+      isMovePossible('down')
     )
       return;
 
@@ -310,8 +317,6 @@ export const GameBoard = () => {
 
     focalPointRef.current = [3, 0];
     updateCurrentTetromino('add', tetromino);
-
-    // console.log(isMovePossible('dowv n'));
   };
 
   const rotateShapeClockwise = (
@@ -328,7 +333,6 @@ export const GameBoard = () => {
 
   const rotateTetromino = () => {
     if (!currentTetromino) return;
-    const original = currentTetromino;
 
     const rotated = {
       ...currentTetromino,
@@ -339,9 +343,6 @@ export const GameBoard = () => {
       updateCurrentTetromino('remove');
       setTetromino(rotated);
       updateCurrentTetromino('add', rotated);
-    } else {
-      setTetromino(original);
-      updateCurrentTetromino('add', original);
     }
   };
 
@@ -383,6 +384,7 @@ export const GameBoard = () => {
 
   return (
     <main onKeyDown={(event) => handleKeyPress(event.key)}>
+      <div className='score-board'>{score}</div>
       <Grid
         setPixelRef={setPixelRef}
         width={boardWidth}
