@@ -1,28 +1,30 @@
 import React from 'react';
 import { Grid } from '../../grid/Grid';
-import { blocks } from '../Tetromino/Tetromino';
+import {
+  randomTetromino,
+  Direction,
+} from '../../utilities';
 
 export type TetrominoType = {
   shape:
     | [string[], (string | null)[]]
     | (string | null)[][];
   id?: string;
-  letter: string;
+  // letter: string;
 };
 
 export type PixelType = {
   x: number;
   y: number;
-  id?: string | undefined;
-  nextSquare?: PixelType | undefined;
-  letter?: string;
 
+  // also why are there so many conditionals anyways?
+  // whats a usecasse for nextSquare? cant we calculate the next square based on x and y values?
+  id?: string | undefined;
+  letter?: string;
   // why am i doing this again???
   // something to look into
   html?: React.RefObject<HTMLSpanElement>;
 };
-
-type Direction = 'down' | 'left' | 'right';
 
 /**
  * Tetris GameBoardComponent -
@@ -36,18 +38,6 @@ export const GameBoard = () => {
     React.useState<TetrominoType>();
   const [gameOver, setGameOver] = React.useState(false);
   const [score, setScore] = React.useState(0);
-
-  // this would be better abstracted out
-  const randomTetromino = (): TetrominoType => {
-    const block =
-      blocks[Math.floor(Math.random() * blocks.length)];
-
-    return {
-      id: block.letter + Date.now(),
-      shape: block.shape,
-      letter: block.letter,
-    };
-  };
 
   /**
    * Focal point determining the coordinates on the Grid that pieces are placed/oriented with.
@@ -124,7 +114,8 @@ export const GameBoard = () => {
               const x = focalPointRef.current[0] + colIndex;
               const y = focalPointRef.current[1] + rowIndex;
 
-              const { id, letter } = tetromino;
+              const { id } = tetromino;
+              const letter = getLetter(id);
 
               addOrRemovePixel(x, y, action, letter, id);
             }
@@ -205,10 +196,13 @@ export const GameBoard = () => {
     focalPointRef.current = [x, y];
     updateCurrentTetromino('add');
 
-    // if (!isMovePossible('down'))
-    //   setTimeout(() => {
-    if (!isMovePossible('down')) handleBlockLanding();
-    // }, 150);
+    // this is causing a user error:
+    //to recreate hold the down arrow while there's a current tetromino
+    // new pieces will load on top of each other
+    if (!isMovePossible('down'))
+      setTimeout(() => {
+        if (!isMovePossible('down')) handleBlockLanding();
+      }, 150);
   };
 
   const moveRowsDown = (rows: number[]) => {
@@ -248,7 +242,7 @@ export const GameBoard = () => {
   const calculateScore = (multiplier: number) => {
     const newScore =
       score +
-      multiplier * (150 * Math.floor(Math.random() * 2));
+      multiplier * (150 * Math.floor(Math.random() * 10));
 
     setScore(newScore);
   };
@@ -414,32 +408,6 @@ export const GameBoard = () => {
           console log stuff
         </button>
         <button onClick={() => pauseGame()}>pause</button>
-
-        <div className='arrow-button-container'>
-          <button className='arrow-button'>^</button>
-        </div>
-        <div className='arrow-button-container'>
-          <button
-            className='arrow-button'
-            onClick={() => handleKeyPress('ArrowLeft')}
-          >
-            {'<'}
-          </button>
-          <button
-            className='arrow-button'
-            onClick={() => handleKeyPress('ArrowRight')}
-          >
-            {'>'}
-          </button>
-        </div>
-        <div className='arrow-button-container'>
-          <button
-            className='arrow-button'
-            onClick={() => handleKeyPress('ArrowDown')}
-          >
-            v
-          </button>
-        </div>
       </div>
     </main>
   );

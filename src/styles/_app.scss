@@ -11,6 +11,17 @@
 main {
   display: flex;
   flex-direction: row;
+  justify-content: space-evenly;
+  width: 80vw;
+}
+
+.score-board {
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  width: 200px;
+  height: fit-content;
+  font-size: 50px;
 }
 
 
