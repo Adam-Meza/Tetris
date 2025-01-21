@@ -1,12 +1,28 @@
 .button-container {
-  width: 100%;
+  width: 15vw;
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
   margin: 10px;
 
   button {
     border: 0px;
-    padding: 2% 4%
+    height: 10%;
+
+    &:hover {
+      background-color: darkgrey;
+    }
+  }
+
+  .arrow-button-container{
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+  }
+
+  .arrow-button {
+    height: 30px;
+    width: 30px;
+
   }
 }
 

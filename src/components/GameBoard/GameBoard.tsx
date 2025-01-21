@@ -1,18 +1,25 @@
 import React from 'react';
 import { Grid } from '../../grid/Grid';
-import {
-  blocks,
-  TetrominoType,
-} from '../Tetromino/Tetromino';
-import { version } from 'process';
+import { blocks } from '../Tetromino/Tetromino';
+
+export type TetrominoType = {
+  shape:
+    | [string[], (string | null)[]]
+    | (string | null)[][];
+  id?: string;
+  letter: string;
+};
 
 export type PixelType = {
   x: number;
   y: number;
   id?: string | undefined;
-  html?: React.RefObject<HTMLSpanElement>;
   nextSquare?: PixelType | undefined;
   letter?: string;
+
+  // why am i doing this again???
+  // something to look into
+  html?: React.RefObject<HTMLSpanElement>;
 };
 
 type Direction = 'down' | 'left' | 'right';
@@ -27,8 +34,9 @@ export const GameBoard = () => {
   const boardHeight = 20;
   const [currentTetromino, setTetromino] =
     React.useState<TetrominoType>();
-  // const [gameOver, setGameOver] = React.useState(false);
+  const [gameOver, setGameOver] = React.useState(false);
 
+  // this would be better abstracted out
   const randomTetromino = (): TetrominoType => {
     const block =
       blocks[Math.floor(Math.random() * blocks.length)];
@@ -41,7 +49,7 @@ export const GameBoard = () => {
   };
 
   /**
-   * Focal point determining the coordinates on the Grid that pieces are placed/oriented with. Example
+   * Focal point determining the coordinates on the Grid that pieces are placed/oriented with.
    */
   const focalPointRef = React.useRef<[number, number]>([
     3, 0,
@@ -49,11 +57,16 @@ export const GameBoard = () => {
 
   /**
    * This is a mutable ref object that will be used as the point of truth for game state logic
+   *
    */
   const pixelRefs = React.useRef<{
     [key: string]: PixelType;
   }>({});
 
+  /**
+   * This sets the individual pixel ref objects and is responsible for effecting change on the dom
+   * @param pixel
+   */
   const setPixelRef = (pixel: PixelType) => {
     const key = `${pixel.x}-${pixel.y}`;
 
@@ -82,6 +95,10 @@ export const GameBoard = () => {
     if (!spanRef) return false;
 
     if (action === 'add') {
+      // right now we are both adding the class and setting the ref
+      // shouldnt one be good enough?
+      // Why isnt it enough?
+      // will i ever be enough?
       spanRef.classList.add(`${letter}-block`);
       setPixelRef({ x, y, id: id });
     } else {
@@ -94,6 +111,8 @@ export const GameBoard = () => {
     }
   };
 
+  // this will take the entire tetromino and
+  // invoke addOrRemove Pixel to update the pixel
   const updateCurrentTetromino = (
     action: 'add' | 'remove',
     tetromino = currentTetromino
@@ -116,45 +135,56 @@ export const GameBoard = () => {
     );
   };
 
-  const isMovePossible = React.useCallback(
-    (direction: Direction) => {
-      if (!currentTetromino) return;
+  const isMovePossible = (
+    direction: Direction,
+    tetromino?: TetrominoType
+  ) => {
+    const current = tetromino ?? currentTetromino;
 
-      for (let i = 0; i < boardHeight; i++) {
-        for (let j = 0; j < boardWidth; j++) {
-          let x = j;
-          let y = i;
+    for (let i = 0; i < boardHeight; i++) {
+      for (let j = 0; j < boardWidth; j++) {
+        let x = j,
+          y = i;
 
-          const square = pixelRefs?.current[`${x}-${y}`];
+        const square = pixelRefs?.current[`${x}-${y}`];
 
-          switch (direction) {
-            case 'down':
-              y += 1;
-              break;
-            case 'left':
-              x -= 1;
-              break;
-            case 'right':
-              x += 1;
-              break;
-          }
-
-          const nextSquare =
-            pixelRefs?.current[`${x}-${y}`];
-
-          if (square.id === currentTetromino.id)
-            if (
-              !nextSquare ||
-              (square.id !== nextSquare.id && nextSquare.id)
-            ) {
-              return false;
-            }
+        switch (direction) {
+          case 'down':
+            y += 1;
+            break;
+          case 'left':
+            x -= 1;
+            break;
+          case 'right':
+            x += 1;
+            break;
         }
+
+        const nextSquare = pixelRefs?.current[`${x}-${y}`];
+        const tetrominoLength =
+          current?.shape[0].length ?? 0;
+
+        // This is where the verification happens,
+        // first we check if the square in question is occupied by the current Tetromino
+        if (square.id === current?.id)
+          if (
+            // then if the next square doesn't exist return false
+            !nextSquare ||
+            /* Or if the next square does exist,
+              but the target square has an id other than the default
+             i.e. the square is already occupied, then return false */
+            (nextSquare.id &&
+              square.id !== nextSquare.id) ||
+            //Of if the length of the Tetromino plus the X value of the focal point
+            // is greater then the width of the board, return false.
+            tetrominoLength + focalPointRef.current[0] >
+              boardWidth
+          )
+            return false;
       }
-      return true;
-    },
-    [currentTetromino]
-  );
+    }
+    return true;
+  };
 
   const moveTetromino = (direction: Direction) => {
     if (!currentTetromino) return;
@@ -180,8 +210,8 @@ export const GameBoard = () => {
 
     if (!isMovePossible('down'))
       setTimeout(() => {
-        handleBlockLanding();
-      }, 200);
+        if (!isMovePossible('down')) handleBlockLanding();
+      }, 150);
   };
 
   const moveRowsDown = (rows: number[]) => {
@@ -205,13 +235,6 @@ export const GameBoard = () => {
       });
     });
   };
-
-  React.useMemo(() => {
-    console.log('we work');
-    if (currentTetromino && !isMovePossible('down')) {
-      console.log(currentTetromino);
-    }
-  }, [currentTetromino, isMovePossible]);
 
   const handleBlockLanding = async () => {
     const completedRowIndexes = findCompletedRows();
@@ -288,14 +311,9 @@ export const GameBoard = () => {
     focalPointRef.current = [3, 0];
     updateCurrentTetromino('add', tetromino);
 
-    // console.log(isMovePossible('down'));
+    // console.log(isMovePossible('dowv n'));
   };
 
-  /**
-   *
-   * @param shape
-   * @returns
-   */
   const rotateShapeClockwise = (
     shape: (string | null)[][]
   ): (string | null)[][] => {
@@ -307,7 +325,7 @@ export const GameBoard = () => {
 
     return transposedShape;
   };
-  version;
+
   const rotateTetromino = () => {
     if (!currentTetromino) return;
     const original = currentTetromino;
@@ -317,25 +335,28 @@ export const GameBoard = () => {
       shape: rotateShapeClockwise(currentTetromino.shape),
     };
 
-    updateCurrentTetromino('remove');
-    setTetromino(rotated);
-    if (isMovePossible('down'))
+    if (isMovePossible('down', rotated)) {
+      updateCurrentTetromino('remove');
+      setTetromino(rotated);
       updateCurrentTetromino('add', rotated);
-    else {
-      console.log('here');
+    } else {
       setTetromino(original);
       updateCurrentTetromino('add', original);
     }
   };
 
+  //this moves the piece downwards automatically on a constant interval
   React.useEffect(() => {
-    if (currentTetromino) {
-      const interval = setInterval(() => {
+    const interval = setInterval(() => {
+      if (currentTetromino && !gameOver)
         moveTetromino('down');
-      }, 700);
-      return () => clearInterval(interval);
-    }
+    }, 700);
+    return () => clearInterval(interval);
   });
+
+  const pauseGame = () => {
+    setGameOver(!gameOver);
+  };
 
   const handleKeyPress = (key: string) => {
     const direction = key
@@ -361,13 +382,14 @@ export const GameBoard = () => {
   };
 
   return (
-    <div onKeyDown={(event) => handleKeyPress(event.key)}>
+    <main onKeyDown={(event) => handleKeyPress(event.key)}>
       <Grid
         setPixelRef={setPixelRef}
         width={boardWidth}
         height={boardHeight}
         ref={pixelRefs}
       />
+
       <div className='button-container'>
         <button
           onClick={() => {
@@ -389,11 +411,34 @@ export const GameBoard = () => {
         >
           console log stuff
         </button>
+        <button onClick={() => pauseGame()}>pause</button>
 
-        <button onClick={() => rotateTetromino()}>
-          rotate
-        </button>
+        <div className='arrow-button-container'>
+          <button className='arrow-button'>^</button>
+        </div>
+        <div className='arrow-button-container'>
+          <button
+            className='arrow-button'
+            onClick={() => handleKeyPress('ArrowLeft')}
+          >
+            {'<'}
+          </button>
+          <button
+            className='arrow-button'
+            onClick={() => handleKeyPress('ArrowRight')}
+          >
+            {'>'}
+          </button>
+        </div>
+        <div className='arrow-button-container'>
+          <button
+            className='arrow-button'
+            onClick={() => handleKeyPress('ArrowDown')}
+          >
+            v
+          </button>
+        </div>
       </div>
-    </div>
+    </main>
   );
 };
