@@ -1,4 +1,10 @@
-import { TetrominoType } from '../GameBoard/GameBoard';
+export type TetrominoType = {
+  shape:
+    | [string[], (string | null)[]]
+    | (string | null)[][];
+  letter: string;
+  id?: string;
+};
 
 const t_block: TetrominoType = {
   letter: 't',

@@ -3,31 +3,15 @@ import { Grid } from '../../grid/Grid';
 import {
   randomTetromino,
   Direction,
+  calculateScore,
+  rotateShapeClockwise,
+  getLetter,
 } from '../../utilities';
-
-export type TetrominoType = {
-  shape:
-    | [string[], (string | null)[]]
-    | (string | null)[][];
-  id?: string;
-  // letter: string;
-};
-
-export type PixelType = {
-  x: number;
-  y: number;
-
-  // also why are there so many conditionals anyways?
-  // whats a usecasse for nextSquare? cant we calculate the next square based on x and y values?
-  id?: string | undefined;
-  letter?: string;
-  // why am i doing this again???
-  // something to look into
-  html?: React.RefObject<HTMLSpanElement>;
-};
-
+import { TetrominoType } from '../Tetromino/Tetromino';
+import { PixelType } from '../../grid/Pixel';
+import { ControlPanel } from '../ControlPanel/ControlPanel';
 /**
- * Tetris GameBoardComponent -
+ * Tetris GameBoard Component -
  * Handles almost all the logic for game play including:
  * moving, placing, and deleting Tetrominos.
  */
@@ -55,7 +39,7 @@ export const GameBoard = () => {
 
   /**
    * This sets the individual pixel ref objects and is responsible for effecting change on the dom
-   * @param pixel
+
    */
   const setPixelRef = (pixel: PixelType) => {
     const key = `${pixel.x}-${pixel.y}`;
@@ -199,10 +183,7 @@ export const GameBoard = () => {
     // this is causing a user error:
     //to recreate hold the down arrow while there's a current tetromino
     // new pieces will load on top of each other
-    if (!isMovePossible('down'))
-      setTimeout(() => {
-        if (!isMovePossible('down')) handleBlockLanding();
-      }, 150);
+    if (!isMovePossible('down')) handleBlockLanding();
   };
 
   const moveRowsDown = (rows: number[]) => {
@@ -227,24 +208,27 @@ export const GameBoard = () => {
     });
   };
 
+  // this is causing a user error:
+  //to recreate hold the down arrow while there's a current tetromino
+  // new pieces will load on top of each other
   const handleBlockLanding = () => {
-    const completedRowIndexes = findCompletedRows();
+    setTimeout(() => {
+      const completedRowIndexes = findCompletedRows();
 
-    if (completedRowIndexes) {
-      removeRows(completedRowIndexes);
-      moveRowsDown(completedRowIndexes);
-      calculateScore(completedRowIndexes.length);
-    }
+      if (completedRowIndexes) {
+        removeRows(completedRowIndexes);
+        moveRowsDown(completedRowIndexes);
 
-    makeNewTetromino();
-  };
+        const newScore = calculateScore(
+          completedRowIndexes.length,
+          score
+        );
 
-  const calculateScore = (multiplier: number) => {
-    const newScore =
-      score +
-      multiplier * (150 * Math.floor(Math.random() * 10));
+        setScore(newScore);
+      }
 
-    setScore(newScore);
+      makeNewTetromino();
+    }, 150);
   };
 
   const removeRows = (rows: number[]) => {
@@ -252,18 +236,14 @@ export const GameBoard = () => {
 
     rows.forEach((y) => {
       for (let i = 0; i < boardWidth; i++) {
-        if (!pixelRefs.current[`${i}-${y}`].id) return;
-
         const id = pixelRefs.current[`${i}-${y}`].id;
+
+        if (!id) return;
         const letter = getLetter(id);
 
         addOrRemovePixel(i, y, 'remove', letter);
       }
     });
-  };
-
-  const getLetter = (id: string | undefined) => {
-    return id?.split('')[0];
   };
 
   const reformattedRefs = () => {
@@ -311,18 +291,6 @@ export const GameBoard = () => {
 
     focalPointRef.current = [3, 0];
     updateCurrentTetromino('add', tetromino);
-  };
-
-  const rotateShapeClockwise = (
-    shape: (string | null)[][]
-  ): (string | null)[][] => {
-    const transposedShape = shape[0]
-      .map((_, colIndex) =>
-        shape.map((row) => row[colIndex])
-      )
-      .map((row) => row.reverse());
-
-    return transposedShape;
   };
 
   const rotateTetromino = () => {
@@ -376,6 +344,11 @@ export const GameBoard = () => {
     }
   };
 
+  const consoleLogData = () => {
+    console.log('currentTetromino:', currentTetromino);
+    console.log('pixelrefs:', pixelRefs.current);
+  };
+
   return (
     <main onKeyDown={(event) => handleKeyPress(event.key)}>
       <div className='score-board'>{score}</div>
@@ -386,29 +359,11 @@ export const GameBoard = () => {
         ref={pixelRefs}
       />
 
-      <div className='button-container'>
-        <button
-          onClick={() => {
-            makeNewTetromino();
-          }}
-        >
-          Place Block
-        </button>
-
-        <button
-          onClick={() => {
-            console.log(
-              'currentTetromino:',
-              currentTetromino
-            );
-
-            console.log('pixelrefs:', pixelRefs.current);
-          }}
-        >
-          console log stuff
-        </button>
-        <button onClick={() => pauseGame()}>pause</button>
-      </div>
+      <ControlPanel
+        makeNewTetromino={makeNewTetromino}
+        consoleLogData={consoleLogData}
+        pauseGame={pauseGame}
+      />
     </main>
   );
 };
