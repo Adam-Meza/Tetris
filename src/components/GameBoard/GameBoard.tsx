@@ -1,5 +1,8 @@
 import React from 'react';
 import { Grid } from '../../grid/Grid';
+import { TetrominoType } from '../Tetromino/Tetromino';
+import { PixelType } from '../../grid/Pixel';
+import { ControlPanel } from '../ControlPanel/ControlPanel';
 import {
   randomTetromino,
   Direction,
@@ -7,9 +10,7 @@ import {
   rotateShapeClockwise,
   getLetter,
 } from '../../utilities';
-import { TetrominoType } from '../Tetromino/Tetromino';
-import { PixelType } from '../../grid/Pixel';
-import { ControlPanel } from '../ControlPanel/ControlPanel';
+
 /**
  * Tetris GameBoard Component -
  * Handles almost all the logic for game play including:
@@ -74,7 +75,7 @@ export const GameBoard = () => {
       // Why isnt it enough?
       spanRef.classList.add(`${letter}-block`);
       setPixelRef({ x, y, id: id });
-    } else {
+    } else if (action === 'remove') {
       spanRef.classList.remove(`${letter}-block`);
       setPixelRef({
         x,
