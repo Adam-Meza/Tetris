@@ -85,8 +85,6 @@ export const GameBoard = () => {
     }
   };
 
-  // this will take the entire tetromino and
-  // invoke addOrRemove Pixel to update the pixel
   const updateCurrentTetromino = (
     action: 'add' | 'remove',
     tetromino = currentTetromino
@@ -181,10 +179,9 @@ export const GameBoard = () => {
     focalPointRef.current = [x, y];
     updateCurrentTetromino('add');
 
-    // this is causing a user error:
-    //to recreate hold the down arrow while there's a current tetromino
-    // new pieces will load on top of each other
-    if (!isMovePossible('down')) handleBlockLanding();
+    if (!isMovePossible('down')) {
+      handleBlockLanding();
+    }
   };
 
   const moveRowsDown = (rows: number[]) => {
@@ -209,9 +206,6 @@ export const GameBoard = () => {
     });
   };
 
-  // this is causing a user error:
-  //to recreate hold the down arrow while there's a current tetromino
-  // new pieces will load on top of each other
   const handleBlockLanding = () => {
     setTimeout(() => {
       const completedRowIndexes = findCompletedRows();
@@ -237,12 +231,13 @@ export const GameBoard = () => {
 
     rows.forEach((y) => {
       for (let i = 0; i < boardWidth; i++) {
-        const id = pixelRefs.current[`${i}-${y}`].id;
+        const x = i;
+        const id = pixelRefs.current[`${x}-${y}`].id;
 
         if (!id) return;
         const letter = getLetter(id);
 
-        addOrRemovePixel(i, y, 'remove', letter);
+        addOrRemovePixel(x, y, 'remove', letter);
       }
     });
   };
@@ -322,7 +317,17 @@ export const GameBoard = () => {
     setGameOver(!gameOver);
   };
 
-  const handleKeyPress = (key: string) => {
+  const handleKeyPress = (
+    e: React.KeyboardEvent<HTMLElement>
+  ) => {
+    if (
+      e.repeat &&
+      focalPointRef.current[0] === 3 &&
+      focalPointRef.current[1] === 0
+    )
+      return;
+
+    const { key } = e;
     const direction = key
       .replace('Arrow', '')
       .toLowerCase() as Direction;
@@ -351,7 +356,7 @@ export const GameBoard = () => {
   };
 
   return (
-    <main onKeyDown={(event) => handleKeyPress(event.key)}>
+    <main onKeyDown={(event) => handleKeyPress(event)}>
       <div className='score-board'>{score}</div>
       <Grid
         setPixelRef={setPixelRef}
