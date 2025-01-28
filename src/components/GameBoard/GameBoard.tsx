@@ -206,8 +206,13 @@ export const GameBoard = () => {
         setScore(newScore);
       }
 
+      if (pixelRefs.current[`3-0`].id) {
+        pauseGame();
+        console.log('game was paused ');
+      }
+
       makeNewTetromino();
-    }, 150);
+    }, 80);
   };
 
   const removeRows = (rows: number[]) => {
@@ -270,6 +275,7 @@ export const GameBoard = () => {
     setTetromino(tetromino);
 
     focalPointRef.current = [3, 0];
+
     updateCurrentTetromino('add', tetromino);
   };
 
@@ -311,7 +317,6 @@ export const GameBoard = () => {
     const { key, repeat } = e;
     let direction;
 
-    // this isnt working as intended
     if (
       repeat &&
       focalPointRef.current[0] === 3 &&
