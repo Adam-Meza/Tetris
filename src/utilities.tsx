@@ -8,14 +8,14 @@ export const randomTetromino = (): TetrominoType => {
     blocks[Math.floor(Math.random() * blocks.length)];
 
   return {
-    id: block?.letter + Date.now(),
+    id: block.letter + Date.now(),
     shape: block.shape,
     letter: block.letter,
   };
 };
 
-export const getLetter = (id: string | undefined) => {
-  return id?.split('')[0];
+export const getLetter = (id: string): string => {
+  return id.split('')[0];
 };
 
 export const calculateScore = (
@@ -31,7 +31,7 @@ export const calculateScore = (
 
 export const rotateShapeClockwise = (
   shape: (string | null)[][]
-): (string | null)[][] => {
+) => {
   const transposedShape = shape[0]
     .map((_, colIndex) => shape.map((row) => row[colIndex]))
     .map((row) => row.reverse());

@@ -17,8 +17,9 @@ import {
  * moving, placing, and deleting Tetrominos.
  */
 export const GameBoard = () => {
-  const boardWidth = 10;
-  const boardHeight = 20;
+  const BOARD_WIDTH = 10;
+  const BOARD_HEIGHT = 20;
+
   const [currentTetromino, setTetromino] =
     React.useState<TetrominoType>();
   const [gameOver, setGameOver] = React.useState(false);
@@ -32,15 +33,14 @@ export const GameBoard = () => {
   ]);
 
   /**
-   * This is a mutable ref object that will be used as the point of truth for game state logic
+   * Mutable ref object that will be used as the point of truth for game state logic.
    */
   const pixelRefs = React.useRef<{
     [key: string]: PixelType;
   }>({});
 
   /**
-   * This sets the individual pixel ref objects and is responsible for effecting change on the dom
-
+   * Sets the individual pixel ref objects and is responsible for effecting change on the DOM.
    */
   const setPixelRef = (pixel: PixelType) => {
     const key = `${pixel.x}-${pixel.y}`;
@@ -70,9 +70,6 @@ export const GameBoard = () => {
     if (!spanRef) return false;
 
     if (action === 'add') {
-      // right now we are both adding the class and setting the ref
-      // shouldnt one be good enough?
-      // Why isnt it enough?
       spanRef.classList.add(`${letter}-block`);
       setPixelRef({ x, y, id: id });
     } else if (action === 'remove') {
@@ -98,7 +95,7 @@ export const GameBoard = () => {
               const y = focalPointRef.current[1] + rowIndex;
 
               const { id } = tetromino;
-              const letter = getLetter(id);
+              const letter = id ? getLetter(id) : undefined;
 
               addOrRemovePixel(x, y, action, letter, id);
             }
@@ -112,10 +109,10 @@ export const GameBoard = () => {
     direction: Direction,
     current = currentTetromino
   ) => {
-    for (let i = 0; i < boardHeight; i++) {
-      for (let j = 0; j < boardWidth; j++) {
-        let x = j,
-          y = i;
+    for (let i = 0; i < BOARD_HEIGHT; i++) {
+      for (let j = 0; j < BOARD_WIDTH; j++) {
+        let x = j;
+        let y = i;
 
         const square = pixelRefs?.current[`${x}-${y}`];
 
@@ -132,24 +129,11 @@ export const GameBoard = () => {
         }
 
         const nextSquare = pixelRefs?.current[`${x}-${y}`];
-        const tetrominoLength =
-          current?.shape[0].length ?? 0;
 
-        // This is where the verification happens,
-        // first we check if the square in question is occupied by the current Tetromino
         if (square.id === current?.id)
           if (
-            // then if the next square doesn't exist return false
             !nextSquare ||
-            /* Or if the next square does exist,
-              but the target square has an id other than the default
-             i.e. the square is already occupied, then return false */
-            (nextSquare.id &&
-              square.id !== nextSquare.id) ||
-            //Of if the length of the Tetromino plus the X value of the focal point
-            // is greater then the width of the board, return false.
-            tetrominoLength + focalPointRef.current[0] >
-              boardWidth
+            (nextSquare.id && square.id !== nextSquare.id)
           )
             return false;
       }
@@ -191,7 +175,7 @@ export const GameBoard = () => {
       row.forEach((pixel) => {
         if (pixel.y < rows[0]) {
           const { x, y, id } = pixel;
-          const letter = getLetter(id);
+          const letter = id ? getLetter(id) : undefined;
 
           addOrRemovePixel(x, y, 'remove', letter);
           addOrRemovePixel(
@@ -230,7 +214,7 @@ export const GameBoard = () => {
     if (!rows) return;
 
     rows.forEach((y) => {
-      for (let i = 0; i < boardWidth; i++) {
+      for (let i = 0; i < BOARD_WIDTH; i++) {
         const x = i;
         const id = pixelRefs.current[`${x}-${y}`].id;
 
@@ -245,10 +229,10 @@ export const GameBoard = () => {
   const reformattedRefs = () => {
     const pixelsInRows = [];
 
-    for (let i = 0; i < boardHeight; i++) {
+    for (let i = 0; i < BOARD_HEIGHT; i++) {
       const row = [];
 
-      for (let j = 0; j < boardWidth; j++) {
+      for (let j = 0; j < BOARD_WIDTH; j++) {
         const pixel = pixelRefs.current[`${j}-${i}`];
         row.push(pixel);
       }
@@ -278,7 +262,7 @@ export const GameBoard = () => {
       (focalPointRef.current[0] === 3 &&
         focalPointRef.current[1] === 0 &&
         currentTetromino) ||
-      isMovePossible('down')
+      isMovePossible('down', currentTetromino)
     )
       return;
 
@@ -297,14 +281,18 @@ export const GameBoard = () => {
       shape: rotateShapeClockwise(currentTetromino.shape),
     };
 
-    if (isMovePossible('down', rotated)) {
+    const tetrominoLength = rotated.shape[0].length ?? 0;
+
+    if (
+      tetrominoLength + focalPointRef.current[0] <=
+      BOARD_WIDTH
+    ) {
       updateCurrentTetromino('remove');
       setTetromino(rotated);
       updateCurrentTetromino('add', rotated);
     }
   };
 
-  //this moves the piece downwards automatically on a constant interval
   React.useEffect(() => {
     const interval = setInterval(() => {
       if (currentTetromino && !gameOver)
@@ -320,22 +308,25 @@ export const GameBoard = () => {
   const handleKeyPress = (
     e: React.KeyboardEvent<HTMLElement>
   ) => {
+    const { key, repeat } = e;
+    let direction;
+
+    // this isnt working as intended
     if (
-      e.repeat &&
+      repeat &&
       focalPointRef.current[0] === 3 &&
       focalPointRef.current[1] === 0
     )
       return;
 
-    const { key } = e;
-    const direction = key
-      .replace('Arrow', '')
-      .toLowerCase() as Direction;
-
     switch (key) {
       case 'ArrowDown':
       case 'ArrowLeft':
       case 'ArrowRight':
+        direction = key
+          .replace('Arrow', '')
+          .toLowerCase() as Direction;
+
         if (isMovePossible(direction))
           moveTetromino(direction);
         return;
@@ -344,8 +335,6 @@ export const GameBoard = () => {
         return;
       case 'Shift':
         rotateTetromino();
-        return;
-      default:
         return;
     }
   };
@@ -360,8 +349,8 @@ export const GameBoard = () => {
       <div className='score-board'>{score}</div>
       <Grid
         setPixelRef={setPixelRef}
-        width={boardWidth}
-        height={boardHeight}
+        width={BOARD_WIDTH}
+        height={BOARD_HEIGHT}
         ref={pixelRefs}
       />
 
