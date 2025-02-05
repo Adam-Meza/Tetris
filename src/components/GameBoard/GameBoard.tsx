@@ -192,6 +192,8 @@ export const GameBoard = () => {
 
   const handleBlockLanding = () => {
     setTimeout(() => {
+      if (!currentTetromino) return;
+
       const completedRowIndexes = findCompletedRows();
 
       if (completedRowIndexes) {
@@ -204,11 +206,13 @@ export const GameBoard = () => {
         );
 
         setScore(newScore);
-      }
-
-      if (pixelRefs.current[`3-0`].id) {
+      } else if (
+        currentTetromino.shape.length +
+          focalPointRef.current[1] <=
+        3
+      ) {
+        console.log('game is over');
         pauseGame();
-        console.log('game was paused ');
       }
 
       makeNewTetromino();
@@ -347,6 +351,7 @@ export const GameBoard = () => {
   const consoleLogData = () => {
     console.log('currentTetromino:', currentTetromino);
     console.log('pixelrefs:', pixelRefs.current);
+    console.log('gameOver', gameOver);
   };
 
   return (
