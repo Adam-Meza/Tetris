@@ -2,7 +2,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(var(--pixel-width),1fr);
+  grid-template-columns: repeat(var(--pixel-width), 1fr);
   grid-template-rows: repeat(var(--pixel-height), 1fr);
   height: fit-content;
   width: fit-content;

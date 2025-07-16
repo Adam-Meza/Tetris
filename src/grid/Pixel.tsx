@@ -1,11 +1,20 @@
 import React from 'react';
-import { PixelType } from '../components/GameBoard/GameBoard';
 
 export type PixelProps = {
   x: number;
   y: number;
   setPixelRef: (pixel: PixelType) => void;
 };
+
+export type PixelType = {
+  x: number;
+  y: number;
+  id?: string | undefined;
+  // why am i doing this again???
+  // something to look into
+  html?: React.RefObject<HTMLSpanElement>;
+};
+
 
 /**
  * Pixel component - uses forwarded pixelRef to rerender itself

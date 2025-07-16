@@ -1,10 +1,10 @@
-export interface TetrominoType {
+export type TetrominoType = {
   shape:
     | [string[], (string | null)[]]
     | (string | null)[][];
-  id?: string;
   letter: string;
-}
+  id?: string;
+};
 
 const t_block: TetrominoType = {
   letter: 't',

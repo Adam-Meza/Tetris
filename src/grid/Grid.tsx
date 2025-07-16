@@ -1,7 +1,6 @@
 import React from 'react';
 import { Pixel } from './Pixel';
-import { PixelType } from '../components/GameBoard/GameBoard';
-
+import { PixelType } from './Pixel';
 /**
  * Props for Grid component
  * @param width number
@@ -11,8 +10,8 @@ import { PixelType } from '../components/GameBoard/GameBoard';
  */
 type GridProps = {
   width: number;
-  height?: number;
   setPixelRef: (pixel: PixelType) => void;
+  height?: number;
 };
 
 /**
@@ -51,8 +50,8 @@ export const Grid = React.forwardRef((props: GridProps) => {
   };
 
   return (
-    <div className='grid' style={styles}>
+    <section className='grid' style={styles}>
       {pixels()}
-    </div>
+    </section>
   );
 });
