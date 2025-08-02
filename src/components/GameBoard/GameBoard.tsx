@@ -17,6 +17,7 @@ import {
  * moving, placing, and deleting Tetrominos.
  */
 export const GameBoard = () => {
+  console.log('Gamnboard Render');
   const BOARD_WIDTH = 10;
   const BOARD_HEIGHT = 20;
 
@@ -207,6 +208,7 @@ export const GameBoard = () => {
 
         setScore(newScore);
       } else if (
+        // This SHOULD hypothetically end the game.
         currentTetromino.shape.length +
           focalPointRef.current[1] <=
         3
@@ -283,6 +285,7 @@ export const GameBoard = () => {
     updateCurrentTetromino('add', tetromino);
   };
 
+  // CODE I DONT KNOW HOW IT WORKS EXACTLY
   const rotateTetromino = () => {
     if (!currentTetromino) return;
 
@@ -308,6 +311,7 @@ export const GameBoard = () => {
       if (currentTetromino && !gameOver)
         moveTetromino('down');
     }, 700);
+
     return () => clearInterval(interval);
   });
 

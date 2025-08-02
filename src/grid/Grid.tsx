@@ -19,6 +19,7 @@ type GridProps = {
  */
 export const Grid = React.forwardRef((props: GridProps) => {
   const { width, height = null, setPixelRef } = props;
+  console.log('Grid Render');
 
   const trueHeight = height ?? width;
 

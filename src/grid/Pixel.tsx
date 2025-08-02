@@ -15,7 +15,6 @@ export type PixelType = {
   html?: React.RefObject<HTMLSpanElement>;
 };
 
-
 /**
  * Pixel component - uses forwarded pixelRef to rerender itself
  * 
