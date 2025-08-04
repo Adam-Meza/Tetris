@@ -1,12 +1,15 @@
 type ControlPanelProps = {
   makeNewTetromino: () => void;
-  pauseGame: () => void;
+  setGameOverState: (state: boolean) => void;
   consoleLogData: () => void;
 };
 
 export const ControlPanel = (props: ControlPanelProps) => {
-  const { makeNewTetromino, pauseGame, consoleLogData } =
-    props;
+  const {
+    makeNewTetromino,
+    setGameOverState,
+    consoleLogData,
+  } = props;
 
   return (
     <div className='button-container'>
@@ -25,7 +28,12 @@ export const ControlPanel = (props: ControlPanelProps) => {
       >
         console log stuff
       </button>
-      <button onClick={() => pauseGame()}>pause</button>
+      <button onClick={() => setGameOverState(false)}>
+        start
+      </button>
+      <button onClick={() => setGameOverState(true)}>
+        pause
+      </button>
     </div>
   );
 };

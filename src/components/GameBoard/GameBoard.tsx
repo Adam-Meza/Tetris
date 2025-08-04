@@ -194,6 +194,7 @@ export const GameBoard = () => {
   const handleBlockLanding = () => {
     setTimeout(() => {
       if (!currentTetromino) return;
+      console.log(currentTetromino.letter);
 
       const completedRowIndexes = findCompletedRows();
 
@@ -207,14 +208,6 @@ export const GameBoard = () => {
         );
 
         setScore(newScore);
-      } else if (
-        // This SHOULD hypothetically end the game.
-        currentTetromino.shape.length +
-          focalPointRef.current[1] <=
-        3
-      ) {
-        console.log('game is over');
-        pauseGame();
       }
 
       makeNewTetromino();
@@ -269,13 +262,20 @@ export const GameBoard = () => {
   };
 
   const makeNewTetromino = () => {
-    if (
-      (focalPointRef.current[0] === 3 &&
-        focalPointRef.current[1] === 0 &&
-        currentTetromino) ||
-      isMovePossible('down', currentTetromino)
-    )
-      return;
+    if (currentTetromino) {
+      const currentX = focalPointRef.current[0];
+      const currentY = focalPointRef.current[1];
+
+      if (
+        (currentX === 3 && currentY === 0) ||
+        isMovePossible('down', currentTetromino)
+      )
+        return;
+      if (currentTetromino.shape.length + currentY <= 3) {
+        setGameOverState(true);
+        return;
+      }
+    }
 
     const tetromino = randomTetromino();
     setTetromino(tetromino);
@@ -294,7 +294,7 @@ export const GameBoard = () => {
       shape: rotateShapeClockwise(currentTetromino.shape),
     };
 
-    const tetrominoLength = rotated.shape[0].length ?? 0;
+    const tetrominoLength = rotated.shape[0].length;
 
     if (
       tetrominoLength + focalPointRef.current[0] <=
@@ -315,8 +315,8 @@ export const GameBoard = () => {
     return () => clearInterval(interval);
   });
 
-  const pauseGame = () => {
-    setGameOver(!gameOver);
+  const setGameOverState = (state: boolean) => {
+    setGameOver(state);
   };
 
   const handleKeyPress = (
@@ -326,9 +326,10 @@ export const GameBoard = () => {
     let direction;
 
     if (
-      repeat &&
-      focalPointRef.current[0] === 3 &&
-      focalPointRef.current[1] === 0
+      (repeat &&
+        focalPointRef.current[0] === 3 &&
+        focalPointRef.current[1] === 0) ||
+      gameOver
     )
       return;
 
@@ -360,7 +361,7 @@ export const GameBoard = () => {
 
   return (
     <main onKeyDown={(event) => handleKeyPress(event)}>
-      <div className='score-board'>{score}</div>
+      <div className='score-board'>{`${gameOver}`}</div>
       <Grid
         setPixelRef={setPixelRef}
         width={BOARD_WIDTH}
@@ -371,7 +372,7 @@ export const GameBoard = () => {
       <ControlPanel
         makeNewTetromino={makeNewTetromino}
         consoleLogData={consoleLogData}
-        pauseGame={pauseGame}
+        setGameOverState={setGameOverState}
       />
     </main>
   );
