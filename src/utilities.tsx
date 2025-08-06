@@ -1,7 +1,7 @@
 import { blocks } from './components/Tetromino/Tetromino';
 import { TetrominoType } from './components/Tetromino/Tetromino';
 
-export type Direction = 'down' | 'left' | 'right';
+export type Direction = 'down' | 'left' | 'right' | 'same';
 
 export const randomTetromino = (): TetrominoType => {
   const block =
@@ -37,4 +37,27 @@ export const rotateShapeClockwise = (
     .map((row) => row.reverse());
 
   return transposedShape;
+};
+
+export const makeNewCoordinates = (
+  x: number,
+  y: number,
+  direction: Direction
+) => {
+  let newX = x;
+  let newY = y;
+
+  switch (direction) {
+    case 'down':
+      newY += 1;
+      break;
+    case 'left':
+      newX -= 1;
+      break;
+    case 'right':
+      newX += 1;
+      break;
+  }
+
+  return [newX, newY];
 };

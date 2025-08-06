@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid } from '../../grid/Grid';
 import { TetrominoType } from '../Tetromino/Tetromino';
-import { Pixel, PixelType } from '../../grid/Pixel';
+import { PixelType } from '../../grid/Pixel';
 import { ControlPanel } from '../ControlPanel/ControlPanel';
 import {
   randomTetromino,
@@ -9,6 +9,7 @@ import {
   calculateScore,
   rotateShapeClockwise,
   getLetter,
+  makeNewCoordinates,
 } from '../../utilities';
 
 /**
@@ -109,7 +110,7 @@ export const GameBoard = () => {
   const isMovePossible = (
     direction: Direction,
     current = currentTetromino
-  ) => {
+  ): boolean => {
     for (let i = 0; i < BOARD_HEIGHT; i++) {
       for (let j = 0; j < BOARD_WIDTH; j++) {
         let x = j;
@@ -117,17 +118,7 @@ export const GameBoard = () => {
 
         const square = pixelRefs?.current[`${x}-${y}`];
 
-        switch (direction) {
-          case 'down':
-            y += 1;
-            break;
-          case 'left':
-            x -= 1;
-            break;
-          case 'right':
-            x += 1;
-            break;
-        }
+        [x, y] = makeNewCoordinates(x, y, direction);
 
         const nextSquare = pixelRefs?.current[`${x}-${y}`];
 
@@ -147,25 +138,15 @@ export const GameBoard = () => {
     let [x, y] = focalPointRef.current;
 
     if (isMovePossible(direction)) {
-      switch (direction) {
-        case 'down':
-          y += 1;
-          break;
-        case 'left':
-          x -= 1;
-          break;
-        case 'right':
-          x += 1;
-          break;
+      [x, y] = makeNewCoordinates(x, y, direction);
+
+      updateCurrentTetromino('remove');
+      focalPointRef.current = [x, y];
+      updateCurrentTetromino('add');
+
+      if (!isMovePossible('down')) {
+        handleBlockLanding();
       }
-    }
-
-    updateCurrentTetromino('remove');
-    focalPointRef.current = [x, y];
-    updateCurrentTetromino('add');
-
-    if (!isMovePossible('down')) {
-      handleBlockLanding();
     }
   };
 
@@ -283,11 +264,9 @@ export const GameBoard = () => {
     setTetromino(tetromino);
 
     focalPointRef.current = [3, 0];
-
     updateCurrentTetromino('add', tetromino);
   };
 
-  // CODE I DONT KNOW HOW IT WORKS EXACTLY
   const rotateTetromino = () => {
     if (!currentTetromino) return;
 
@@ -300,7 +279,8 @@ export const GameBoard = () => {
 
     if (
       tetrominoLength + focalPointRef.current[0] <=
-      BOARD_WIDTH
+        BOARD_WIDTH &&
+      isMovePossible('same', rotated)
     ) {
       updateCurrentTetromino('remove');
       setTetromino(rotated);
@@ -338,9 +318,7 @@ export const GameBoard = () => {
         direction = key
           .replace('Arrow', '')
           .toLowerCase() as Direction;
-
-        if (isMovePossible(direction))
-          moveTetromino(direction);
+        moveTetromino(direction);
         return;
       case 'Enter':
         makeNewTetromino();
