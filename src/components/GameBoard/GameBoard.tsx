@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid } from '../../grid/Grid';
 import { TetrominoType } from '../Tetromino/Tetromino';
-import { PixelType } from '../../grid/Pixel';
+import { Pixel, PixelType } from '../../grid/Pixel';
 import { ControlPanel } from '../ControlPanel/ControlPanel';
 import {
   randomTetromino,
@@ -194,7 +194,6 @@ export const GameBoard = () => {
   const handleBlockLanding = () => {
     setTimeout(() => {
       if (!currentTetromino) return;
-      console.log(currentTetromino.letter);
 
       const completedRowIndexes = findCompletedRows();
 
@@ -261,17 +260,20 @@ export const GameBoard = () => {
     return rowsToRemove;
   };
 
-  const makeNewTetromino = () => {
-    if (currentTetromino) {
-      const currentX = focalPointRef.current[0];
-      const currentY = focalPointRef.current[1];
+  const makeNewTetromino = (override?: boolean) => {
+    let current;
+
+    if (!override) current = currentTetromino;
+
+    if (current) {
+      const [x, y] = focalPointRef.current;
 
       if (
-        (currentX === 3 && currentY === 0) ||
-        isMovePossible('down', currentTetromino)
+        (x === 3 && y === 0) ||
+        isMovePossible('down', current)
       )
         return;
-      if (currentTetromino.shape.length + currentY <= 3) {
+      if (current.shape.length + y <= 3) {
         setGameOverState(true);
         return;
       }
@@ -323,15 +325,11 @@ export const GameBoard = () => {
     e: React.KeyboardEvent<HTMLElement>
   ) => {
     const { key, repeat } = e;
+    const [x, y] = focalPointRef.current;
+
     let direction;
 
-    if (
-      (repeat &&
-        focalPointRef.current[0] === 3 &&
-        focalPointRef.current[1] === 0) ||
-      gameOver
-    )
-      return;
+    if ((repeat && x === 3 && y === 0) || gameOver) return;
 
     switch (key) {
       case 'ArrowDown':
@@ -359,6 +357,26 @@ export const GameBoard = () => {
     console.log('gameOver', gameOver);
   };
 
+  const clearBoard = () => {
+    for (let i = 0; i < BOARD_HEIGHT; i++) {
+      for (let j = 0; j < BOARD_WIDTH; j++) {
+        const id = pixelRefs.current[`${j}-${i}`].id;
+
+        if (id) {
+          const letter = getLetter(id);
+          addOrRemovePixel(j, i, 'remove', letter, id);
+        }
+      }
+    }
+  };
+
+  const startNewGame = () => {
+    setTetromino(undefined);
+    clearBoard();
+    setGameOver(false);
+    makeNewTetromino(true);
+  };
+
   return (
     <main onKeyDown={(event) => handleKeyPress(event)}>
       <div className='score-board'>{`${gameOver}`}</div>
@@ -370,7 +388,7 @@ export const GameBoard = () => {
       />
 
       <ControlPanel
-        makeNewTetromino={makeNewTetromino}
+        startNewGame={startNewGame}
         consoleLogData={consoleLogData}
         setGameOverState={setGameOverState}
       />

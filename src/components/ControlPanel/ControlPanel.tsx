@@ -1,24 +1,21 @@
 type ControlPanelProps = {
-  makeNewTetromino: () => void;
+  startNewGame: () => void;
   setGameOverState: (state: boolean) => void;
   consoleLogData: () => void;
 };
 
 export const ControlPanel = (props: ControlPanelProps) => {
-  const {
-    makeNewTetromino,
-    setGameOverState,
-    consoleLogData,
-  } = props;
+  const { startNewGame, setGameOverState, consoleLogData } =
+    props;
 
   return (
     <div className='button-container'>
       <button
         onClick={() => {
-          makeNewTetromino();
+          startNewGame();
         }}
       >
-        Place Block
+        New Game
       </button>
 
       <button
