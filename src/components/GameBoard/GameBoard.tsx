@@ -11,9 +11,12 @@ import {
   getLetter,
   makeNewCoordinates,
 } from '../../utilities';
-import { atom, useAtom } from 'jotai';
-
-const scoreAtom = atom(0);
+import { useAtom } from 'jotai';
+import {
+  scoreAtom,
+  gameOverAtom,
+  currentTetrominoAtom,
+} from '../../atoms';
 
 /**
  * Tetris GameBoard Component -
@@ -25,9 +28,10 @@ export const GameBoard = () => {
   const BOARD_WIDTH = 10;
   const BOARD_HEIGHT = 20;
 
-  const [currentTetromino, setTetromino] =
-    React.useState<TetrominoType>(randomTetromino());
-  const [gameOver, setGameOver] = React.useState(true);
+  const [currentTetromino, setTetromino] = useAtom(
+    currentTetrominoAtom
+  );
+  const [gameOver, setGameOver] = useAtom(gameOverAtom);
   const [score, setScore] = useAtom(scoreAtom);
 
   /**
