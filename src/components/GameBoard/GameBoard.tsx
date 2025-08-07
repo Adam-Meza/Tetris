@@ -11,6 +11,9 @@ import {
   getLetter,
   makeNewCoordinates,
 } from '../../utilities';
+import { atom, useAtom } from 'jotai';
+
+const scoreAtom = atom(0);
 
 /**
  * Tetris GameBoard Component -
@@ -25,7 +28,7 @@ export const GameBoard = () => {
   const [currentTetromino, setTetromino] =
     React.useState<TetrominoType>(randomTetromino());
   const [gameOver, setGameOver] = React.useState(true);
-  const [score, setScore] = React.useState(0);
+  const [score, setScore] = useAtom(scoreAtom);
 
   /**
    * Focal point determining the coordinates on the Grid that pieces are placed/oriented with.
@@ -373,7 +376,7 @@ export const GameBoard = () => {
 
   return (
     <main onKeyDown={(event) => handleKeyPress(event)}>
-      <div className='score-board'>{`${gameOver}`}</div>
+      <div className='score-board'>{`${score}`}</div>
       <Grid
         setPixelRef={setPixelRef}
         width={BOARD_WIDTH}
