@@ -24,7 +24,7 @@ import {
  * moving, placing, and deleting Tetrominos.
  */
 export const GameBoard = () => {
-  console.log('Gamnboard Render');
+  // console.log('Gameboard Render');
   const BOARD_WIDTH = 10;
   const BOARD_HEIGHT = 20;
 
@@ -95,10 +95,13 @@ export const GameBoard = () => {
     action: 'add' | 'remove',
     tetromino = currentTetromino
   ) => {
-    tetromino?.shape.forEach(
+    tetromino.shape.forEach(
       (row: (string | null)[], rowIndex: number) => {
         row.forEach(
           (cell: string | null, colIndex: number) => {
+            // some parts of the shape will be null,
+            // this ensures we are only updating
+            // DOM and data model for filled squares
             if (cell) {
               const x = focalPointRef.current[0] + colIndex;
               const y = focalPointRef.current[1] + rowIndex;
@@ -112,19 +115,23 @@ export const GameBoard = () => {
         );
       }
     );
+
+    if (!isMovePossible('down', tetromino))
+      handleBlockLanding();
   };
 
   const isMovePossible = (
     direction: Direction,
-    tetromino = currentTetromino
+    tetromino = currentTetromino,
+    focalPoint = focalPointRef
   ): boolean => {
     const tetrominoHeight = tetromino.shape.length;
     const tetrominoWidth = tetromino.shape[0].length;
 
     for (let i = 0; i < tetrominoHeight; i++) {
       for (let j = 0; j < tetrominoWidth; j++) {
-        const x = j + focalPointRef.current[0];
-        const y = i + focalPointRef.current[1];
+        const x = j + focalPoint.current[0];
+        const y = i + focalPoint.current[1];
         const [targetX, targetY] = makeNewCoordinates(
           x,
           y,
@@ -137,23 +144,42 @@ export const GameBoard = () => {
         const nextSquare =
           pixelRefs?.current[`${targetX}-${targetY}`];
 
-        if (!nextSquare) return false;
-
-        if (nextSquare.id) {
-          if (
-            currentSquare.id === tetromino.id &&
-            nextSquare.id !== currentSquare.id
-          )
-            return false;
-          else if (
-            tetromino !== currentTetromino &&
-            nextSquare.id !== tetromino.id
-          ) {
-            return false;
-          }
-        }
+        if (!runCheck(currentSquare, nextSquare, tetromino))
+          return false;
       }
     }
+    return true;
+  };
+
+  const runCheck = (
+    currentSquare: PixelType,
+    nextSquare: PixelType,
+    tetromino: TetrominoType
+  ) => {
+    //If the next sqaure doesn't exist, move is not possible
+    //return false.
+    if (!nextSquare) return false;
+    // The following code will only check if the nextSqaure is occupied
+    if (nextSquare.id) {
+      if (
+        //first we check if the current square is occupied
+        // i.e. parts of each tetromino will have blank spaces
+        // that do not carry and ID
+        // if thats true, we make sure the
+        (currentSquare.id === tetromino.id &&
+          nextSquare.id !== currentSquare.id) ||
+        // given that the nextSquare has an id,
+        // if the tetromino in question is not the current
+        // then we check if nextSquare is occupied by anooter piece
+        // based on the given tetromino NOT the current pixelRef
+        (tetromino !== currentTetromino &&
+          nextSquare.id !== tetromino.id)
+      )
+        return false;
+    }
+
+    // if none of the falsifying conditions are met
+    // move is possible, return true
     return true;
   };
 
@@ -167,10 +193,6 @@ export const GameBoard = () => {
       updateCurrentTetromino('remove');
       focalPointRef.current = [x, y];
       updateCurrentTetromino('add');
-
-      if (!isMovePossible('down')) {
-        handleBlockLanding();
-      }
     }
   };
 
@@ -198,8 +220,6 @@ export const GameBoard = () => {
 
   const handleBlockLanding = () => {
     setTimeout(() => {
-      if (!currentTetromino) return;
-
       const completedRowIndexes = findCompletedRows();
 
       if (completedRowIndexes) {
@@ -265,35 +285,32 @@ export const GameBoard = () => {
     return rowsToRemove;
   };
 
-  const makeNewTetromino = (override?: boolean) => {
-    let current;
+  const makeNewTetromino = () => {
+    const current = currentTetromino;
+    const [x, y] = focalPointRef.current;
 
-    if (!override) current = currentTetromino;
-
-    if (current) {
-      const [x, y] = focalPointRef.current;
-
-      if (
-        (x === 3 && y === 0) ||
-        isMovePossible('down', current)
-      )
-        return;
-      if (current.shape.length + y <= 3) {
-        setGameOverState(true);
-        return;
-      }
+    if (isMovePossible('down', current)) return;
+    if (current.shape.length + y <= 3) {
+      setGameOverState(true);
+      return;
     }
-
     const tetromino = randomTetromino();
     setTetromino(tetromino);
+
+    if (
+      !isMovePossible('same', tetromino, {
+        current: [3, 0],
+      })
+    ) {
+      setGameOverState(true);
+      return;
+    }
 
     focalPointRef.current = [3, 0];
     updateCurrentTetromino('add', tetromino);
   };
 
   const rotateTetromino = () => {
-    if (!currentTetromino) return;
-
     const rotated = {
       ...currentTetromino,
       shape: rotateShapeClockwise(currentTetromino.shape),
@@ -322,6 +339,7 @@ export const GameBoard = () => {
   });
 
   const setGameOverState = (state: boolean) => {
+    focalPointRef.current = [3, 0];
     setGameOver(state);
   };
 
@@ -373,9 +391,10 @@ export const GameBoard = () => {
   };
 
   const startNewGame = () => {
+    setGameOverState(true);
     clearBoard();
-    setGameOver(false);
-    makeNewTetromino(true);
+    setGameOverState(false);
+    makeNewTetromino();
   };
 
   return (

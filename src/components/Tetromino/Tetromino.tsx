@@ -22,17 +22,17 @@ const o_block: TetrominoType = {
   ],
 };
 
-const l_block: TetrominoType = {
-  letter: 'l',
+const j_block: TetrominoType = {
+  letter: 'j',
   shape: [
-    [null, 'l'],
-    [null, 'l'],
-    ['l', 'l'],
+    [null, 'j'],
+    [null, 'j'],
+    ['j', 'j'],
   ],
 };
 
-const j_block: TetrominoType = {
-  letter: 'j',
+const l_block: TetrominoType = {
+  letter: 'l',
   shape: [
     ['l', null],
     ['l', null],

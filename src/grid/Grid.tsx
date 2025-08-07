@@ -19,13 +19,11 @@ type GridProps = {
  */
 export const Grid = React.forwardRef((props: GridProps) => {
   const { width, height = null, setPixelRef } = props;
-  console.log('Grid Render');
 
   const trueHeight = height ?? width;
 
   // this is setting the size of the grid based on provided values
   // by passing those via custom properties to the scss
-
   const styles = {
     '--pixel-width': width,
     '--pixel-height': trueHeight,

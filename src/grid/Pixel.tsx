@@ -41,5 +41,5 @@ export const Pixel = React.forwardRef<
     });
   }, [x, y, pixelRef, setPixelRef]);
 
-  return <span ref={pixelRef}></span>;
+  return <span ref={pixelRef}>{/* {x}-{y} */}</span>;
 });

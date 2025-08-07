@@ -1,4 +1,4 @@
-import { atom, useAtom } from 'jotai';
+import { atom } from 'jotai';
 import { randomTetromino } from './utilities';
 
 export const scoreAtom = atom(0);
