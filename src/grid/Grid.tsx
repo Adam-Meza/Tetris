@@ -17,7 +17,7 @@ type GridProps = {
 /**
  * Grid React component
  */
-export const Grid = React.forwardRef((props: GridProps) => {
+export const Grid = (props: GridProps) => {
   const { width, height = null, setPixelRef } = props;
 
   const trueHeight = height ?? width;
@@ -56,4 +56,4 @@ export const Grid = React.forwardRef((props: GridProps) => {
       {pixels()}
     </section>
   );
-});
+};

@@ -294,6 +294,7 @@ export const GameBoard = () => {
       setGameOverState(true);
       return;
     }
+
     const tetromino = randomTetromino();
     setTetromino(tetromino);
 
@@ -404,7 +405,6 @@ export const GameBoard = () => {
         setPixelRef={setPixelRef}
         width={BOARD_WIDTH}
         height={BOARD_HEIGHT}
-        ref={pixelRefs}
       />
 
       <ControlPanel

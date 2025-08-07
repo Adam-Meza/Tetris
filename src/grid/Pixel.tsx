@@ -25,10 +25,7 @@ export type PixelType = {
       y={6}
   />
  */
-export const Pixel = React.forwardRef<
-  HTMLSpanElement,
-  PixelProps
->((props, ref) => {
+export const Pixel = (props: PixelProps) => {
   const { setPixelRef, x, y } = props;
 
   const pixelRef = React.useRef<HTMLSpanElement>(null);
@@ -42,4 +39,4 @@ export const Pixel = React.forwardRef<
   }, [x, y, pixelRef, setPixelRef]);
 
   return <span ref={pixelRef}>{/* {x}-{y} */}</span>;
-});
+};
