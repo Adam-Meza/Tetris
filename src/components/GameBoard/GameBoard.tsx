@@ -23,8 +23,8 @@ export const GameBoard = () => {
   const BOARD_HEIGHT = 20;
 
   const [currentTetromino, setTetromino] =
-    React.useState<TetrominoType>();
-  const [gameOver, setGameOver] = React.useState(false);
+    React.useState<TetrominoType>(randomTetromino());
+  const [gameOver, setGameOver] = React.useState(true);
   const [score, setScore] = React.useState(0);
 
   /**
@@ -109,25 +109,42 @@ export const GameBoard = () => {
 
   const isMovePossible = (
     direction: Direction,
-    current = currentTetromino
+    tetromino = currentTetromino
   ): boolean => {
-    for (let i = 0; i < BOARD_HEIGHT; i++) {
-      for (let j = 0; j < BOARD_WIDTH; j++) {
-        let x = j;
-        let y = i;
+    const tetrominoHeight = tetromino.shape.length;
+    const tetrominoWidth = tetromino.shape[0].length;
 
-        const square = pixelRefs?.current[`${x}-${y}`];
+    for (let i = 0; i < tetrominoHeight; i++) {
+      for (let j = 0; j < tetrominoWidth; j++) {
+        const x = j + focalPointRef.current[0];
+        const y = i + focalPointRef.current[1];
+        const [targetX, targetY] = makeNewCoordinates(
+          x,
+          y,
+          direction
+        );
 
-        [x, y] = makeNewCoordinates(x, y, direction);
+        const currentSquare =
+          pixelRefs?.current[`${x}-${y}`];
 
-        const nextSquare = pixelRefs?.current[`${x}-${y}`];
+        const nextSquare =
+          pixelRefs?.current[`${targetX}-${targetY}`];
 
-        if (square.id === current?.id)
+        if (!nextSquare) return false;
+
+        if (nextSquare.id) {
           if (
-            !nextSquare ||
-            (nextSquare.id && square.id !== nextSquare.id)
+            currentSquare.id === tetromino.id &&
+            nextSquare.id !== currentSquare.id
           )
             return false;
+          else if (
+            tetromino !== currentTetromino &&
+            nextSquare.id !== tetromino.id
+          ) {
+            return false;
+          }
+        }
       }
     }
     return true;
@@ -349,7 +366,6 @@ export const GameBoard = () => {
   };
 
   const startNewGame = () => {
-    setTetromino(undefined);
     clearBoard();
     setGameOver(false);
     makeNewTetromino(true);
