@@ -17,6 +17,7 @@ import {
   gameOverAtom,
   currentTetrominoAtom,
 } from '../../atoms';
+import Info from '../Info/Info';
 
 /**
  * Tetris GameBoard Component -
@@ -400,18 +401,19 @@ export const GameBoard = () => {
 
   return (
     <main onKeyDown={(event) => handleKeyPress(event)}>
-      <div className='score-board'>{`${score}`}</div>
-      <Grid
-        setPixelRef={setPixelRef}
-        width={BOARD_WIDTH}
-        height={BOARD_HEIGHT}
-      />
-
-      <ControlPanel
-        startNewGame={startNewGame}
-        consoleLogData={consoleLogData}
-        setGameOverState={setGameOverState}
-      />
+      <Info />
+      <section>
+        <Grid
+          setPixelRef={setPixelRef}
+          width={BOARD_WIDTH}
+          height={BOARD_HEIGHT}
+        />
+        <ControlPanel
+          startNewGame={startNewGame}
+          consoleLogData={consoleLogData}
+          setGameOverState={setGameOverState}
+        />
+      </section>
     </main>
   );
 };

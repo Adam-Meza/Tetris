@@ -1,29 +1,17 @@
 .button-container {
-  width: 15vw;
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-around;
   margin: 10px;
 
   button {
     border: 0px;
-    height: 10%;
+    padding: 15px;
+    font-size: 15px;
 
     &:hover {
       background-color: darkgrey;
     }
   }
-
-  .arrow-button-container{
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-  }
-
-  .arrow-button {
-    height: 30px;
-    width: 30px;
-
-  }
 }
-
