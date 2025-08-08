@@ -1,9 +1,20 @@
 @use 'sass:map';
 @import 'variables';
+@import 'mixins';
 
 $pink: map.get($tetromino-colors, 'z');
 $green: map.get($tetromino-colors, 's');
 $blue: map.get($tetromino-colors, 'j');
+
+$color-list: map-values($tetromino-colors);
+
+@for $i from 1 through length($color-list) {
+  $color: nth($color-list, $i);
+  h1 span:nth-child(#{$i}) {
+    background-color: $color;
+    border: 0.5px solid $color;
+  }
+}
 
 .info-wrapper {
   width: 50%;
@@ -24,16 +35,6 @@ $blue: map.get($tetromino-colors, 'j');
 
     span {
       padding: 8px;
-    }
-  }
-
-  $color-list: map-values($tetromino-colors);
-
-  @for $i from 1 through length($color-list) {
-    $color: nth($color-list, $i);
-    h1 span:nth-child(#{$i}) {
-      background-color: $color;
-      border: 0.5px solid $color;
     }
   }
 
