@@ -401,7 +401,7 @@ export const GameBoard = () => {
 
   return (
     <main onKeyDown={(event) => handleKeyPress(event)}>
-      <Info />
+      <Info startNewGame={startNewGame} />
       <section>
         <Grid
           setPixelRef={setPixelRef}
@@ -409,7 +409,6 @@ export const GameBoard = () => {
           height={BOARD_HEIGHT}
         />
         <ControlPanel
-          startNewGame={startNewGame}
           consoleLogData={consoleLogData}
           setGameOverState={setGameOverState}
         />
