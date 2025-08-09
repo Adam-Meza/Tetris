@@ -11,6 +11,7 @@ import { PixelType } from './Pixel';
 type GridProps = {
   width: number;
   height: number;
+  baseClass: string;
   setPixelRef: (pixel: PixelType) => void;
 };
 
@@ -18,14 +19,14 @@ type GridProps = {
  * Grid React component
  */
 export const Grid = (props: GridProps) => {
-  const { width, height, setPixelRef } = props;
+  const { width, height, baseClass, setPixelRef } = props;
 
   const styles = {
     '--grid-width': width,
     '--grid-height': height,
   } as React.CSSProperties;
 
-  const pixels = () => {
+  const makePixels = () => {
     const grid = [];
 
     for (let i = 0; i < height; i++) {
@@ -39,7 +40,13 @@ export const Grid = (props: GridProps) => {
           y: i,
         };
 
-        row.push(<Pixel {...pixelProps} key={key} />);
+        row.push(
+          <Pixel
+            {...pixelProps}
+            key={key}
+            baseClass={baseClass}
+          />
+        );
       }
       grid.push(row);
     }
@@ -47,9 +54,11 @@ export const Grid = (props: GridProps) => {
     return grid;
   };
 
+  const pixels = makePixels();
+
   return (
     <section className='grid' style={styles}>
-      {pixels()}
+      {pixels}
     </section>
   );
 };

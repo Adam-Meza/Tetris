@@ -1,22 +1,23 @@
 @use 'sass:map';
-
-@import 'variables';
+@import '../../styles/variables';
 
 $purple: map.get($tetromino-colors, 't');
 
 .button-container {
   @include flex-row;
+  align-items: center;
   width: 100%;
   justify-content: space-around;
+  font-family: 'Jersey 10', sans-serif;
   margin: 10px;
 
   button {
     border: 0px;
     padding: 15px;
     font-size: 20px;
-    font-family: 'Jersey 10', sans-serif;
     color: white;
     background-color: $purple;
+    font-family: 'Jersey 10', sans-serif;
 
     &:hover {
       background-color: lighten(
@@ -24,5 +25,9 @@ $purple: map.get($tetromino-colors, 't');
         $amount: 10
       );
     }
+  }
+
+  span {
+    font-size: 50px;
   }
 }

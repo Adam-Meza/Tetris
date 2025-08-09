@@ -26,8 +26,8 @@ import Info from '../Info/Info';
  */
 export const GameBoard = () => {
   // console.log('Gameboard Render');
-  const BOARD_WIDTH = 5;
-  const BOARD_HEIGHT = 10;
+  const BOARD_WIDTH = 10;
+  const BOARD_HEIGHT = 20;
 
   const [currentTetromino, setTetromino] = useAtom(
     currentTetrominoAtom
@@ -408,6 +408,7 @@ export const GameBoard = () => {
             setPixelRef={setPixelRef}
             width={BOARD_WIDTH}
             height={BOARD_HEIGHT}
+            baseClass={'tetromino'}
           />
         </div>
 

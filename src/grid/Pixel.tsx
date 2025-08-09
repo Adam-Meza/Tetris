@@ -3,6 +3,7 @@ import React from 'react';
 export type PixelProps = {
   x: number;
   y: number;
+  baseClass?: string;
   setPixelRef: (pixel: PixelType) => void;
 };
 
@@ -23,10 +24,11 @@ export type PixelType = {
  *    setPixelRef ={setPixelRef}
       x={2}
       y={6}
+      class
   />
  */
 export const Pixel = (props: PixelProps) => {
-  const { setPixelRef, x, y } = props;
+  const { setPixelRef, x, y, baseClass } = props;
 
   const pixelRef = React.useRef<HTMLSpanElement>(null);
 
@@ -38,5 +40,9 @@ export const Pixel = (props: PixelProps) => {
     });
   }, [x, y, pixelRef, setPixelRef]);
 
-  return <span ref={pixelRef}>{/* {x}-{y} */}</span>;
+  return (
+    <span ref={pixelRef} className={baseClass}>
+      {/* {x}-{y} */}
+    </span>
+  );
 };

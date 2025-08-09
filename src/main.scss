@@ -1,5 +1,30 @@
-@import './styles/grid';
-@import './styles/app';
-@import './styles/button';
-@import './styles/info';
-@import './styles/game-board';
+@import './grid/grid';
+@import './components/ControlPanel/button';
+@import './components/Info/info';
+@import './components/Tetromino/tetromino';
+@import './components/GameBoard/game-board';
+@import './styles/mixins';
+
+* {
+  overflow: hidden;
+}
+
+.App {
+  font-family: 'Roboto', serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+  font-variation-settings: 'wdth' 100;
+  height: 100vh;
+  width: 100vw;
+  @include flex-row;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+main {
+  @include flex-row;
+  justify-content: space-evenly;
+  width: 80vw;
+}

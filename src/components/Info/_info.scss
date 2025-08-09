@@ -1,6 +1,6 @@
 @use 'sass:map';
-@import 'variables';
-@import 'mixins';
+@import '../../styles/variables';
+@import '../../styles/mixins';
 
 $pink: map.get($tetromino-colors, 'z');
 $green: map.get($tetromino-colors, 's');
@@ -12,6 +12,7 @@ $color-list: map-values($tetromino-colors);
   $color: nth($color-list, $i);
   h1 span:nth-child(#{$i}) {
     background-color: $color;
+
     border: 0.5px solid $color;
   }
 }
