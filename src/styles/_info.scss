@@ -17,9 +17,8 @@ $color-list: map-values($tetromino-colors);
 }
 
 .info-wrapper {
+  @include flex-column;
   width: 50%;
-  display: flex;
-  flex-direction: column;
   justify-content: space-between;
   align-items: center;
 
@@ -30,8 +29,6 @@ $color-list: map-values($tetromino-colors);
     font-size: 90px;
     margin: 0px;
     color: white;
-    text-align: center;
-    text-justify: center;
 
     span {
       padding: 8px;
@@ -39,8 +36,7 @@ $color-list: map-values($tetromino-colors);
   }
 
   .link-wrapper {
-    display: flex;
-    flex-direction: row;
+    @include flex-row;
     justify-content: space-evenly;
     gap: 10;
     width: 100%;

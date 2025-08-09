@@ -1,0 +1,5 @@
+.gameboard-wrapper {
+  @include flex-column;
+  height: fit-content;
+  width: fit-content;
+}

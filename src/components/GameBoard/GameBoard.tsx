@@ -26,8 +26,8 @@ import Info from '../Info/Info';
  */
 export const GameBoard = () => {
   // console.log('Gameboard Render');
-  const BOARD_WIDTH = 10;
-  const BOARD_HEIGHT = 20;
+  const BOARD_WIDTH = 5;
+  const BOARD_HEIGHT = 10;
 
   const [currentTetromino, setTetromino] = useAtom(
     currentTetrominoAtom
@@ -402,12 +402,15 @@ export const GameBoard = () => {
   return (
     <main onKeyDown={(event) => handleKeyPress(event)}>
       <Info startNewGame={startNewGame} />
-      <section>
-        <Grid
-          setPixelRef={setPixelRef}
-          width={BOARD_WIDTH}
-          height={BOARD_HEIGHT}
-        />
+      <section className='gameboard-wrapper'>
+        <div className='grid-wrapper'>
+          <Grid
+            setPixelRef={setPixelRef}
+            width={BOARD_WIDTH}
+            height={BOARD_HEIGHT}
+          />
+        </div>
+
         <ControlPanel
           consoleLogData={consoleLogData}
           setGameOverState={setGameOverState}

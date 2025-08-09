@@ -10,29 +10,25 @@ import { PixelType } from './Pixel';
  */
 type GridProps = {
   width: number;
+  height: number;
   setPixelRef: (pixel: PixelType) => void;
-  height?: number;
 };
 
 /**
  * Grid React component
  */
 export const Grid = (props: GridProps) => {
-  const { width, height = null, setPixelRef } = props;
+  const { width, height, setPixelRef } = props;
 
-  const trueHeight = height ?? width;
-
-  // this is setting the size of the grid based on provided values
-  // by passing those via custom properties to the scss
   const styles = {
-    '--pixel-width': width,
-    '--pixel-height': trueHeight,
+    '--grid-width': width,
+    '--grid-height': height,
   } as React.CSSProperties;
 
   const pixels = () => {
     const grid = [];
 
-    for (let i = 0; i < trueHeight; i++) {
+    for (let i = 0; i < height; i++) {
       const row = [];
       for (let j = 0; j < width; j++) {
         const key = i * width + j;
