@@ -4,8 +4,8 @@ import type { PixelType } from '../../grid/Pixel';
 import { makeRefMatrix } from '../../utilities';
 import { nextTetrominoAtom } from '../../atoms';
 import { useAtomValue } from 'jotai';
-import { TetrominoType } from '../Tetromino/Tetromino';
 import { rotateShapeClockwise } from '../../utilities';
+import { addOrRemovePixel } from '../../grid/utilities';
 
 export const NextTetromino = () => {
   const BOARD_WIDTH = 6;
@@ -22,7 +22,8 @@ export const NextTetromino = () => {
   );
 
   const displayNext = (tetromino = next) => {
-    let { shape, id, letter } = tetromino;
+    let { shape } = tetromino;
+    const { id, letter } = tetromino;
 
     if (letter === 'i') shape = rotateShapeClockwise(shape);
 
@@ -33,7 +34,15 @@ export const NextTetromino = () => {
     for (let i = 0; i < height; i++) {
       for (let j = 0; j < width; j++) {
         if (shape[i][j]) {
-          addOrRemovePixel(x + j, y + i, 'add', letter, id);
+          addOrRemovePixel(
+            pixelRefs,
+            setPixelRef,
+            x + j,
+            y + i,
+            'add',
+            letter,
+            id
+          );
         }
       }
     }
@@ -48,39 +57,6 @@ export const NextTetromino = () => {
       x < BOARD_WIDTH
     ) {
       pixelRefs.current[y]![x] = pixel;
-    }
-  };
-
-  const addOrRemovePixel = (
-    x: number,
-    y: number,
-    action: 'add' | 'remove',
-    letter?: string,
-    id?: string
-  ) => {
-    console.log(x, y);
-    const dataRef = pixelRefs.current[y][x];
-
-    const spanRef = dataRef?.el;
-
-    if (!spanRef) return false;
-
-    if (action === 'add') {
-      spanRef.classList.add(`${letter}-block`);
-      setPixelRef({
-        x,
-        y,
-        id: id,
-        el: spanRef,
-      });
-    } else if (action === 'remove') {
-      spanRef.classList.remove(`${letter}-block`);
-      setPixelRef({
-        x,
-        y,
-        id: undefined,
-        el: null,
-      });
     }
   };
 
