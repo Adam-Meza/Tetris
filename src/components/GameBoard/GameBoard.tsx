@@ -18,6 +18,8 @@ import {
   currentTetrominoAtom,
 } from '../../atoms';
 import Info from '../Info/Info';
+import ScoreBoard from './ScoreBoard';
+import { NextTetromino } from '../NextTetromino/NextTetromino';
 
 /**
  * Tetris GameBoard Component -
@@ -75,19 +77,25 @@ export const GameBoard = () => {
       `${x}-${y}`
     ] as PixelType;
 
-    const spanRef = dataRef.html?.current as HTMLElement;
+    const spanRef = dataRef?.el as HTMLElement;
 
     if (!spanRef) return false;
 
     if (action === 'add') {
       spanRef.classList.add(`${letter}-block`);
-      setPixelRef({ x, y, id: id });
+      setPixelRef({
+        x,
+        y,
+        id: id,
+        el: spanRef,
+      });
     } else if (action === 'remove') {
       spanRef.classList.remove(`${letter}-block`);
       setPixelRef({
         x,
         y,
         id: undefined,
+        el: null,
       });
     }
   };
@@ -220,23 +228,23 @@ export const GameBoard = () => {
   };
 
   const handleBlockLanding = () => {
-    setTimeout(() => {
-      const completedRowIndexes = findCompletedRows();
+    // setTimeout(() => {
+    const completedRowIndexes = findCompletedRows();
 
-      if (completedRowIndexes) {
-        removeRows(completedRowIndexes);
-        moveRowsDown(completedRowIndexes);
+    if (completedRowIndexes) {
+      removeRows(completedRowIndexes);
+      moveRowsDown(completedRowIndexes);
 
-        const newScore = calculateScore(
-          completedRowIndexes.length,
-          score
-        );
+      const newScore = calculateScore(
+        completedRowIndexes.length,
+        score
+      );
 
-        setScore(newScore);
-      }
+      setScore(newScore);
+    }
 
-      makeNewTetromino();
-    }, 80);
+    makeNewTetromino();
+    // }, 80);
   };
 
   const removeRows = (rows: number[]) => {
@@ -290,8 +298,8 @@ export const GameBoard = () => {
     const current = currentTetromino;
     const [x, y] = focalPointRef.current;
 
-    if (isMovePossible('down', current)) return;
-    if (current.shape.length + y <= 3) {
+    if (isMovePossible('down', current) && gameOver) return;
+    else if (current.shape.length + y <= 3) {
       setGameOver(true);
       return;
     }
@@ -396,10 +404,22 @@ export const GameBoard = () => {
   };
 
   return (
-    <main onKeyDown={(event) => handleKeyPress(event)}>
-      <Info startNewGame={startNewGame} />
+    <main
+      tabIndex={0}
+      onKeyDown={(event) => handleKeyPress(event)}
+    >
+      {/* <Info startNewGame={startNewGame} /> */}
       <section className='gameboard-wrapper'>
-        <div className='grid-wrapper'>
+        <ControlPanel
+          consoleLogData={consoleLogData}
+          setGameOver={setGameOver}
+        />
+        <div className='top-display'>
+          <ScoreBoard />
+          <NextTetromino />
+        </div>
+
+        <div className='grid-wrapper' id='gameboard'>
           <Grid
             setPixelRef={setPixelRef}
             width={BOARD_WIDTH}
@@ -407,11 +427,6 @@ export const GameBoard = () => {
             baseClass={'tetromino'}
           />
         </div>
-
-        <ControlPanel
-          consoleLogData={consoleLogData}
-          setGameOver={setGameOver}
-        />
       </section>
     </main>
   );

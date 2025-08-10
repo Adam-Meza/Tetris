@@ -27,7 +27,6 @@ export const ControlPanel = (props: ControlPanelProps) => {
       <button onClick={() => setGameOver(!gameOver)}>
         {gameOver ? 'start' : 'pause'}
       </button>
-      <span>{score}</span>
     </div>
   );
 };

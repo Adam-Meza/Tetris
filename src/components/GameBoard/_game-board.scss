@@ -1,5 +1,29 @@
+@import '../../styles/mixins';
+
 .gameboard-wrapper {
   @include flex-column;
   height: fit-content;
   width: fit-content;
+}
+
+#gameboard {
+  height: clamp(400px, 65vh, 600px);
+  aspect-ratio: 1/2;
+  border: 1px red solid;
+}
+
+.top-display {
+  @include flex-row;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+  height: clamp(50px, 110vh, 100px);
+  font-family: 'Jersey 10', sans-serif;
+
+  .score-board-wrapper {
+    @include flex-row;
+    width: 50%;
+    font-size: 50px;
+    border: red solid 1px;
+  }
 }

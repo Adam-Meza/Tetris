@@ -1,0 +1,8 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.next-tetromino-wrapper {
+  height: clamp(80px, 90%, 150px);
+  aspect-ratio: 7/5;
+  border: red solid 1px;
+}

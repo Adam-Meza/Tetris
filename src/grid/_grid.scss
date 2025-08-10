@@ -1,26 +1,35 @@
 @import '../styles/variables';
 @import '../styles/mixins';
 
-$wrapper-height: clamp(300px, 80vh, 600px);
-
-$grid-height: var(--grid-height);
-$grid-width: var(--grid-width);
-
 .grid-wrapper {
-  aspect-ratio: $grid-width / $grid-height;
-  border: 1px black solid;
+  container-type: size;
+  display: grid;
+  place-items: center;
+  border: 1px solid #000;
 }
 
 .grid {
+  --cell-size: min(
+    calc(100cqw / var(--grid-width)),
+    calc(100cqh / var(--grid-height))
+  );
+
   display: grid;
-  grid-template-columns: repeat($grid-width, 1fr);
-  grid-template-rows: repeat($grid-height, 1fr);
-  height: 100%;
-  width: 100%;
+  grid-template-columns: repeat(
+    var(--grid-width),
+    var(--cell-size)
+  );
+  grid-template-rows: repeat(
+    var(--grid-height),
+    var(--cell-size)
+  );
+
+  inline-size: calc(var(--cell-size) * var(--grid-width));
+  block-size: calc(var(--cell-size) * var(--grid-height));
 
   span {
     @include flex-row;
-    height: calc($wrapper-height / $grid-height);
-    aspect-ratio: 1/1;
+    inline-size: 100%;
+    block-size: 100%;
   }
 }
