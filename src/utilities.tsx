@@ -1,5 +1,6 @@
 import { blocks } from './components/Tetromino/Tetromino';
 import { TetrominoType } from './components/Tetromino/Tetromino';
+import type { PixelType } from './grid/Pixel';
 
 export type Direction = 'down' | 'left' | 'right' | 'same';
 
@@ -61,3 +62,14 @@ export const makeNewCoordinates = (
 
   return [newX, newY];
 };
+
+export const makeRefMatrix = (
+  height: number,
+  width: number
+) =>
+  Array.from({ length: height }, () =>
+    Array.from(
+      { length: width },
+      () => null as PixelType | null
+    )
+  );

@@ -1,32 +1,97 @@
 import { Grid } from '../../grid/Grid';
 import React from 'react';
 import type { PixelType } from '../../grid/Pixel';
+import { makeRefMatrix } from '../../utilities';
+import { nextTetrominoAtom } from '../../atoms';
+import { useAtomValue } from 'jotai';
+import { TetrominoType } from '../Tetromino/Tetromino';
 
 export const NextTetromino = () => {
-  const pixelRefs = React.useRef<{
-    [key: string]: PixelType;
-  }>({});
+  const BOARD_WIDTH = 7;
+  const BOARD_HEIGHT = 5;
+  const focalPoint = [2, 1];
+  const next = useAtomValue(nextTetrominoAtom);
+
+  React.useEffect(() => {
+    displayNext();
+  }, []);
+
+  const pixelRefs = React.useRef<(PixelType | null)[][]>(
+    makeRefMatrix(BOARD_HEIGHT, BOARD_WIDTH)
+  );
+
+  const displayNext = (tetromino = next) => {
+    const width = tetromino.shape[0].length;
+    const height = tetromino.shape.length;
+    const [x, y] = focalPoint;
+
+    for (let i = 0; i < height; i++) {
+      for (let j = 0; j < width; j++) {
+        console.log(tetromino.shape);
+        console.log(tetromino.shape[i][j]);
+
+        if (tetromino.shape[i][j]) {
+          const { letter, id } = tetromino;
+
+          addOrRemovePixel(x + j, y + i, 'add', letter, id);
+        }
+      }
+    }
+  };
 
   const setPixelRef = (pixel: PixelType) => {
-    const key = `${pixel.x}-${pixel.y}`;
+    const { x, y } = pixel;
+    if (
+      y >= 0 &&
+      y < BOARD_HEIGHT &&
+      x >= 0 &&
+      x < BOARD_WIDTH
+    ) {
+      pixelRefs.current[y]![x] = pixel;
+    }
+  };
 
-    if (!pixelRefs.current[key])
-      pixelRefs.current[key] = pixel;
-    else
-      pixelRefs.current[key] = {
-        ...pixelRefs.current[key],
-        ...pixel,
-      };
+  const addOrRemovePixel = (
+    x: number,
+    y: number,
+    action: 'add' | 'remove',
+    letter?: string,
+    id?: string
+  ) => {
+    console.log(x, y);
+    const dataRef = pixelRefs.current[y][x];
+
+    const spanRef = dataRef?.el;
+
+    if (!spanRef) return false;
+
+    if (action === 'add') {
+      spanRef.classList.add(`${letter}-block`);
+      setPixelRef({
+        x,
+        y,
+        id: id,
+        el: spanRef,
+      });
+    } else if (action === 'remove') {
+      spanRef.classList.remove(`${letter}-block`);
+      setPixelRef({
+        x,
+        y,
+        id: undefined,
+        el: null,
+      });
+    }
   };
 
   return (
     <div className='next-tetromino-wrapper grid-wrapper'>
       <Grid
-        width={7}
-        height={5}
+        width={BOARD_WIDTH}
+        height={BOARD_HEIGHT}
         setPixelRef={setPixelRef}
         baseClass='tetromino'
-      ></Grid>
+      />
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid } from '../../grid/Grid';
 import { TetrominoType } from '../Tetromino/Tetromino';
-import { PixelType } from '../../grid/Pixel';
+import { Pixel, PixelType } from '../../grid/Pixel';
 import { ControlPanel } from '../ControlPanel/ControlPanel';
 import {
   randomTetromino,
@@ -50,6 +50,8 @@ export const GameBoard = () => {
   const pixelRefs = React.useRef<{
     [key: string]: PixelType;
   }>({});
+
+  // const pixelRefs = buildRefs()
 
   /**
    * Sets the individual pixel ref objects and is responsible for effecting change on the DOM.
