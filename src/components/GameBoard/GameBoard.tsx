@@ -16,6 +16,7 @@ import {
   scoreAtom,
   gameOverAtom,
   currentTetrominoAtom,
+  nextTetrominoAtom,
 } from '../../atoms';
 import Info from '../Info/Info';
 import ScoreBoard from './ScoreBoard';
@@ -36,6 +37,7 @@ export const GameBoard = () => {
   );
   const [gameOver, setGameOver] = useAtom(gameOverAtom);
   const [score, setScore] = useAtom(scoreAtom);
+  const [next, setNext] = useAtom(nextTetrominoAtom);
 
   /**
    * Focal point determining the coordinates on the Grid that pieces are placed/oriented with.
@@ -307,10 +309,11 @@ export const GameBoard = () => {
     }
 
     const tetromino = randomTetromino();
-    setTetromino(tetromino);
+    setNext(tetromino);
+    setTetromino(next);
 
     if (
-      !isMovePossible('same', tetromino, {
+      !isMovePossible('same', next, {
         current: [3, 0],
       })
     ) {
@@ -319,7 +322,7 @@ export const GameBoard = () => {
     }
 
     focalPointRef.current = [3, 0];
-    updateCurrentTetromino('add', tetromino);
+    updateCurrentTetromino('add', next);
   };
 
   const rotateTetromino = () => {

@@ -5,11 +5,12 @@ import { makeRefMatrix } from '../../utilities';
 import { nextTetrominoAtom } from '../../atoms';
 import { useAtomValue } from 'jotai';
 import { TetrominoType } from '../Tetromino/Tetromino';
+import { rotateShapeClockwise } from '../../utilities';
 
 export const NextTetromino = () => {
-  const BOARD_WIDTH = 7;
-  const BOARD_HEIGHT = 5;
-  const focalPoint = [2, 1];
+  const BOARD_WIDTH = 6;
+  const BOARD_HEIGHT = 4;
+  const focalPoint = [1, 1];
   const next = useAtomValue(nextTetrominoAtom);
 
   React.useEffect(() => {
@@ -21,18 +22,17 @@ export const NextTetromino = () => {
   );
 
   const displayNext = (tetromino = next) => {
-    const width = tetromino.shape[0].length;
-    const height = tetromino.shape.length;
+    let { shape, id, letter } = tetromino;
+
+    if (letter === 'i') shape = rotateShapeClockwise(shape);
+
+    const width = shape[0].length;
+    const height = shape.length;
     const [x, y] = focalPoint;
 
     for (let i = 0; i < height; i++) {
       for (let j = 0; j < width; j++) {
-        console.log(tetromino.shape);
-        console.log(tetromino.shape[i][j]);
-
-        if (tetromino.shape[i][j]) {
-          const { letter, id } = tetromino;
-
+        if (shape[i][j]) {
           addOrRemovePixel(x + j, y + i, 'add', letter, id);
         }
       }

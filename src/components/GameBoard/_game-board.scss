@@ -14,7 +14,7 @@
 
 .top-display {
   @include flex-row;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   height: clamp(50px, 110vh, 100px);
