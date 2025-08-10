@@ -3,26 +3,28 @@ import { gameOverAtom, scoreAtom } from '../../atoms';
 import { useAtomValue } from 'jotai';
 
 type ControlPanelProps = {
-  setGameOverState: (state: boolean) => void;
+  setGameOver: (state: boolean) => void;
   consoleLogData: () => void;
 };
 
 export const ControlPanel = (props: ControlPanelProps) => {
-  const { setGameOverState, consoleLogData } = props;
+  const { setGameOver, consoleLogData } = props;
 
   const gameOver = useAtomValue(gameOverAtom);
   const score = useAtomValue(scoreAtom);
 
   return (
     <div className='button-container'>
-      {/* <button
-        onClick={() => {
-          consoleLogData();
-        }}
-      >
-        console log stuff
-      </button> */}
-      <button onClick={() => setGameOverState(!gameOver)}>
+      {
+        <button
+          onClick={() => {
+            consoleLogData();
+          }}
+        >
+          console log stuff
+        </button>
+      }
+      <button onClick={() => setGameOver(!gameOver)}>
         {gameOver ? 'start' : 'pause'}
       </button>
       <span>{score}</span>

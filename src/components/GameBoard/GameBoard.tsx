@@ -292,7 +292,7 @@ export const GameBoard = () => {
 
     if (isMovePossible('down', current)) return;
     if (current.shape.length + y <= 3) {
-      setGameOverState(true);
+      setGameOver(true);
       return;
     }
 
@@ -304,7 +304,7 @@ export const GameBoard = () => {
         current: [3, 0],
       })
     ) {
-      setGameOverState(true);
+      setGameOver(true);
       return;
     }
 
@@ -340,11 +340,6 @@ export const GameBoard = () => {
     return () => clearInterval(interval);
   });
 
-  const setGameOverState = (state: boolean) => {
-    focalPointRef.current = [3, 0];
-    setGameOver(state);
-  };
-
   const handleKeyPress = (
     e: React.KeyboardEvent<HTMLElement>
   ) => {
@@ -377,6 +372,7 @@ export const GameBoard = () => {
     console.log('currentTetromino:', currentTetromino);
     console.log('pixelrefs:', pixelRefs.current);
     console.log('gameOver', gameOver);
+    console.log('focal point', focalPointRef.current);
   };
 
   const clearBoard = () => {
@@ -393,9 +389,9 @@ export const GameBoard = () => {
   };
 
   const startNewGame = () => {
-    setGameOverState(true);
+    setGameOver(true);
     clearBoard();
-    setGameOverState(false);
+    setGameOver(false);
     makeNewTetromino();
   };
 
@@ -414,7 +410,7 @@ export const GameBoard = () => {
 
         <ControlPanel
           consoleLogData={consoleLogData}
-          setGameOverState={setGameOverState}
+          setGameOver={setGameOver}
         />
       </section>
     </main>
