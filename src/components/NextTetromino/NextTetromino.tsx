@@ -5,17 +5,22 @@ import { makeRefMatrix } from '../../utilities';
 import { nextTetrominoAtom } from '../../atoms';
 import { useAtomValue } from 'jotai';
 import { rotateShapeClockwise } from '../../utilities';
-import { addOrRemovePixel } from '../../grid/utilities';
+import {
+  addOrRemovePixel,
+  clearBoard,
+} from '../../grid/utilities';
 
 export const NextTetromino = () => {
   const BOARD_WIDTH = 6;
   const BOARD_HEIGHT = 4;
-  const focalPoint = [1, 1];
+  const FOCAL_POINT = [1, 1];
   const next = useAtomValue(nextTetrominoAtom);
 
   React.useEffect(() => {
+    console.log(pixelRefs);
+    clearBoard(pixelRefs, setPixelRef);
     displayNext();
-  }, []);
+  }, [next]);
 
   const pixelRefs = React.useRef<(PixelType | null)[][]>(
     makeRefMatrix(BOARD_HEIGHT, BOARD_WIDTH)
@@ -25,14 +30,22 @@ export const NextTetromino = () => {
     let { shape } = tetromino;
     const { id, letter } = tetromino;
 
-    if (letter === 'i') shape = rotateShapeClockwise(shape);
+    switch (letter) {
+      case 'i':
+      case 'j':
+      case 'l':
+        shape = rotateShapeClockwise(shape);
+        break;
+    }
 
     const width = shape[0].length;
     const height = shape.length;
-    const [x, y] = focalPoint;
+    const [x, y] = FOCAL_POINT;
 
     for (let i = 0; i < height; i++) {
       for (let j = 0; j < width; j++) {
+        let pixel = shape[i][j];
+
         if (shape[i][j]) {
           addOrRemovePixel(
             pixelRefs,
@@ -56,8 +69,9 @@ export const NextTetromino = () => {
       x >= 0 &&
       x < BOARD_WIDTH
     ) {
-      pixelRefs.current[y]![x] = pixel;
+      pixelRefs.current[y][x] = pixel;
     }
+    console.log(pixelRefs);
   };
 
   return (

@@ -1,4 +1,5 @@
 import type { PixelType } from './Pixel';
+import { getLetter } from '../utilities';
 
 export const addOrRemovePixel = (
   pixels: React.MutableRefObject<(PixelType | null)[][]>,
@@ -9,9 +10,10 @@ export const addOrRemovePixel = (
   letter?: string,
   id?: string
 ) => {
+  if (action === 'add') console.log(id);
   const dataRef = pixels.current[y][x];
 
-  const spanRef = dataRef?.el;
+  const spanRef = dataRef?.html?.current;
 
   if (!spanRef) return false;
 
@@ -20,8 +22,7 @@ export const addOrRemovePixel = (
     setPixel({
       x,
       y,
-      id: id,
-      el: spanRef,
+      id,
     });
   } else if (action === 'remove') {
     spanRef.classList.remove(`${letter}-block`);
@@ -29,7 +30,34 @@ export const addOrRemovePixel = (
       x,
       y,
       id: undefined,
-      el: null,
     });
+  }
+};
+
+export const clearBoard = (
+  refs: React.MutableRefObject<(PixelType | null)[][]>,
+  setRefs: (refs: PixelType) => void
+) => {
+  const height = refs.current.length;
+  const width = refs.current[0].length;
+
+  for (let i = 0; i < height; i++) {
+    for (let j = 0; j < width; j++) {
+      const id = refs.current[i][j]?.id;
+
+      if (id) {
+        console.log('we got here');
+        const letter = getLetter(id);
+        addOrRemovePixel(
+          refs,
+          setRefs,
+          j,
+          i,
+          'remove',
+          letter,
+          id
+        );
+      }
+    }
   }
 };

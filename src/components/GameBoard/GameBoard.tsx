@@ -81,25 +81,24 @@ export const GameBoard = () => {
       `${x}-${y}`
     ] as PixelType;
 
-    const spanRef = dataRef?.el as HTMLElement;
+    const spanRef = dataRef.html;
 
-    if (!spanRef) return false;
+    if (!spanRef?.current) return false;
 
     if (action === 'add') {
-      spanRef.classList.add(`${letter}-block`);
+      spanRef.current.classList.add(`${letter}-block`);
       setPixelRef({
         x,
         y,
         id: id,
-        el: spanRef,
+        html: spanRef,
       });
     } else if (action === 'remove') {
-      spanRef.classList.remove(`${letter}-block`);
+      spanRef.current.classList.remove(`${letter}-block`);
       setPixelRef({
         x,
         y,
         id: undefined,
-        el: null,
       });
     }
   };
@@ -309,11 +308,12 @@ export const GameBoard = () => {
     }
 
     const tetromino = randomTetromino();
+    const test = randomTetromino();
     setNext(tetromino);
-    setTetromino(next);
+    setTetromino(test);
 
     if (
-      !isMovePossible('same', next, {
+      !isMovePossible('same', test, {
         current: [3, 0],
       })
     ) {
@@ -322,7 +322,7 @@ export const GameBoard = () => {
     }
 
     focalPointRef.current = [3, 0];
-    updateCurrentTetromino('add', next);
+    updateCurrentTetromino('add', test);
   };
 
   const rotateTetromino = () => {

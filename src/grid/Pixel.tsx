@@ -10,7 +10,7 @@ export type PixelProps = {
 export type PixelType = {
   x: number;
   y: number;
-  el: HTMLSpanElement | null;
+  // el: HTMLSpanElement | null;
   id?: string | undefined;
   // why am i doing this again???
   // something to look into
@@ -28,20 +28,23 @@ export type PixelType = {
       class
   />
  */
-export const Pixel = React.memo(
-  ({
-    x,
-    y,
-    baseClass = 'pixel',
-    setPixelRef,
-  }: PixelProps) => {
-    const refCallback = React.useCallback(
-      (el: HTMLSpanElement | null) => {
-        setPixelRef({ x, y, el });
-      },
-      [x, y, setPixelRef]
-    );
 
-    return <span ref={refCallback} className={baseClass} />;
-  }
-);
+export const Pixel = (props: PixelProps) => {
+  const { setPixelRef, x, y, baseClass } = props;
+
+  const pixelRef = React.useRef<HTMLSpanElement>(null);
+
+  React.useMemo(() => {
+    setPixelRef({
+      x,
+      y,
+      html: pixelRef,
+    });
+  }, [x, y, pixelRef, setPixelRef]);
+
+  return (
+    <span ref={pixelRef} className={baseClass}>
+      {/* {x}-{y} */}
+    </span>
+  );
+};
