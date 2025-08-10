@@ -26,10 +26,4 @@
 
   inline-size: calc(var(--cell-size) * var(--grid-width));
   block-size: calc(var(--cell-size) * var(--grid-height));
-
-  span {
-    @include flex-row;
-    inline-size: 100%;
-    block-size: 100%;
-  }
 }
