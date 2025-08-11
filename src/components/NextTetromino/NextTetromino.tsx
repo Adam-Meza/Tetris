@@ -76,7 +76,7 @@ export const NextTetromino = () => {
     }
   };
 
-  const display = React.useMemo(() => {
+  React.useMemo(() => {
     if (next && !gameOver) {
       clearBoard(pixelRefs);
       displayNext(next);

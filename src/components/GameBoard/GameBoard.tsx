@@ -199,32 +199,34 @@ export const GameBoard = () => {
   };
 
   const moveRowsDown = (rows: number[]) => {
-    pixelRefs.current.forEach((row) => {
-      row.forEach((pixel) => {
-        if (!pixel) return;
+    console.log('we run');
+    for (let i = rows[0]; i >= 0; i--) {
+      if (i < rows[0]) {
+        console.log(i);
+        pixelRefs.current[i].forEach((pixel) => {
+          if (pixel) {
+            const { x, y, id } = pixel;
+            const letter = id ? getLetter(id) : undefined;
+            const className = `${letter}-block`;
 
-        if (pixel.y < rows[0]) {
-          const { x, y, id } = pixel;
-          const letter = id ? getLetter(id) : undefined;
-          const className = `${letter}-block`;
+            addOrRemovePixel(
+              pixelRefs,
+              [x, y],
+              'remove',
+              className,
+              id
+            );
 
-          addOrRemovePixel(
-            pixelRefs,
-            [x, y],
-            'remove',
-            className
-          );
-
-          addOrRemovePixel(
-            pixelRefs,
-            [x, y + rows.length],
-            'add',
-            className,
-            id
-          );
-        }
-      });
-    });
+            addOrRemovePixel(
+              pixelRefs,
+              [x, y + rows.length],
+              'add',
+              className
+            );
+          }
+        });
+      }
+    }
   };
 
   const handleBlockLanding = () => {
@@ -232,6 +234,7 @@ export const GameBoard = () => {
     const completedRowIndexes = findCompletedRows();
 
     if (completedRowIndexes) {
+      console.log(completedRowIndexes);
       removeRows(completedRowIndexes);
       moveRowsDown(completedRowIndexes);
 
@@ -247,7 +250,6 @@ export const GameBoard = () => {
     // }, 80);
   };
 
-  //
   const removeRows = (rows: number[]) => {
     if (!rows) return;
 
@@ -270,8 +272,8 @@ export const GameBoard = () => {
     });
   };
 
-  const findCompletedRows = (): number[] => {
-    let rowsToRemove: null | number[];
+  const findCompletedRows = (): number[] | null => {
+    let rowsToRemove: number[];
 
     pixelRefs.current.forEach((row, index) => {
       if (row.every((pixel) => pixel?.id)) {
