@@ -21,6 +21,11 @@ import {
 import Info from '../Info/Info';
 import ScoreBoard from './ScoreBoard';
 import { NextTetromino } from '../NextTetromino/NextTetromino';
+import {
+  makeRefMatrix,
+  addOrRemovePixel,
+  clearBoard,
+} from '../../grid/utilities';
 
 /**
  * Tetris GameBoard Component -
@@ -49,9 +54,9 @@ export const GameBoard = () => {
   /**
    * Mutable ref object that will be used as the point of truth for game state logic.
    */
-  const pixelRefs = React.useRef<{
-    [key: string]: PixelType;
-  }>({});
+  const pixelRefs = React.useRef<(PixelType | null)[][]>(
+    makeRefMatrix(BOARD_HEIGHT, BOARD_WIDTH)
+  );
 
   // const pixelRefs = buildRefs()
 
@@ -60,47 +65,14 @@ export const GameBoard = () => {
    */
 
   const setPixelRef = (pixel: PixelType) => {
-    const key = `${pixel.x}-${pixel.y}`;
-
-    if (!pixelRefs.current[key])
-      pixelRefs.current[key] = pixel;
-    else
-      pixelRefs.current[key] = {
-        ...pixelRefs.current[key],
-        ...pixel,
-      };
-  };
-
-  const addOrRemovePixel = (
-    x: number,
-    y: number,
-    action: 'add' | 'remove',
-    letter?: string,
-    id?: string
-  ) => {
-    const dataRef = pixelRefs.current[
-      `${x}-${y}`
-    ] as PixelType;
-
-    const spanRef = dataRef.html;
-
-    if (!spanRef?.current) return false;
-
-    if (action === 'add') {
-      spanRef.current.classList.add(`${letter}-block`);
-      setPixelRef({
-        x,
-        y,
-        id: id,
-        html: spanRef,
-      });
-    } else if (action === 'remove') {
-      spanRef.current.classList.remove(`${letter}-block`);
-      setPixelRef({
-        x,
-        y,
-        id: undefined,
-      });
+    const { x, y } = pixel;
+    if (
+      y >= 0 &&
+      y < BOARD_HEIGHT &&
+      x >= 0 &&
+      x < BOARD_WIDTH
+    ) {
+      pixelRefs.current[y][x] = pixel;
     }
   };
 
@@ -125,8 +97,15 @@ export const GameBoard = () => {
 
               const { id } = tetromino;
               const letter = id ? getLetter(id) : undefined;
+              const className = `${letter}-block`;
 
-              addOrRemovePixel(x, y, action, letter, id);
+              addOrRemovePixel(
+                pixelRefs,
+                [x, y],
+                action,
+                className,
+                id
+              );
             }
           }
         );
@@ -155,26 +134,32 @@ export const GameBoard = () => {
           direction
         );
 
-        const currentSquare =
-          pixelRefs?.current[`${x}-${y}`];
+        if (
+          targetX >= BOARD_WIDTH ||
+          targetY >= BOARD_HEIGHT
+        )
+          return false;
+
+        const currentSquare = pixelRefs.current[y][x];
 
         const nextSquare =
-          pixelRefs?.current[`${targetX}-${targetY}`];
+          pixelRefs.current[targetY][targetX];
 
-        if (!runCheck(currentSquare, nextSquare, tetromino))
+        if (
+          !runCheck(currentSquare, nextSquare, tetromino)
+        ) {
           return false;
+        }
       }
     }
     return true;
   };
 
   const runCheck = (
-    currentSquare: PixelType,
-    nextSquare: PixelType,
+    currentSquare: PixelType | null,
+    nextSquare: PixelType | null,
     tetromino: TetrominoType
   ) => {
-    //If the next sqaure doesn't exist, move is not possible
-    //return false.
     if (!nextSquare) return false;
     // The following code will only check if the nextSqaure is occupied
     if (nextSquare.id) {
@@ -183,8 +168,8 @@ export const GameBoard = () => {
         // i.e. parts of each tetromino will have blank spaces
         // that do not carry and ID
         // if thats true, we make sure the
-        (currentSquare.id === tetromino.id &&
-          nextSquare.id !== currentSquare.id) ||
+        (currentSquare?.id === tetromino.id &&
+          nextSquare.id !== currentSquare?.id) ||
         // given that the nextSquare has an id,
         // if the tetromino in question is not the current
         // then we check if nextSquare is occupied by anooter piece
@@ -214,20 +199,27 @@ export const GameBoard = () => {
   };
 
   const moveRowsDown = (rows: number[]) => {
-    const pixelsInRows = reformattedRefs().reverse();
-
-    pixelsInRows.forEach((row) => {
+    pixelRefs.current.forEach((row) => {
       row.forEach((pixel) => {
+        if (!pixel) return;
+
         if (pixel.y < rows[0]) {
           const { x, y, id } = pixel;
           const letter = id ? getLetter(id) : undefined;
+          const className = `${letter}-block`;
 
-          addOrRemovePixel(x, y, 'remove', letter);
           addOrRemovePixel(
-            x,
-            y + rows.length,
+            pixelRefs,
+            [x, y],
+            'remove',
+            className
+          );
+
+          addOrRemovePixel(
+            pixelRefs,
+            [x, y + rows.length],
             'add',
-            letter,
+            className,
             id
           );
         }
@@ -262,39 +254,27 @@ export const GameBoard = () => {
     rows.forEach((y) => {
       for (let i = 0; i < BOARD_WIDTH; i++) {
         const x = i;
-        const id = pixelRefs.current[`${x}-${y}`].id;
+        const id = pixelRefs.current[y][x]?.id;
 
         if (!id) return;
         const letter = getLetter(id);
+        const className = `${letter}-block`;
 
-        addOrRemovePixel(x, y, 'remove', letter);
+        addOrRemovePixel(
+          pixelRefs,
+          [x, y],
+          'remove',
+          className
+        );
       }
     });
-  };
-
-  // delete once update DM
-  const reformattedRefs = () => {
-    const pixelsInRows = [];
-
-    for (let i = 0; i < BOARD_HEIGHT; i++) {
-      const row = [];
-
-      for (let j = 0; j < BOARD_WIDTH; j++) {
-        const pixel = pixelRefs.current[`${j}-${i}`];
-        row.push(pixel);
-      }
-
-      pixelsInRows.push(row);
-    }
-
-    return pixelsInRows;
   };
 
   const findCompletedRows = (): number[] => {
     let rowsToRemove: null | number[];
 
-    reformattedRefs().forEach((row, index) => {
-      if (row.every((pixel) => pixel.id)) {
+    pixelRefs.current.forEach((row, index) => {
+      if (row.every((pixel) => pixel?.id)) {
         if (!rowsToRemove) rowsToRemove = [];
         rowsToRemove.push(index);
       }
@@ -397,22 +377,9 @@ export const GameBoard = () => {
     console.log('focal point', focalPointRef.current);
   };
 
-  const clearBoard = () => {
-    for (let i = 0; i < BOARD_HEIGHT; i++) {
-      for (let j = 0; j < BOARD_WIDTH; j++) {
-        const id = pixelRefs.current[`${j}-${i}`].id;
-
-        if (id) {
-          const letter = getLetter(id);
-          addOrRemovePixel(j, i, 'remove', letter, id);
-        }
-      }
-    }
-  };
-
   const startNewGame = () => {
     setGameOver(true);
-    clearBoard();
+    clearBoard(pixelRefs);
     setGameOver(false);
     makeNewTetromino();
   };
