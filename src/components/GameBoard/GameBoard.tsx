@@ -213,15 +213,15 @@ export const GameBoard = () => {
               pixelRefs,
               [x, y],
               'remove',
-              className,
-              id
+              className
             );
 
             addOrRemovePixel(
               pixelRefs,
               [x, y + rows.length],
               'add',
-              className
+              className,
+              id
             );
           }
         });
@@ -234,7 +234,6 @@ export const GameBoard = () => {
     const completedRowIndexes = findCompletedRows();
 
     if (completedRowIndexes) {
-      console.log(completedRowIndexes);
       removeRows(completedRowIndexes);
       moveRowsDown(completedRowIndexes);
 
