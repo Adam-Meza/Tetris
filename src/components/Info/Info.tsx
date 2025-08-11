@@ -23,10 +23,10 @@ const Info = ({ startNewGame }: InfoProps) => {
         React, SCSS and after my internship i wanted to stay
         sharp and apply the things i learned i built this
         iwas a way of praxtiving react specifallyt best
-        practices in syntax and functionality i wanted to
+        {/* practices in syntax and functionality i wanted to
         praxctice the useRef which proved ti be intergal
         duirng my time at bentley. write more consice code
-        with scss iterator funcitons and selectors.
+        with scss iterator funcitons and selectors. */}
         <br></br>
         {/* ive always wanted to make games so antoher big part
         was figuringout a system for moving game pieces

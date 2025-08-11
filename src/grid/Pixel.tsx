@@ -40,7 +40,7 @@ export const Pixel = (props: PixelProps) => {
       y,
       html: pixelRef,
     });
-  }, [x, y, pixelRef, setPixelRef]);
+  }, []);
 
   return (
     <span ref={pixelRef} className={baseClass}>

@@ -3,40 +3,29 @@ import { getLetter } from '../utilities';
 
 export const addOrRemovePixel = (
   pixels: React.MutableRefObject<(PixelType | null)[][]>,
-  setPixel: (pixel: PixelType) => void,
   x: number,
   y: number,
   action: 'add' | 'remove',
   letter?: string,
   id?: string
 ) => {
-  if (action === 'add') console.log(id);
-  const dataRef = pixels.current[y][x];
+  const dataRef = pixels.current[y][x] as PixelType;
 
-  const spanRef = dataRef?.html?.current;
+  const spanRef = dataRef.html;
 
-  if (!spanRef) return false;
+  if (!spanRef?.current) return false;
 
   if (action === 'add') {
-    spanRef.classList.add(`${letter}-block`);
-    setPixel({
-      x,
-      y,
-      id,
-    });
+    spanRef.current.classList.add(`${letter}-block`);
+    dataRef.id = id;
   } else if (action === 'remove') {
-    spanRef.classList.remove(`${letter}-block`);
-    setPixel({
-      x,
-      y,
-      id: undefined,
-    });
+    spanRef.current.classList.remove(`${letter}-block`);
+    dataRef.id = undefined;
   }
 };
 
 export const clearBoard = (
-  refs: React.MutableRefObject<(PixelType | null)[][]>,
-  setRefs: (refs: PixelType) => void
+  refs: React.MutableRefObject<(PixelType | null)[][]>
 ) => {
   const height = refs.current.length;
   const width = refs.current[0].length;
@@ -46,18 +35,11 @@ export const clearBoard = (
       const id = refs.current[i][j]?.id;
 
       if (id) {
-        console.log('we got here');
         const letter = getLetter(id);
-        addOrRemovePixel(
-          refs,
-          setRefs,
-          j,
-          i,
-          'remove',
-          letter,
-          id
-        );
+        addOrRemovePixel(refs, j, i, 'remove', letter, id);
       }
     }
   }
+
+  console.log(refs);
 };

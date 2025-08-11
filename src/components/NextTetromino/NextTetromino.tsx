@@ -2,31 +2,48 @@ import { Grid } from '../../grid/Grid';
 import React from 'react';
 import type { PixelType } from '../../grid/Pixel';
 import { makeRefMatrix } from '../../utilities';
-import { nextTetrominoAtom } from '../../atoms';
+import {
+  nextTetrominoAtom,
+  gameOverAtom,
+} from '../../atoms';
 import { useAtomValue } from 'jotai';
 import { rotateShapeClockwise } from '../../utilities';
 import {
   addOrRemovePixel,
   clearBoard,
 } from '../../grid/utilities';
+import { TetrominoType } from '../Tetromino/Tetromino';
 
 export const NextTetromino = () => {
   const BOARD_WIDTH = 6;
   const BOARD_HEIGHT = 4;
   const FOCAL_POINT = [1, 1];
   const next = useAtomValue(nextTetrominoAtom);
-
-  React.useEffect(() => {
-    console.log(pixelRefs);
-    clearBoard(pixelRefs, setPixelRef);
-    displayNext();
-  }, [next]);
+  const gameOver = useAtomValue(gameOverAtom);
+  console.log('nextrender', next);
 
   const pixelRefs = React.useRef<(PixelType | null)[][]>(
     makeRefMatrix(BOARD_HEIGHT, BOARD_WIDTH)
   );
 
-  const displayNext = (tetromino = next) => {
+  const setPixelRef = (pixel: PixelType) => {
+    const { x, y } = pixel;
+    if (
+      y >= 0 &&
+      y < BOARD_HEIGHT &&
+      x >= 0 &&
+      x < BOARD_WIDTH
+    ) {
+      pixelRefs.current[y][x] = pixel;
+    }
+  };
+
+  const displayNext = (
+    tetromino: TetrominoType,
+    refs: React.MutableRefObject<(PixelType | null)[][]>
+  ) => {
+    clearBoard(refs);
+
     let { shape } = tetromino;
     const { id, letter } = tetromino;
 
@@ -49,7 +66,6 @@ export const NextTetromino = () => {
         if (shape[i][j]) {
           addOrRemovePixel(
             pixelRefs,
-            setPixelRef,
             x + j,
             y + i,
             'add',
@@ -61,18 +77,13 @@ export const NextTetromino = () => {
     }
   };
 
-  const setPixelRef = (pixel: PixelType) => {
-    const { x, y } = pixel;
-    if (
-      y >= 0 &&
-      y < BOARD_HEIGHT &&
-      x >= 0 &&
-      x < BOARD_WIDTH
-    ) {
-      pixelRefs.current[y][x] = pixel;
+  const display = React.useMemo(() => {
+    console.log('we run');
+    if (next && !gameOver) {
+      console.log('we get into conditional');
+      displayNext(next, pixelRefs);
     }
-    console.log(pixelRefs);
-  };
+  }, [next, gameOver]);
 
   return (
     <div className='next-tetromino-wrapper grid-wrapper'>

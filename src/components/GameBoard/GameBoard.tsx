@@ -107,7 +107,7 @@ export const GameBoard = () => {
     action: 'add' | 'remove',
     tetromino = currentTetromino
   ) => {
-    tetromino.shape.forEach(
+    tetromino.shape?.forEach(
       (row: (string | null)[], rowIndex: number) => {
         row.forEach(
           (cell: string | null, colIndex: number) => {
@@ -308,12 +308,12 @@ export const GameBoard = () => {
     }
 
     const tetromino = randomTetromino();
-    const test = randomTetromino();
+
     setNext(tetromino);
-    setTetromino(test);
+    setTetromino(next);
 
     if (
-      !isMovePossible('same', test, {
+      !isMovePossible('same', next, {
         current: [3, 0],
       })
     ) {
@@ -322,7 +322,7 @@ export const GameBoard = () => {
     }
 
     focalPointRef.current = [3, 0];
-    updateCurrentTetromino('add', test);
+    updateCurrentTetromino('add', next);
   };
 
   const rotateTetromino = () => {
@@ -413,7 +413,7 @@ export const GameBoard = () => {
       tabIndex={0}
       onKeyDown={(event) => handleKeyPress(event)}
     >
-      {/* <Info startNewGame={startNewGame} /> */}
+      <Info startNewGame={startNewGame} />
       <section className='gameboard-wrapper'>
         <ControlPanel
           consoleLogData={consoleLogData}
