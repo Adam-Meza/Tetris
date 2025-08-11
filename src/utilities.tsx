@@ -62,14 +62,3 @@ export const makeNewCoordinates = (
 
   return [newX, newY];
 };
-
-export const makeRefMatrix = (
-  height: number,
-  width: number
-) =>
-  Array.from({ length: height }, () =>
-    Array.from(
-      { length: width },
-      () => null as PixelType | null
-    )
-  );

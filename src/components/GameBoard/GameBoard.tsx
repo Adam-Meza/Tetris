@@ -58,6 +58,7 @@ export const GameBoard = () => {
   /**
    * Sets the individual pixel ref objects and is responsible for effecting change on the DOM.
    */
+
   const setPixelRef = (pixel: PixelType) => {
     const key = `${pixel.x}-${pixel.y}`;
 
@@ -103,6 +104,10 @@ export const GameBoard = () => {
     }
   };
 
+  // CONVERT THIS TO UPDATE OBJECT
+  // BE ABLE TO TAKE IN AN OBJECT
+  // AND A FOCAL POINT
+  // and move that objec to the focal point
   const updateCurrentTetromino = (
     action: 'add' | 'remove',
     tetromino = currentTetromino
@@ -250,6 +255,7 @@ export const GameBoard = () => {
     // }, 80);
   };
 
+  //
   const removeRows = (rows: number[]) => {
     if (!rows) return;
 
@@ -266,6 +272,7 @@ export const GameBoard = () => {
     });
   };
 
+  // delete once update DM
   const reformattedRefs = () => {
     const pixelsInRows = [];
 
@@ -321,10 +328,12 @@ export const GameBoard = () => {
       return;
     }
 
+    // could be place();
     focalPointRef.current = [3, 0];
     updateCurrentTetromino('add', next);
   };
 
+  // could be GameManager.rotate();
   const rotateTetromino = () => {
     const rotated = {
       ...currentTetromino,
@@ -338,6 +347,9 @@ export const GameBoard = () => {
         BOARD_WIDTH &&
       isMovePossible('same', rotated)
     ) {
+      // this can be changed to movePiece(refs, object, focalpoint, {direction: })
+
+      //??/
       updateCurrentTetromino('remove');
       setTetromino(rotated);
       updateCurrentTetromino('add', rotated);
@@ -371,9 +383,6 @@ export const GameBoard = () => {
           .replace('Arrow', '')
           .toLowerCase() as Direction;
         moveTetromino(direction);
-        return;
-      case 'Enter':
-        makeNewTetromino();
         return;
       case 'Shift':
         rotateTetromino();

@@ -17,7 +17,6 @@ import { TetrominoType } from '../Tetromino/Tetromino';
 export const NextTetromino = () => {
   const BOARD_WIDTH = 6;
   const BOARD_HEIGHT = 4;
-  let focalPoint = [1, 1];
 
   const next = useAtomValue(nextTetrominoAtom);
   const gameOver = useAtomValue(gameOverAtom);
@@ -39,6 +38,7 @@ export const NextTetromino = () => {
   };
 
   const displayNext = (tetromino: TetrominoType) => {
+    let focalPoint = [1, 1];
     let { shape } = tetromino;
     const { id, letter } = tetromino;
 
@@ -56,15 +56,19 @@ export const NextTetromino = () => {
     const width = shape[0].length;
     const height = shape.length;
     const [x, y] = focalPoint;
+    const className = `${letter}-block`;
 
     for (let i = 0; i < height; i++) {
       for (let j = 0; j < width; j++) {
         if (shape[i][j]) {
+          const coordinates = [x + j, y + i];
+
           addOrRemovePixel(
             pixelRefs,
-            [x + j, y + i],
+            //@ts-ignore
+            coordinates,
             'add',
-            letter,
+            className,
             id
           );
         }
