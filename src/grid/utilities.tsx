@@ -3,12 +3,12 @@ import { getLetter } from '../utilities';
 
 export const addOrRemovePixel = (
   pixels: React.MutableRefObject<(PixelType | null)[][]>,
-  x: number,
-  y: number,
+  coordinates: [number, number],
   action: 'add' | 'remove',
   letter?: string,
   id?: string
 ) => {
+  const [x, y] = coordinates;
   const dataRef = pixels.current[y][x] as PixelType;
 
   const spanRef = dataRef.html;
@@ -36,10 +36,25 @@ export const clearBoard = (
 
       if (id) {
         const letter = getLetter(id);
-        addOrRemovePixel(refs, j, i, 'remove', letter, id);
+        addOrRemovePixel(
+          refs,
+          [j, i],
+          'remove',
+          letter,
+          id
+        );
       }
     }
   }
-
-  console.log(refs);
 };
+
+export const makeRefMatrix = (
+  height: number,
+  width: number
+) =>
+  Array.from({ length: height }, () =>
+    Array.from(
+      { length: width },
+      () => null as PixelType | null
+    )
+  );

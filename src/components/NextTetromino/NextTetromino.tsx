@@ -1,7 +1,6 @@
 import { Grid } from '../../grid/Grid';
 import React from 'react';
 import type { PixelType } from '../../grid/Pixel';
-import { makeRefMatrix } from '../../utilities';
 import {
   nextTetrominoAtom,
   gameOverAtom,
@@ -11,16 +10,17 @@ import { rotateShapeClockwise } from '../../utilities';
 import {
   addOrRemovePixel,
   clearBoard,
+  makeRefMatrix,
 } from '../../grid/utilities';
 import { TetrominoType } from '../Tetromino/Tetromino';
 
 export const NextTetromino = () => {
   const BOARD_WIDTH = 6;
   const BOARD_HEIGHT = 4;
-  const FOCAL_POINT = [1, 1];
+  let focalPoint = [1, 1];
+
   const next = useAtomValue(nextTetrominoAtom);
   const gameOver = useAtomValue(gameOverAtom);
-  console.log('nextrender', next);
 
   const pixelRefs = React.useRef<(PixelType | null)[][]>(
     makeRefMatrix(BOARD_HEIGHT, BOARD_WIDTH)
@@ -38,12 +38,7 @@ export const NextTetromino = () => {
     }
   };
 
-  const displayNext = (
-    tetromino: TetrominoType,
-    refs: React.MutableRefObject<(PixelType | null)[][]>
-  ) => {
-    clearBoard(refs);
-
+  const displayNext = (tetromino: TetrominoType) => {
     let { shape } = tetromino;
     const { id, letter } = tetromino;
 
@@ -53,21 +48,21 @@ export const NextTetromino = () => {
       case 'l':
         shape = rotateShapeClockwise(shape);
         break;
+      case 'o':
+        focalPoint = [2, 1];
+        break;
     }
 
     const width = shape[0].length;
     const height = shape.length;
-    const [x, y] = FOCAL_POINT;
+    const [x, y] = focalPoint;
 
     for (let i = 0; i < height; i++) {
       for (let j = 0; j < width; j++) {
-        let pixel = shape[i][j];
-
         if (shape[i][j]) {
           addOrRemovePixel(
             pixelRefs,
-            x + j,
-            y + i,
+            [x + j, y + i],
             'add',
             letter,
             id
@@ -78,10 +73,9 @@ export const NextTetromino = () => {
   };
 
   const display = React.useMemo(() => {
-    console.log('we run');
     if (next && !gameOver) {
-      console.log('we get into conditional');
-      displayNext(next, pixelRefs);
+      clearBoard(pixelRefs);
+      displayNext(next);
     }
   }, [next, gameOver]);
 
