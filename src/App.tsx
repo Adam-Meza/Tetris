@@ -1,4 +1,5 @@
 import { GameBoard } from './components/GameBoard/GameBoard';
+import { Header } from './components/Header/Header';
 
 /*
  
@@ -15,6 +16,7 @@ makign a back end to track data of users and allow
 function App() {
   return (
     <div className='App'>
+      <Header />
       <GameBoard />
     </div>
   );

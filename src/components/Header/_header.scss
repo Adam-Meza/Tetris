@@ -1,0 +1,38 @@
+@use 'sass:map';
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+$pink: map.get($tetromino-colors, 'z');
+$green: map.get($tetromino-colors, 's');
+$blue: map.get($tetromino-colors, 'j');
+
+$color-list: map-values($tetromino-colors);
+
+@for $i from 1 through length($color-list) {
+  $color: nth($color-list, $i);
+  h1 span:nth-child(#{$i}) {
+    background-color: $color;
+    color: white;
+  }
+}
+
+header {
+  @include flex-row;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 10px;
+}
+
+h1 {
+  font-family: 'Bytesized', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 6vh;
+  margin: 0px;
+  color: white;
+  margin-left: 20px;
+}
+
+.nav {
+  width: fit-content;
+}

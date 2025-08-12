@@ -5,22 +5,21 @@
 @import './components/GameBoard/game-board';
 @import './components/NextTetromino/next-tetromino';
 @import './components/TopDisplay/top-display';
+@import './components//Header/header';
 @import './styles/mixins';
 
 * {
   overflow: hidden;
 }
+body {
+  margin: 0px;
+}
 
 .App {
-  font-family: 'Roboto', serif;
-  font-optical-sizing: auto;
-  font-weight: 300;
-  font-style: normal;
-  font-variation-settings: 'wdth' 100;
   height: 100vh;
   width: 100vw;
-  @include flex-row;
-  justify-content: center;
+  @include flex-column;
+  justify-content: flex-start;
   align-items: center;
   overflow: hidden;
 }

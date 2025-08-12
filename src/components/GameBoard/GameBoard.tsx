@@ -210,29 +210,23 @@ export const GameBoard = () => {
         // check all the rows above it..
         for (let j = i; j >= 0; j--) {
           const newRow = pixelRefs.current[j];
-
           //if any of the square are occupied...
           if (
             newRow.some((pixel) => pixel?.id !== undefined)
           ) {
             //iterate (again) through that row...
             newRow.forEach((pixel) => {
-              // if the pixel doesn't exist, return.
-
+              // if the pixel doesn't exist or doesn't have any ID, return.
               if (!pixel?.id) return;
 
               const { x, y, id } = pixel;
               const letter = getLetter(id);
               const className = `${letter}-block`;
-
               // store the value of the difference between those two rows
               const difference = i - j;
-
-              // then calculate the new y value based on the difference.
+              // then use it to calculate the new y value based on the difference.
               const targetY = y + difference;
 
-              // THHIS ACTIOM OF REMOVING AN MATRIX AND THEN ADDING IT BACK SHOULD BE REUSABLE
-              // UPDATECURREMNT SHOILD JUST BE MOVE(OBJECT, DIRECTION, DIRECTION: number)
               addOrRemovePixel(
                 pixelRefs,
                 [x, y],
@@ -249,8 +243,9 @@ export const GameBoard = () => {
               );
             });
 
-            //break so we don move everyrow above it, go back
-            // to checking for empty rows, theres gonna be at least one.
+            //break so we don move every row above it to the same location
+            // instead go back to looking for empty rows
+            // then repeat the prcoess if needed.
             break;
           }
         }

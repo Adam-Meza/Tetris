@@ -4,20 +4,19 @@
 
 .top-display {
   @include flex-column;
-  justify-content: space-around;
-  height: 200px;
+  justify-content: flex-start;
+  height: 170px;
   width: 100%;
   font-family: 'Jersey 10', sans-serif;
   margin: 5px 0px;
-  gap: 10px;
+  gap: clamp(5px, 1vh, 10px);
 
   .top-display-bottom-wrapper {
     @include flex-row;
-    height: 100px;
+    height: 90px;
     width: 100%;
     justify-content: space-between;
     height: fit-content;
-    gap: 10px;
   }
 }
 
@@ -27,11 +26,12 @@
   color: white;
   justify-content: center;
   align-items: center;
+
   :nth-child(1) {
-    font-size: 20px;
+    font-size: clamp(15px, 3vh, 20px);
   }
   :nth-child(2) {
-    font-size: 60px;
+    font-size: clamp(50px, 7vh, 60px);
   }
 }
 
