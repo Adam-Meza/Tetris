@@ -5,16 +5,17 @@
   container-type: size;
   display: grid;
   place-items: center;
-  border: 1px solid #000;
+  width: fit-content;
+  height: fit-content;
 }
 
 .grid {
+  display: grid;
   --cell-size: min(
     calc(100cqw / var(--grid-width)),
     calc(100cqh / var(--grid-height))
   );
 
-  display: grid;
   grid-template-columns: repeat(
     var(--grid-width),
     var(--cell-size)

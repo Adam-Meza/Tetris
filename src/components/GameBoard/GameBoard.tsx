@@ -17,15 +17,15 @@ import {
   gameOverAtom,
   currentTetrominoAtom,
   nextTetrominoAtom,
+  lineCountAtom,
 } from '../../atoms';
 import Info from '../Info/Info';
-import ScoreBoard from './ScoreBoard';
-import { NextTetromino } from '../NextTetromino/NextTetromino';
 import {
   makeRefMatrix,
   addOrRemovePixel,
   clearBoard,
 } from '../../grid/utilities';
+import TopDisplay from '../TopDisplay/TopDisplay';
 
 /**
  * Tetris GameBoard Component -
@@ -43,6 +43,7 @@ export const GameBoard = () => {
   const [gameOver, setGameOver] = useAtom(gameOverAtom);
   const [score, setScore] = useAtom(scoreAtom);
   const [next, setNext] = useAtom(nextTetrominoAtom);
+  const [lineCount, setCount] = useAtom(lineCountAtom);
 
   /**
    * Focal point determining the coordinates on the Grid that pieces are placed/oriented with.
@@ -116,6 +117,7 @@ export const GameBoard = () => {
       handleBlockLanding();
   };
 
+  // this might be hard to abstract out as different games have different needs
   const isMovePossible = (
     direction: Direction,
     tetromino = currentTetromino,
@@ -198,33 +200,60 @@ export const GameBoard = () => {
     }
   };
 
-  const moveRowsDown = (rows: number[]) => {
-    console.log('we run');
-    for (let i = rows[0]; i >= 0; i--) {
-      if (i < rows[0]) {
-        console.log(i);
-        pixelRefs.current[i].forEach((pixel) => {
-          if (pixel) {
-            const { x, y, id } = pixel;
-            const letter = id ? getLetter(id) : undefined;
-            const className = `${letter}-block`;
+  const moveRowsDown = () => {
+    // check every row...
+    for (let i = BOARD_HEIGHT - 1; i >= 0; i--) {
+      const row = pixelRefs.current[i];
 
-            addOrRemovePixel(
-              pixelRefs,
-              [x, y],
-              'remove',
-              className
-            );
+      //if that row is empty
+      if (row.every((pixel) => pixel?.id === undefined)) {
+        // check all the rows above it..
+        for (let j = i; j >= 0; j--) {
+          const newRow = pixelRefs.current[j];
 
-            addOrRemovePixel(
-              pixelRefs,
-              [x, y + rows.length],
-              'add',
-              className,
-              id
-            );
+          //if any of the square are occupied...
+          if (
+            newRow.some((pixel) => pixel?.id !== undefined)
+          ) {
+            //iterate (again) through that row...
+            newRow.forEach((pixel) => {
+              // if the pixel doesn't exist, return.
+
+              if (!pixel?.id) return;
+
+              const { x, y, id } = pixel;
+              const letter = getLetter(id);
+              const className = `${letter}-block`;
+
+              // store the value of the difference between those two rows
+              const difference = i - j;
+
+              // then calculate the new y value based on the difference.
+              const targetY = y + difference;
+
+              // THHIS ACTIOM OF REMOVING AN MATRIX AND THEN ADDING IT BACK SHOULD BE REUSABLE
+              // UPDATECURREMNT SHOILD JUST BE MOVE(OBJECT, DIRECTION, DIRECTION: number)
+              addOrRemovePixel(
+                pixelRefs,
+                [x, y],
+                'remove',
+                className
+              );
+
+              addOrRemovePixel(
+                pixelRefs,
+                [x, targetY],
+                'add',
+                className,
+                id
+              );
+            });
+
+            //break so we don move everyrow above it, go back
+            // to checking for empty rows, theres gonna be at least one.
+            break;
           }
-        });
+        }
       }
     }
   };
@@ -235,13 +264,14 @@ export const GameBoard = () => {
 
     if (completedRowIndexes) {
       removeRows(completedRowIndexes);
-      moveRowsDown(completedRowIndexes);
+      moveRowsDown();
 
       const newScore = calculateScore(
         completedRowIndexes.length,
         score
       );
 
+      setCount(lineCount + completedRowIndexes.length);
       setScore(newScore);
     }
 
@@ -382,6 +412,8 @@ export const GameBoard = () => {
     setGameOver(true);
     clearBoard(pixelRefs);
     setGameOver(false);
+    setScore(0);
+    setCount(0);
     makeNewTetromino();
   };
 
@@ -391,16 +423,9 @@ export const GameBoard = () => {
       onKeyDown={(event) => handleKeyPress(event)}
     >
       <Info startNewGame={startNewGame} />
-      <section className='gameboard-wrapper'>
-        <ControlPanel
-          consoleLogData={consoleLogData}
-          setGameOver={setGameOver}
-        />
-        <div className='top-display'>
-          <ScoreBoard />
-          <NextTetromino />
-        </div>
 
+      <section className='gameboard-wrapper'>
+        <TopDisplay />
         <div className='grid-wrapper' id='gameboard'>
           <Grid
             setPixelRef={setPixelRef}

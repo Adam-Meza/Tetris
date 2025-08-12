@@ -36,13 +36,7 @@ export const clearBoard = (
       if (id) {
         const letter = getLetter(id);
         const className = `${letter}-block`;
-        addOrRemovePixel(
-          refs,
-          [j, i],
-          'remove',
-          className,
-          id
-        );
+        addOrRemovePixel(refs, [j, i], 'remove', className);
       }
     }
   }
