@@ -1,4 +1,32 @@
-@import './styles/pixel';
-@import './styles/grid';
-@import './styles/app';
-@import './styles/button'
+@import './grid/grid';
+@import './components/ControlPanel/button';
+@import './components/Info/info';
+@import './components/Tetromino/tetromino';
+@import './components/GameBoard/game-board';
+@import './components/NextTetromino/next-tetromino';
+@import './components/TopDisplay/top-display';
+@import './styles/mixins';
+
+* {
+  overflow: hidden;
+}
+
+.App {
+  font-family: 'Roboto', serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+  font-variation-settings: 'wdth' 100;
+  height: 100vh;
+  width: 100vw;
+  @include flex-row;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+main {
+  @include flex-row;
+  justify-content: space-evenly;
+  width: 80vw;
+}

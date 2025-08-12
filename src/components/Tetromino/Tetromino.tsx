@@ -14,7 +14,7 @@ const t_block: TetrominoType = {
   ],
 };
 
-const o_block = {
+const o_block: TetrominoType = {
   letter: 'o',
   shape: [
     ['o', 'o'],
@@ -22,30 +22,30 @@ const o_block = {
   ],
 };
 
-const l_block = {
-  letter: 'l',
-  shape: [
-    [null, 'l'],
-    [null, 'l'],
-    ['l', 'l'],
-  ],
-};
-
-const j_block = {
+const j_block: TetrominoType = {
   letter: 'j',
   shape: [
+    [null, 'j'],
+    [null, 'j'],
+    ['j', 'j'],
+  ],
+};
+
+const l_block: TetrominoType = {
+  letter: 'l',
+  shape: [
     ['l', null],
     ['l', null],
     ['l', 'l'],
   ],
 };
 
-const i_block = {
+const i_block: TetrominoType = {
   letter: 'i',
   shape: [['i'], ['i'], ['i'], ['i']],
 };
 
-const s_block = {
+const s_block: TetrominoType = {
   letter: 's',
   shape: [
     [null, 's', 's'],
@@ -53,7 +53,7 @@ const s_block = {
   ],
 };
 
-const z_block = {
+const z_block: TetrominoType = {
   letter: 'z',
   shape: [
     ['z', 'z', null],

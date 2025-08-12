@@ -8,50 +8,47 @@ import { PixelType } from './Pixel';
  * @param setPixelRef React.RefObject<HTMLSpanElement>
   ) => void;
  */
+
 type GridProps = {
   width: number;
+  height: number;
+  baseClass: string;
   setPixelRef: (pixel: PixelType) => void;
-  height?: number;
 };
 
 /**
  * Grid React component
  */
-export const Grid = React.forwardRef((props: GridProps) => {
-  const { width, height = null, setPixelRef } = props;
-
-  const trueHeight = height ?? width;
-
-  const styles = {
-    '--pixel-width': width,
-    '--pixel-height': trueHeight,
+export const Grid = ({
+  width,
+  height,
+  baseClass,
+  setPixelRef,
+}: GridProps) => {
+  const style = {
+    '--grid-width': width,
+    '--grid-height': height,
   } as React.CSSProperties;
 
-  const pixels = () => {
-    const grid = [];
+  const pixels = [];
 
-    for (let i = 0; i < trueHeight; i++) {
-      const row = [];
-      for (let j = 0; j < width; j++) {
-        const key = i * width + j;
-
-        const pixelProps = {
-          setPixelRef: setPixelRef,
-          x: j,
-          y: i,
-        };
-
-        row.push(<Pixel {...pixelProps} key={key} />);
-      }
-      grid.push(row);
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      pixels.push(
+        <Pixel
+          key={y * width + x}
+          baseClass={baseClass}
+          x={x}
+          y={y}
+          setPixelRef={setPixelRef}
+        />
+      );
     }
-
-    return grid;
-  };
+  }
 
   return (
-    <section className='grid' style={styles}>
-      {pixels()}
+    <section className='grid' style={style}>
+      {pixels}
     </section>
   );
-});
+};

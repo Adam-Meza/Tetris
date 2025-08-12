@@ -1,31 +1,32 @@
+import { useAtom } from 'jotai';
+import { gameOverAtom, scoreAtom } from '../../atoms';
+import { useAtomValue } from 'jotai';
+
 type ControlPanelProps = {
-  makeNewTetromino: () => void;
-  pauseGame: () => void;
+  setGameOver: (state: boolean) => void;
   consoleLogData: () => void;
 };
 
 export const ControlPanel = (props: ControlPanelProps) => {
-  const { makeNewTetromino, pauseGame, consoleLogData } =
-    props;
+  const { setGameOver, consoleLogData } = props;
+
+  const gameOver = useAtomValue(gameOverAtom);
+  const score = useAtomValue(scoreAtom);
 
   return (
     <div className='button-container'>
-      <button
-        onClick={() => {
-          makeNewTetromino();
-        }}
-      >
-        Place Block
+      {
+        <button
+          onClick={() => {
+            consoleLogData();
+          }}
+        >
+          console log stuff
+        </button>
+      }
+      <button onClick={() => setGameOver(!gameOver)}>
+        {gameOver ? 'start' : 'pause'}
       </button>
-
-      <button
-        onClick={() => {
-          consoleLogData();
-        }}
-      >
-        console log stuff
-      </button>
-      <button onClick={() => pauseGame()}>pause</button>
     </div>
   );
 };
