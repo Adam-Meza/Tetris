@@ -1,6 +1,12 @@
 import { PixelType } from './Pixel';
 import { getLetter } from '../utilities';
-import { TetrominoType } from '../components/Tetromino/Tetromino';
+import type {
+  PieceType,
+  PutPropsType,
+  DeleteArgsType,
+  MoveArgsType,
+  Direction,
+} from './GameManagerTypes';
 
 export class GameManager {
   pixelRefs: React.MutableRefObject<(PixelType | null)[][]>;
@@ -39,7 +45,7 @@ export class GameManager {
     }
   }
 
-  delete(args: PutPropsType) {
+  delete(args: DeleteArgsType) {
     const { piece, focalPoint } = args;
     const { shape, className } = piece;
 
@@ -96,6 +102,7 @@ export class GameManager {
       conditional,
       callback,
     } = args;
+
     const [x, y] = this.focalPoint.current;
 
     if (conditional && !conditional(direction)) return;
@@ -192,54 +199,3 @@ export class GameManager {
 // const conditional = () => {}
 
 // }
-
-export type PutPropsType = {
-  piece: PieceType;
-  focalPoint: number[];
-  conditional?: () => boolean;
-  callback?: (customEvent: CustomEventType) => any;
-};
-
-export type DeleteArgsType = {
-  piece: PieceType;
-  focalPoint: number[];
-  conditional?: () => boolean;
-  callback?: (customEvent: CustomEventType) => any;
-};
-
-type CustomEventType = {
-  dataModel: React.MutableRefObject<(PixelType | null)[][]>;
-  focalPoint: PixelType;
-  neighbors: PixelType[][];
-  piece: PieceType;
-  direction?: Direction;
-};
-
-export type PieceType = {
-  shape: (string | null)[][];
-  id: string | undefined;
-  className: string;
-  letter?: string;
-};
-
-export type MoveArgsType = {
-  piece: PieceType | TetrominoType;
-  direction: Direction;
-  distance: number;
-  focalPoint?: React.MutableRefObject<number[]>;
-  conditional?: (args: any) => boolean;
-  callback?: (args: CallBackArgs, customArgs?: any) => any;
-};
-
-export type CallBackArgs = {
-  piece: PieceType;
-  pixelRefs: React.MutableRefObject<(PixelType | null)[][]>;
-  focalPoint: React.MutableRefObject<number[]>;
-};
-
-export type Direction =
-  | 'down'
-  | 'left'
-  | 'right'
-  | 'same'
-  | 'up';

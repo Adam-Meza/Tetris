@@ -18,16 +18,10 @@ import {
   lineCountAtom,
 } from '../../atoms';
 import Info from '../Info/Info';
-import {
-  makeRefMatrix,
-  addOrRemovePixel,
-} from '../../grid/utilities';
+import { makeRefMatrix } from '../../grid/utilities';
 import TopDisplay from '../TopDisplay/TopDisplay';
-import {
-  CallBackArgs,
-  GameManager,
-  MoveArgsType,
-} from '../../grid/GameManager';
+import { CallBackArgs } from '../../grid/GameManagerTypes';
+import { GameManager } from '../../grid/GameManager';
 
 /**
  * Tetris GameBoard Component -
@@ -103,10 +97,8 @@ export const GameBoard = () => {
 
         const nextSquare = pixelRefs.current[lowerY][x];
 
-        if (!runCheck(currentSquare, nextSquare, piece)) {
+        if (!runCheck(currentSquare, nextSquare, piece))
           handleBlockLanding();
-          return true;
-        }
       }
     }
 
@@ -184,11 +176,16 @@ export const GameBoard = () => {
   const moveTetromino = (direction: Direction) => {
     if (!currentTetromino) return;
 
+    const focalPoint = [
+      focalPointRef.current[0],
+      focalPointRef.current[1],
+    ];
+
     const args = {
       piece: currentTetromino,
       direction: direction,
       distance: 1,
-      focalPoint: focalPointRef,
+      focalPoint: focalPoint,
       callback: didBlockLand,
     };
 
@@ -213,22 +210,16 @@ export const GameBoard = () => {
           ) {
             //iterate (again) through that row...
             newRow.forEach((pixel) => {
-              if (!pixel?.id) return; // on deal with pixels that exist/have id's
-              const { x, y, id } = pixel;
+              if (!pixel?.id) return;
+
+              const { x, id } = pixel;
               const letter = getLetter(id);
               const className = `${letter}-block`;
-              // store the value of the difference between those two rows
-              const difference = i - j;
-              // then use it to calculate the new y value based on the difference.
-              const targetY = y + difference;
 
               gm.removePixel(pixel, className);
               gm.addPixel(id, className, [x, i]);
             });
 
-            //break so we don move every row above it to the same location
-            // instead go back to looking for empty rows
-            // then repeat the prcoess if needed.
             break;
           }
         }
@@ -252,7 +243,6 @@ export const GameBoard = () => {
       setCount(lineCount + completedRowIndexes.length);
       setScore(newScore);
     }
-    console.log('here');
     makeNewTetromino();
     // }, 80);
   };
@@ -275,7 +265,7 @@ export const GameBoard = () => {
   };
 
   const findCompletedRows = (): number[] | null => {
-    let rowsToRemove: number[];
+    let rowsToRemove = [] as number[];
 
     pixelRefs.current.forEach((row, index) => {
       if (row.every((pixel) => pixel?.id)) {
@@ -284,7 +274,6 @@ export const GameBoard = () => {
       }
     });
 
-    //@ts-expect-error faulty error
     return rowsToRemove;
   };
 

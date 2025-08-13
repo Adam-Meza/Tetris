@@ -9,7 +9,7 @@ import { useAtomValue } from 'jotai';
 import { rotateShapeClockwise } from '../../utilities';
 import { makeRefMatrix } from '../../grid/utilities';
 import { GameManager } from '../../grid/GameManager';
-import type { PieceType } from '../../grid/GameManager';
+import type { PieceType } from '../../grid/GameManagerTypes';
 
 export const NextTetromino = () => {
   const BOARD_WIDTH = 6;

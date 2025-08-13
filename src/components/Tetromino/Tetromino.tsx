@@ -1,4 +1,4 @@
-import { PieceType } from '../../grid/GameManager';
+import { PieceType } from '../../grid/GameManagerTypes';
 
 type TetrominoPrimative = {
   shape: (string | null)[][];
