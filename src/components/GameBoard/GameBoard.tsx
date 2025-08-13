@@ -1,5 +1,6 @@
 import React from 'react';
 import { Grid } from '../../grid/Grid';
+import { GameModal } from '../Modal/Modal';
 import { TetrominoType } from '../Tetromino/Tetromino';
 import { PixelType } from '../../grid/Pixel';
 import {
@@ -372,7 +373,6 @@ export const GameBoard = () => {
 
   const startNewGame = () => {
     setGameOver(true);
-    gm.clearBoard();
     setGameOver(false);
     setScore(0);
     setCount(0);
@@ -384,8 +384,7 @@ export const GameBoard = () => {
       tabIndex={0}
       onKeyDown={(event) => handleKeyPress(event)}
     >
-      <Info startNewGame={startNewGame} />
-
+      <GameModal startNewGame={startNewGame} />
       <section className='gameboard-wrapper'>
         <TopDisplay />
         <div className='grid-wrapper' id='gameboard'>

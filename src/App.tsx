@@ -1,6 +1,9 @@
 import { GameBoard } from './components/GameBoard/GameBoard';
 import { Header } from './components/Header/Header';
 import { SideArt } from './components/SideArt/SideArt';
+import { GameModal } from './components/Modal/Modal';
+import { ThemeProvider } from '@itwin/itwinui-react';
+import '@itwin/itwinui-react/styles.css';
 
 /*
  
@@ -16,11 +19,13 @@ makign a back end to track data of users and allow
  */
 function App() {
   return (
-    <div className='App'>
-      <Header />
-      <SideArt />
-      {/* <GameBoard /> */}
-    </div>
+    <ThemeProvider>
+      <div className='App'>
+        <Header />
+        {/* <SideArt /> */}
+        <GameBoard />
+      </div>
+    </ThemeProvider>
   );
 }
 

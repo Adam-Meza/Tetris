@@ -35,13 +35,6 @@ const Info = ({ startNewGame }: InfoProps) => {
           </a>
         </div>
       </>
-      <button
-        onClick={() => {
-          startNewGame();
-        }}
-      >
-        New Game
-      </button>
     </div>
   );
 };
