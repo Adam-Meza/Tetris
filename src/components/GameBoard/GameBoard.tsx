@@ -79,43 +79,6 @@ export const GameBoard = () => {
     }
   };
 
-  // CONVERT THIS TO UPDATE OBJECT
-  // BE ABLE TO TAKE IN AN OBJECT
-  // AND A FOCAL POINT
-  // and move that objec to the focal point
-  const updateCurrentTetromino = (
-    action: 'add' | 'remove',
-    tetromino = currentTetromino
-  ) => {
-    tetromino.shape?.forEach(
-      (row: (string | null)[], rowIndex: number) => {
-        row.forEach(
-          (cell: string | null, colIndex: number) => {
-            // some parts of the shape will be null,
-            // this ensures we are only updating
-            // DOM and data model for filled squares
-            if (cell) {
-              const x = focalPointRef.current[0] + colIndex;
-              const y = focalPointRef.current[1] + rowIndex;
-
-              const { id } = tetromino;
-              const letter = id ? getLetter(id) : undefined;
-              const className = `${letter}-block`;
-
-              addOrRemovePixel(
-                pixelRefs,
-                [x, y],
-                action,
-                className,
-                id
-              );
-            }
-          }
-        );
-      }
-    );
-  };
-
   const didBlockLand = (args: CallBackArgs) => {
     const { piece, focalPoint, pixelRefs } = args;
     const tetrominoHeight = piece.shape.length;
@@ -141,7 +104,6 @@ export const GameBoard = () => {
         const nextSquare = pixelRefs.current[lowerY][x];
 
         if (!runCheck(currentSquare, nextSquare, piece)) {
-          console.log('we et here');
           handleBlockLanding();
           return true;
         }
@@ -151,7 +113,6 @@ export const GameBoard = () => {
     return false;
   };
 
-  // this might be hard to abstract out as different games have different needs
   const isMovePossible = (
     direction: Direction,
     piece: TetrominoType,
@@ -170,8 +131,6 @@ export const GameBoard = () => {
           direction,
           1
         );
-
-        console.log('test');
 
         if (
           targetX >= BOARD_WIDTH ||
@@ -263,20 +222,8 @@ export const GameBoard = () => {
               // then use it to calculate the new y value based on the difference.
               const targetY = y + difference;
 
-              addOrRemovePixel(
-                pixelRefs,
-                [x, y],
-                'remove',
-                className
-              );
-
-              addOrRemovePixel(
-                pixelRefs,
-                [x, targetY],
-                'add',
-                className,
-                id
-              );
+              gm.removePixel(pixel, className);
+              gm.addPixel(id, className, [x, i]);
             });
 
             //break so we don move every row above it to the same location
@@ -316,18 +263,13 @@ export const GameBoard = () => {
     rows.forEach((y) => {
       for (let i = 0; i < BOARD_WIDTH; i++) {
         const x = i;
-        const id = pixelRefs.current[y][x]?.id;
+        const pixel = pixelRefs.current[y][x];
 
-        if (!id) return;
-        const letter = getLetter(id);
+        if (!pixel || !pixel.id) return;
+        const letter = getLetter(pixel.id);
         const className = `${letter}-block`;
 
-        addOrRemovePixel(
-          pixelRefs,
-          [x, y],
-          'remove',
-          className
-        );
+        gm.removePixel(pixel, className);
       }
     });
   };
@@ -363,8 +305,6 @@ export const GameBoard = () => {
     focalPointRef.current = [3, 0];
 
     if (!isMovePossible('same', next)) {
-      console.log('we think gmae is over');
-
       setGameOver(true);
       return;
     }

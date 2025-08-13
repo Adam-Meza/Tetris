@@ -1,6 +1,4 @@
 import type { PixelType } from './Pixel';
-import { getLetter } from '../utilities';
-
 export const addOrRemovePixel = (
   pixels: React.MutableRefObject<(PixelType | null)[][]>,
   coordinates: [number, number],

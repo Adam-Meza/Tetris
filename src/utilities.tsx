@@ -44,28 +44,3 @@ export const rotateShapeClockwise = (
 
   return transposedShape;
 };
-
-export const makeNewCoordinates = (
-  x: number,
-  y: number,
-  direction: Direction
-) => {
-  let newX = x;
-  let newY = y;
-
-  switch (direction) {
-    case 'down':
-      newY += 1;
-      break;
-    case 'left':
-      newX -= 1;
-      break;
-    case 'right':
-      newX += 1;
-      break;
-    case 'up':
-      newY -= 1;
-  }
-
-  return [newX, newY];
-};

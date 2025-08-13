@@ -29,7 +29,11 @@ export class GameManager {
       for (let j = 0; j < width; j++) {
         if (shape[i][j]) {
           const coordinates = [x + j, y + i];
-          this.addPixel(piece, coordinates);
+          this.addPixel(
+            piece.id,
+            piece.className,
+            coordinates
+          );
         }
       }
     }
@@ -58,11 +62,11 @@ export class GameManager {
     }
   }
 
-  private addPixel(
-    piece: PieceType,
+  addPixel(
+    id: string | undefined,
+    className: string,
     coordinates: number[]
   ) {
-    const { className, id } = piece;
     const [x, y] = coordinates;
     const dataRef = this.pixelRefs.current[y][
       x
@@ -76,7 +80,7 @@ export class GameManager {
     dataRef.id = id;
   }
 
-  private removePixel(pixel: PixelType, className: string) {
+  removePixel(pixel: PixelType, className: string) {
     const spanRef = pixel.html;
 
     if (!spanRef?.current) return false;
@@ -124,7 +128,9 @@ export class GameManager {
     }
   }
 
-  move(args: PutPropsType) {}
+  move(args: PutPropsType) {
+    // this is more universal move
+  }
 
   clearBoard() {
     const height = this.pixelRefs.current.length;
@@ -190,17 +196,15 @@ export class GameManager {
 export type PutPropsType = {
   piece: PieceType;
   focalPoint: number[];
-  conditional?: () => boolean; // ran before method. method will only run if the conditional returns true
+  conditional?: () => boolean;
   callback?: (customEvent: CustomEventType) => any;
-  // return value of method comes from their
 };
 
 export type DeleteArgsType = {
   piece: PieceType;
   focalPoint: number[];
-  conditional?: () => boolean; // ran before method. method will only run if the conditional returns true
+  conditional?: () => boolean;
   callback?: (customEvent: CustomEventType) => any;
-  // return value of method comes from their
 };
 
 type CustomEventType = {
