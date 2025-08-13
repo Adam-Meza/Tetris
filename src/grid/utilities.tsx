@@ -23,25 +23,6 @@ export const addOrRemovePixel = (
   }
 };
 
-export const clearBoard = (
-  refs: React.MutableRefObject<(PixelType | null)[][]>
-) => {
-  const height = refs.current.length;
-  const width = refs.current[0].length;
-
-  for (let i = 0; i < height; i++) {
-    for (let j = 0; j < width; j++) {
-      const id = refs.current[i][j]?.id;
-
-      if (id) {
-        const letter = getLetter(id);
-        const className = `${letter}-block`;
-        addOrRemovePixel(refs, [j, i], 'remove', className);
-      }
-    }
-  }
-};
-
 export const makeRefMatrix = (
   height: number,
   width: number

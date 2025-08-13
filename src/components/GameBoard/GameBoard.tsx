@@ -50,9 +50,7 @@ export const GameBoard = () => {
   /**
    * Focal point determining the coordinates on the Grid that pieces are placed/oriented with.
    */
-  const focalPointRef = React.useRef<[number, number]>([
-    3, 0,
-  ]);
+  const focalPointRef = React.useRef<number[]>([3, 0]);
 
   /**
    * Mutable ref object that will be used as the point of truth for game state logic.
@@ -388,12 +386,16 @@ export const GameBoard = () => {
         BOARD_WIDTH &&
       isMovePossible('same', rotated)
     ) {
-      // this can be changed to movePiece(refs, object, focalpoint, {direction: })
+      const [x, y] = focalPointRef.current;
 
-      //??/
-      updateCurrentTetromino('remove');
+      gm.delete({
+        piece: currentTetromino,
+        focalPoint: [x, y],
+      });
+
       setTetromino(rotated);
-      updateCurrentTetromino('add', rotated);
+
+      gm.put({ piece: rotated, focalPoint: [x, y] });
     }
   };
 

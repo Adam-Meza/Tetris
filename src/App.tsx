@@ -1,6 +1,6 @@
 import { GameBoard } from './components/GameBoard/GameBoard';
 import { Header } from './components/Header/Header';
-import { SideArt } from './components/SideArt/SideArt';
+// import { SideArt } from './components/SideArt/SideArt';
 
 /*
  

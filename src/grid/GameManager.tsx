@@ -195,6 +195,14 @@ export type PutPropsType = {
   // return value of method comes from their
 };
 
+export type DeleteArgsType = {
+  piece: PieceType;
+  focalPoint: number[];
+  conditional?: () => boolean; // ran before method. method will only run if the conditional returns true
+  callback?: (customEvent: CustomEventType) => any;
+  // return value of method comes from their
+};
+
 type CustomEventType = {
   dataModel: React.MutableRefObject<(PixelType | null)[][]>;
   focalPoint: PixelType;
@@ -216,10 +224,7 @@ export type MoveArgsType = {
   distance: number;
   focalPoint?: React.MutableRefObject<number[]>;
   conditional?: (args: any) => boolean;
-  callback?: (
-    args: CallBackArgs,
-    customArgs?: any
-  ) => boolean;
+  callback?: (args: CallBackArgs, customArgs?: any) => any;
 };
 
 export type CallBackArgs = {
