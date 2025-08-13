@@ -18,6 +18,7 @@ $color-list: map-values($tetromino-colors);
 
 header {
   @include flex-row;
+  height: 65px;
   justify-content: space-between;
   width: 100%;
   margin-top: 10px;
@@ -27,7 +28,7 @@ h1 {
   font-family: 'Bytesized', sans-serif;
   font-weight: 400;
   font-style: normal;
-  font-size: 6vh;
+  font-size: 60px;
   margin: 0px;
   color: white;
   margin-left: 20px;

@@ -4,7 +4,6 @@ import { TetrominoType } from '../Tetromino/Tetromino';
 import { PixelType } from '../../grid/Pixel';
 import {
   randomTetromino,
-  Direction,
   calculateScore,
   rotateShapeClockwise,
   getLetter,
@@ -20,7 +19,10 @@ import {
 import Info from '../Info/Info';
 import { makeRefMatrix } from '../../grid/utilities';
 import TopDisplay from '../TopDisplay/TopDisplay';
-import { CallBackArgs } from '../../grid/GameManagerTypes';
+import {
+  CallbackPayload,
+  Direction,
+} from '../../grid/GameManagerTypes';
 import { GameManager } from '../../grid/GameManager';
 
 /**
@@ -73,7 +75,7 @@ export const GameBoard = () => {
     }
   };
 
-  const didBlockLand = (args: CallBackArgs) => {
+  const didBlockLand = (args: CallbackPayload) => {
     const { piece, focalPoint, pixelRefs } = args;
     const tetrominoHeight = piece.shape.length;
     const tetrominoWidth = piece.shape[0].length;
@@ -83,9 +85,8 @@ export const GameBoard = () => {
         const x = j + focalPoint.current[0];
         const y = i + focalPoint.current[1];
 
-        const [, lowerY] = gm.makeNewCoordinates(
-          x,
-          y,
+        const [, lowerY] = gm.offsetCoord(
+          [x, y],
           'down',
           1
         );
@@ -117,9 +118,8 @@ export const GameBoard = () => {
       for (let j = 0; j < tetrominoWidth; j++) {
         const x = j + focalPoint.current[0];
         const y = i + focalPoint.current[1];
-        const [targetX, targetY] = gm.makeNewCoordinates(
-          x,
-          y,
+        const [targetX, targetY] = gm.offsetCoord(
+          [x, y],
           direction,
           1
         );
@@ -186,7 +186,7 @@ export const GameBoard = () => {
       direction: direction,
       distance: 1,
       focalPoint: focalPoint,
-      callback: didBlockLand,
+      onAfter: didBlockLand,
     };
 
     if (isMovePossible(direction, currentTetromino)) {
@@ -279,7 +279,7 @@ export const GameBoard = () => {
 
   const makeNewTetromino = () => {
     const current = currentTetromino;
-    const [x, y] = focalPointRef.current;
+    const [, y] = focalPointRef.current;
 
     if (isMovePossible('down', current) && gameOver) return;
     else if (current.shape.length + y <= 3) {
@@ -302,6 +302,7 @@ export const GameBoard = () => {
   };
 
   // could be GameManager.rotate();
+  // would need piece,
   const rotateTetromino = () => {
     const rotated = {
       ...currentTetromino,
@@ -362,12 +363,12 @@ export const GameBoard = () => {
     }
   };
 
-  const consoleLogData = () => {
-    console.log('currentTetromino:', currentTetromino);
-    console.log('pixelrefs:', pixelRefs.current);
-    console.log('gameOver', gameOver);
-    console.log('focal point', focalPointRef.current);
-  };
+  // const consoleLogData = () => {
+  //   console.log('currentTetromino:', currentTetromino);
+  //   console.log('pixelrefs:', pixelRefs.current);
+  //   console.log('gameOver', gameOver);
+  //   console.log('focal point', focalPointRef.current);
+  // };
 
   const startNewGame = () => {
     setGameOver(true);

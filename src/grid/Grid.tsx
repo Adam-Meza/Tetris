@@ -19,18 +19,18 @@ type GridProps = {
 /**
  * Grid React component
  */
-export const Grid = ({
+export const Grid: React.FC<GridProps> = ({
   width,
   height,
   baseClass,
   setPixelRef,
-}: GridProps) => {
+}) => {
   const style = {
     '--grid-width': width,
     '--grid-height': height,
   } as React.CSSProperties;
 
-  const pixels = [];
+  const pixels: React.ReactNode[] = [];
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {

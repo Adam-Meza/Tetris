@@ -1,12 +1,15 @@
-import { PieceType } from '../../grid/GameManagerTypes';
+import {
+  PieceType,
+  ShapeMatrix,
+} from '../../grid/GameManagerTypes';
 
 type TetrominoPrimative = {
-  shape: (string | null)[][];
+  shape: ShapeMatrix;
   letter: string;
 };
 
 export type TetrominoType = PieceType & {
-  shape: (string | null)[][];
+  shape: ShapeMatrix;
   className: string;
 };
 

@@ -1,12 +1,6 @@
 import { blocks } from './components/Tetromino/Tetromino';
 import { TetrominoType } from './components/Tetromino/Tetromino';
-
-export type Direction =
-  | 'down'
-  | 'left'
-  | 'right'
-  | 'same'
-  | 'up';
+import { ShapeMatrix } from './grid/GameManagerTypes';
 
 export const randomTetromino = (): TetrominoType => {
   const block =
@@ -36,7 +30,7 @@ export const calculateScore = (
 };
 
 export const rotateShapeClockwise = (
-  shape: (string | null)[][]
+  shape: ShapeMatrix
 ) => {
   const transposedShape = shape[0]
     .map((_, colIndex) => shape.map((row) => row[colIndex]))

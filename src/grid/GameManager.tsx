@@ -1,11 +1,11 @@
 import { PixelType } from './Pixel';
 import { getLetter } from '../utilities';
 import type {
-  PieceType,
   PutPropsType,
   DeleteArgsType,
-  MoveArgsType,
+  MoveArgs,
   Direction,
+  Coord,
 } from './GameManagerTypes';
 
 export class GameManager {
@@ -22,9 +22,12 @@ export class GameManager {
     this.focalPoint = focalPoint;
   }
 
-  put(args: PutPropsType): any {
-    const { piece, focalPoint } = args;
+  put(args: PutPropsType): void {
+    const { piece, focalPoint, conditional, onAfter } =
+      args;
     const { shape } = piece;
+
+    if (conditional && !conditional(args)) return;
 
     const width = shape[0].length;
     const height = shape.length;
@@ -43,11 +46,20 @@ export class GameManager {
         }
       }
     }
+
+    onAfter?.({
+      piece: piece,
+      pixelRefs: this.pixelRefs,
+      focalPoint: this.focalPoint,
+    });
   }
 
-  delete(args: DeleteArgsType) {
-    const { piece, focalPoint } = args;
+  delete(args: DeleteArgsType): void {
+    const { piece, focalPoint, conditional, onAfter } =
+      args;
     const { shape, className } = piece;
+
+    if (conditional && !conditional(args)) return;
 
     const width = shape[0].length;
     const height = shape.length;
@@ -66,13 +78,19 @@ export class GameManager {
         }
       }
     }
+
+    onAfter?.({
+      piece: piece,
+      pixelRefs: this.pixelRefs,
+      focalPoint: this.focalPoint,
+    });
   }
 
   addPixel(
     id: string | undefined,
     className: string,
     coordinates: number[]
-  ) {
+  ): void {
     const [x, y] = coordinates;
     const dataRef = this.pixelRefs.current[y][
       x
@@ -80,41 +98,41 @@ export class GameManager {
 
     const spanRef = dataRef.html;
 
-    if (!spanRef?.current) return false;
+    if (!spanRef?.current) return;
 
     spanRef.current?.classList.add(className);
     dataRef.id = id;
   }
 
-  removePixel(pixel: PixelType, className: string) {
+  removePixel(pixel: PixelType, className: string): void {
     const spanRef = pixel.html;
 
-    if (!spanRef?.current) return false;
+    if (!spanRef?.current) return;
+
     spanRef.current.classList.remove(className);
     pixel.id = undefined;
   }
 
-  playerMove(args: MoveArgsType) {
+  playerMove(args: MoveArgs): void {
     const {
       piece,
       direction,
       distance,
       conditional,
-      callback,
+      onAfter,
     } = args;
 
     const [x, y] = this.focalPoint.current;
 
-    if (conditional && !conditional(direction)) return;
+    if (conditional && !conditional(args)) return;
 
     this.delete({
       piece: piece,
       focalPoint: [x, y],
     });
 
-    const [targetX, targetY] = this.makeNewCoordinates(
-      x,
-      y,
+    const [targetX, targetY] = this.offsetCoord(
+      [x, y],
       direction,
       distance
     );
@@ -126,20 +144,50 @@ export class GameManager {
       focalPoint: [targetX, targetY],
     });
 
-    if (callback) {
-      callback({
-        piece: piece,
-        pixelRefs: this.pixelRefs,
-        focalPoint: this.focalPoint,
-      });
-    }
+    onAfter?.({
+      piece: piece,
+      pixelRefs: this.pixelRefs,
+      focalPoint: this.focalPoint,
+    });
   }
 
-  move(args: PutPropsType) {
-    // this is more universal move
+  move(args: MoveArgs): void {
+    const {
+      piece,
+      direction,
+      distance,
+      conditional,
+      onAfter,
+    } = args;
+
+    const [x, y] = this.focalPoint.current;
+
+    if (conditional && !conditional(args)) return;
+
+    this.delete({
+      piece: piece,
+      focalPoint: [x, y],
+    });
+
+    const [targetX, targetY] = this.offsetCoord(
+      [x, y],
+      direction,
+      distance
+    );
+
+    this.put({
+      piece: piece,
+      focalPoint: [targetX, targetY],
+    });
+
+    onAfter?.({
+      piece: piece,
+      pixelRefs: this.pixelRefs,
+      focalPoint: this.focalPoint,
+    });
   }
 
-  clearBoard() {
+  clearBoard(): void {
     const height = this.pixelRefs.current.length;
     const width = this.pixelRefs.current[0].length;
 
@@ -148,42 +196,35 @@ export class GameManager {
         const pixel = this.pixelRefs.current[i][j];
 
         if (pixel?.id) {
-          const className = `${getLetter(pixel.id)}-block`;
+          const className = `${getLetter(pixel.id)}-block`; // THIS IS A DANGER THIS IS NOT UNIVERSAL!!!!
           this.removePixel(pixel, className);
         }
       }
     }
   }
 
-  makeNewCoordinates(
-    x: number,
-    y: number,
+  offsetCoord(
+    [x, y]: Coord,
     direction: Direction,
     distance: number
-  ) {
-    let newX = x;
-    let newY = y;
-
+  ): Coord {
     switch (direction) {
       case 'down':
-        newY += distance;
-        break;
+        return [x, y + distance];
       case 'left':
-        newX -= distance;
-        break;
+        return [x - distance, y];
       case 'right':
-        newX += distance;
-        break;
+        return [x + distance, y];
       case 'up':
-        newY -= distance;
+        return [x, y - distance];
+      case 'same':
+        return [x, y];
     }
-
-    return [newX, newY];
   }
 }
 
 //   createEvent(args: PutPropsType): CustomEventType {
-//     const { piece, focalPoint, conditional, callback } =
+//     const { piece, focalPoint, conditional, onAfter } =
 //       args;
 //   }
 

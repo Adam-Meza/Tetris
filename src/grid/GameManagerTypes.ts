@@ -1,15 +1,28 @@
 import { PixelType } from './Pixel';
 
-type BasicArgsType = {
+export type Coord = readonly [number, number];
+
+export type Direction =
+  | 'down'
+  | 'left'
+  | 'right'
+  | 'same'
+  | 'up';
+
+export type ShapeMatrix = ReadonlyArray<
+  ReadonlyArray<string | null>
+>;
+
+type BasicActionArgs = {
   piece: PieceType;
   focalPoint: number[];
   conditional?: (args: any) => boolean;
-  callback?: (args: CallBackArgs) => any;
+  onAfter?: (args: CallbackPayload) => any;
 };
 
-export type PutPropsType = BasicArgsType;
+export type PutPropsType = BasicActionArgs;
 
-export type DeleteArgsType = BasicArgsType;
+export type DeleteArgsType = BasicActionArgs;
 
 // type CustomEventType = {
 //   dataModel: React.MutableRefObject<(PixelType | null)[][]>;
@@ -19,26 +32,19 @@ export type DeleteArgsType = BasicArgsType;
 // };
 
 export type PieceType = {
-  shape: (string | null)[][];
+  shape: ShapeMatrix;
   id: string | undefined;
   className: string;
   letter?: string;
 };
 
-export type MoveArgsType = BasicArgsType & {
+export type MoveArgs = BasicActionArgs & {
   direction: Direction;
   distance: number;
 };
 
-export type CallBackArgs = {
+export type CallbackPayload = {
   piece: PieceType;
   pixelRefs: React.MutableRefObject<(PixelType | null)[][]>;
   focalPoint: React.MutableRefObject<number[]>;
 };
-
-export type Direction =
-  | 'down'
-  | 'left'
-  | 'right'
-  | 'same'
-  | 'up';
