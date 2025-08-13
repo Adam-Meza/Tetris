@@ -43,5 +43,10 @@ export const Pixel = (props: PixelProps) => {
     });
   }, []);
 
-  return <span ref={pixelRef} className={baseClass}></span>;
+  return (
+    <span ref={pixelRef} className={baseClass}>
+      {x}
+      {y}
+    </span>
+  );
 };

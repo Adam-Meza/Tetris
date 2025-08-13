@@ -1,13 +1,13 @@
+import { PieceType } from '../../grid/GameManager';
+
 type TetrominoPrimative = {
-  shape:
-    | [string[], (string | null)[]]
-    | (string | null)[][];
+  shape: (string | null)[][];
   letter: string;
 };
 
-export type TetrominoType = TetrominoPrimative & {
+export type TetrominoType = PieceType & {
+  shape: (string | null)[][];
   className: string;
-  id: string;
 };
 
 const t_block: TetrominoPrimative = {

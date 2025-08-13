@@ -1,15 +1,13 @@
 import React from 'react';
 import { Grid } from '../../grid/Grid';
 import { TetrominoType } from '../Tetromino/Tetromino';
-import { Pixel, PixelType } from '../../grid/Pixel';
-import { ControlPanel } from '../ControlPanel/ControlPanel';
+import { PixelType } from '../../grid/Pixel';
 import {
   randomTetromino,
   Direction,
   calculateScore,
   rotateShapeClockwise,
   getLetter,
-  makeNewCoordinates,
 } from '../../utilities';
 import { useAtom } from 'jotai';
 import {
@@ -23,9 +21,13 @@ import Info from '../Info/Info';
 import {
   makeRefMatrix,
   addOrRemovePixel,
-  clearBoard,
 } from '../../grid/utilities';
 import TopDisplay from '../TopDisplay/TopDisplay';
+import {
+  CallBackArgs,
+  GameManager,
+  MoveArgsType,
+} from '../../grid/GameManager';
 
 /**
  * Tetris GameBoard Component -
@@ -59,8 +61,10 @@ export const GameBoard = () => {
     makeRefMatrix(BOARD_HEIGHT, BOARD_WIDTH)
   );
 
-  // const pixelRefs = buildRefs()
-
+  /**
+   * GameManager in charge of manipulating DOM
+   */
+  const gm = new GameManager(pixelRefs, focalPointRef);
   /**
    * Sets the individual pixel ref objects and is responsible for effecting change on the DOM.
    */
@@ -112,29 +116,64 @@ export const GameBoard = () => {
         );
       }
     );
-
-    if (!isMovePossible('down', tetromino))
-      handleBlockLanding();
   };
 
-  // this might be hard to abstract out as different games have different needs
-  const isMovePossible = (
-    direction: Direction,
-    tetromino = currentTetromino,
-    focalPoint = focalPointRef
-  ): boolean => {
-    const tetrominoHeight = tetromino.shape.length;
-    const tetrominoWidth = tetromino.shape[0].length;
+  const didBlockLand = (args: CallBackArgs) => {
+    const { piece, focalPoint, pixelRefs } = args;
+    const tetrominoHeight = piece.shape.length;
+    const tetrominoWidth = piece.shape[0].length;
 
     for (let i = 0; i < tetrominoHeight; i++) {
       for (let j = 0; j < tetrominoWidth; j++) {
         const x = j + focalPoint.current[0];
         const y = i + focalPoint.current[1];
-        const [targetX, targetY] = makeNewCoordinates(
+
+        const [, lowerY] = gm.makeNewCoordinates(
           x,
           y,
-          direction
+          'down',
+          1
         );
+
+        if (lowerY >= BOARD_HEIGHT)
+          return handleBlockLanding();
+
+        const currentSquare = pixelRefs.current[y][x];
+
+        const nextSquare = pixelRefs.current[lowerY][x];
+
+        if (!runCheck(currentSquare, nextSquare, piece)) {
+          console.log('we et here');
+          handleBlockLanding();
+          return true;
+        }
+      }
+    }
+
+    return false;
+  };
+
+  // this might be hard to abstract out as different games have different needs
+  const isMovePossible = (
+    direction: Direction,
+    piece: TetrominoType,
+    focalPoint = focalPointRef
+  ): boolean => {
+    const tetrominoHeight = piece.shape.length;
+    const tetrominoWidth = piece.shape[0].length;
+
+    for (let i = 0; i < tetrominoHeight; i++) {
+      for (let j = 0; j < tetrominoWidth; j++) {
+        const x = j + focalPoint.current[0];
+        const y = i + focalPoint.current[1];
+        const [targetX, targetY] = gm.makeNewCoordinates(
+          x,
+          y,
+          direction,
+          1
+        );
+
+        console.log('test');
 
         if (
           targetX >= BOARD_WIDTH ||
@@ -147,9 +186,7 @@ export const GameBoard = () => {
         const nextSquare =
           pixelRefs.current[targetY][targetX];
 
-        if (
-          !runCheck(currentSquare, nextSquare, tetromino)
-        ) {
+        if (!runCheck(currentSquare, nextSquare, piece)) {
           return false;
         }
       }
@@ -189,14 +226,17 @@ export const GameBoard = () => {
 
   const moveTetromino = (direction: Direction) => {
     if (!currentTetromino) return;
-    let [x, y] = focalPointRef.current;
 
-    if (isMovePossible(direction)) {
-      [x, y] = makeNewCoordinates(x, y, direction);
+    const args = {
+      piece: currentTetromino,
+      direction: direction,
+      distance: 1,
+      focalPoint: focalPointRef,
+      callback: didBlockLand,
+    };
 
-      updateCurrentTetromino('remove');
-      focalPointRef.current = [x, y];
-      updateCurrentTetromino('add');
+    if (isMovePossible(direction, currentTetromino)) {
+      gm.playerMove(args);
     }
   };
 
@@ -267,7 +307,7 @@ export const GameBoard = () => {
       setCount(lineCount + completedRowIndexes.length);
       setScore(newScore);
     }
-
+    console.log('here');
     makeNewTetromino();
     // }, 80);
   };
@@ -322,19 +362,16 @@ export const GameBoard = () => {
 
     setNext(tetromino);
     setTetromino(next);
+    focalPointRef.current = [3, 0];
 
-    if (
-      !isMovePossible('same', next, {
-        current: [3, 0],
-      })
-    ) {
+    if (!isMovePossible('same', next)) {
+      console.log('we think gmae is over');
+
       setGameOver(true);
       return;
     }
 
-    // could be place();
-    focalPointRef.current = [3, 0];
-    updateCurrentTetromino('add', next);
+    gm.put({ piece: next, focalPoint: [3, 0] });
   };
 
   // could be GameManager.rotate();
@@ -403,7 +440,7 @@ export const GameBoard = () => {
 
   const startNewGame = () => {
     setGameOver(true);
-    clearBoard(pixelRefs);
+    gm.clearBoard();
     setGameOver(false);
     setScore(0);
     setCount(0);

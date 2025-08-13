@@ -7,12 +7,7 @@ import {
 } from '../../atoms';
 import { useAtomValue } from 'jotai';
 import { rotateShapeClockwise } from '../../utilities';
-import {
-  addOrRemovePixel,
-  clearBoard,
-  makeRefMatrix,
-} from '../../grid/utilities';
-import { TetrominoType } from '../Tetromino/Tetromino';
+import { makeRefMatrix } from '../../grid/utilities';
 import { GameManager } from '../../grid/GameManager';
 import type { PieceType } from '../../grid/GameManager';
 
@@ -26,8 +21,9 @@ export const NextTetromino = () => {
   const pixelRefs = React.useRef<(PixelType | null)[][]>(
     makeRefMatrix(BOARD_HEIGHT, BOARD_WIDTH)
   );
+  const focalPoint = React.useRef<number[]>([0, 0]);
 
-  const gm = new GameManager(pixelRefs);
+  const gm = new GameManager(pixelRefs, focalPoint);
 
   const setPixelRef = (pixel: PixelType) => {
     const { x, y } = pixel;

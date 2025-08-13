@@ -1,22 +1,19 @@
 import { PixelType } from './Pixel';
 import { getLetter } from '../utilities';
+import { TetrominoType } from '../components/Tetromino/Tetromino';
 
 export class GameManager {
   pixelRefs: React.MutableRefObject<(PixelType | null)[][]>;
-  focalPoint:
-    | React.MutableRefObject<[number, number]>
-    | undefined;
+  focalPoint: React.MutableRefObject<number[]>;
 
   constructor(
     pixelRefs: React.MutableRefObject<
       (PixelType | null)[][]
     >,
-    focalPoint?:
-      | React.MutableRefObject<[number, number]>
-      | undefined
+    focalPoint: React.MutableRefObject<number[]>
   ) {
     this.pixelRefs = pixelRefs;
-    this.focalPoint = focalPoint || undefined;
+    this.focalPoint = focalPoint;
   }
 
   put(args: PutPropsType): any {
@@ -38,7 +35,33 @@ export class GameManager {
     }
   }
 
-  addPixel(piece: PieceType, coordinates: number[]) {
+  delete(args: PutPropsType) {
+    const { piece, focalPoint } = args;
+    const { shape, className } = piece;
+
+    const width = shape[0].length;
+    const height = shape.length;
+
+    const [x, y] = focalPoint;
+
+    for (let i = 0; i < height; i++) {
+      for (let j = 0; j < width; j++) {
+        if (shape[i][j]) {
+          const targetX = x + j;
+          const targetY = y + i;
+          const pixel =
+            this.pixelRefs.current[targetY][targetX];
+
+          if (pixel) this.removePixel(pixel, className);
+        }
+      }
+    }
+  }
+
+  private addPixel(
+    piece: PieceType,
+    coordinates: number[]
+  ) {
     const { className, id } = piece;
     const [x, y] = coordinates;
     const dataRef = this.pixelRefs.current[y][
@@ -53,13 +76,55 @@ export class GameManager {
     dataRef.id = id;
   }
 
-  removePixel(pixel: PixelType, className: string) {
+  private removePixel(pixel: PixelType, className: string) {
     const spanRef = pixel.html;
 
     if (!spanRef?.current) return false;
     spanRef.current.classList.remove(className);
     pixel.id = undefined;
   }
+
+  playerMove(args: MoveArgsType) {
+    const {
+      piece,
+      direction,
+      distance,
+      conditional,
+      callback,
+    } = args;
+    const [x, y] = this.focalPoint.current;
+
+    if (conditional && !conditional(direction)) return;
+
+    this.delete({
+      piece: piece,
+      focalPoint: [x, y],
+    });
+
+    const [targetX, targetY] = this.makeNewCoordinates(
+      x,
+      y,
+      direction,
+      distance
+    );
+
+    this.focalPoint.current = [targetX, targetY];
+
+    this.put({
+      piece: piece,
+      focalPoint: [targetX, targetY],
+    });
+
+    if (callback) {
+      callback({
+        piece: piece,
+        pixelRefs: this.pixelRefs,
+        focalPoint: this.focalPoint,
+      });
+    }
+  }
+
+  move(args: PutPropsType) {}
 
   clearBoard() {
     const height = this.pixelRefs.current.length;
@@ -75,6 +140,32 @@ export class GameManager {
         }
       }
     }
+  }
+
+  makeNewCoordinates(
+    x: number,
+    y: number,
+    direction: Direction,
+    distance: number
+  ) {
+    let newX = x;
+    let newY = y;
+
+    switch (direction) {
+      case 'down':
+        newY += distance;
+        break;
+      case 'left':
+        newX -= distance;
+        break;
+      case 'right':
+        newX += distance;
+        break;
+      case 'up':
+        newY -= distance;
+    }
+
+    return [newX, newY];
   }
 }
 
@@ -108,6 +199,8 @@ type CustomEventType = {
   dataModel: React.MutableRefObject<(PixelType | null)[][]>;
   focalPoint: PixelType;
   neighbors: PixelType[][];
+  piece: PieceType;
+  direction?: Direction;
 };
 
 export type PieceType = {
@@ -116,3 +209,28 @@ export type PieceType = {
   className: string;
   letter?: string;
 };
+
+export type MoveArgsType = {
+  piece: PieceType | TetrominoType;
+  direction: Direction;
+  distance: number;
+  focalPoint?: React.MutableRefObject<number[]>;
+  conditional?: (args: any) => boolean;
+  callback?: (
+    args: CallBackArgs,
+    customArgs?: any
+  ) => boolean;
+};
+
+export type CallBackArgs = {
+  piece: PieceType;
+  pixelRefs: React.MutableRefObject<(PixelType | null)[][]>;
+  focalPoint: React.MutableRefObject<number[]>;
+};
+
+export type Direction =
+  | 'down'
+  | 'left'
+  | 'right'
+  | 'same'
+  | 'up';
