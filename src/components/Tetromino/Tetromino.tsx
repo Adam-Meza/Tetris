@@ -1,12 +1,16 @@
-export type TetrominoType = {
+type TetrominoPrimative = {
   shape:
     | [string[], (string | null)[]]
     | (string | null)[][];
   letter: string;
-  id?: string;
 };
 
-const t_block: TetrominoType = {
+export type TetrominoType = TetrominoPrimative & {
+  className: string;
+  id: string;
+};
+
+const t_block: TetrominoPrimative = {
   letter: 't',
   shape: [
     ['t', 't', 't'],
@@ -14,7 +18,7 @@ const t_block: TetrominoType = {
   ],
 };
 
-const o_block: TetrominoType = {
+const o_block: TetrominoPrimative = {
   letter: 'o',
   shape: [
     ['o', 'o'],
@@ -22,7 +26,7 @@ const o_block: TetrominoType = {
   ],
 };
 
-const j_block: TetrominoType = {
+const j_block: TetrominoPrimative = {
   letter: 'j',
   shape: [
     [null, 'j'],
@@ -31,7 +35,7 @@ const j_block: TetrominoType = {
   ],
 };
 
-const l_block: TetrominoType = {
+const l_block: TetrominoPrimative = {
   letter: 'l',
   shape: [
     ['l', null],
@@ -40,12 +44,12 @@ const l_block: TetrominoType = {
   ],
 };
 
-const i_block: TetrominoType = {
+const i_block: TetrominoPrimative = {
   letter: 'i',
   shape: [['i'], ['i'], ['i'], ['i']],
 };
 
-const s_block: TetrominoType = {
+const s_block: TetrominoPrimative = {
   letter: 's',
   shape: [
     [null, 's', 's'],
@@ -53,7 +57,7 @@ const s_block: TetrominoType = {
   ],
 };
 
-const z_block: TetrominoType = {
+const z_block: TetrominoPrimative = {
   letter: 'z',
   shape: [
     ['z', 'z', null],

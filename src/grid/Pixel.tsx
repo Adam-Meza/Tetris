@@ -12,6 +12,7 @@ export type PixelType = {
   y: number;
   // el: HTMLSpanElement | null;
   id?: string | undefined;
+  className?: string;
   // why am i doing this again???
   // something to look into
   html?: React.RefObject<HTMLSpanElement>;
@@ -42,9 +43,5 @@ export const Pixel = (props: PixelProps) => {
     });
   }, []);
 
-  return (
-    <span ref={pixelRef} className={baseClass}>
-      {/* {x}-{y} */}
-    </span>
-  );
+  return <span ref={pixelRef} className={baseClass}></span>;
 };

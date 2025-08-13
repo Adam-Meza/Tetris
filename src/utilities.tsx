@@ -1,8 +1,12 @@
 import { blocks } from './components/Tetromino/Tetromino';
 import { TetrominoType } from './components/Tetromino/Tetromino';
-import type { PixelType } from './grid/Pixel';
 
-export type Direction = 'down' | 'left' | 'right' | 'same';
+export type Direction =
+  | 'down'
+  | 'left'
+  | 'right'
+  | 'same'
+  | 'up';
 
 export const randomTetromino = (): TetrominoType => {
   const block =
@@ -12,6 +16,7 @@ export const randomTetromino = (): TetrominoType => {
     id: block.letter + Date.now(),
     shape: block.shape,
     letter: block.letter,
+    className: `${block.letter}-block`,
   };
 };
 
@@ -58,6 +63,8 @@ export const makeNewCoordinates = (
     case 'right':
       newX += 1;
       break;
+    case 'up':
+      newY -= 1;
   }
 
   return [newX, newY];

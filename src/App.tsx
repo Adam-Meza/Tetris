@@ -1,5 +1,6 @@
 import { GameBoard } from './components/GameBoard/GameBoard';
 import { Header } from './components/Header/Header';
+import { SideArt } from './components/SideArt/SideArt';
 
 /*
  
@@ -17,6 +18,7 @@ function App() {
   return (
     <div className='App'>
       <Header />
+      {/* <SideArt /> */}
       <GameBoard />
     </div>
   );

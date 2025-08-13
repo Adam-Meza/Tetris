@@ -13,6 +13,8 @@ import {
   makeRefMatrix,
 } from '../../grid/utilities';
 import { TetrominoType } from '../Tetromino/Tetromino';
+import { GameManager } from '../../grid/GameManager';
+import type { PieceType } from '../../grid/GameManager';
 
 export const NextTetromino = () => {
   const BOARD_WIDTH = 6;
@@ -24,6 +26,8 @@ export const NextTetromino = () => {
   const pixelRefs = React.useRef<(PixelType | null)[][]>(
     makeRefMatrix(BOARD_HEIGHT, BOARD_WIDTH)
   );
+
+  const gm = new GameManager(pixelRefs);
 
   const setPixelRef = (pixel: PixelType) => {
     const { x, y } = pixel;
@@ -37,48 +41,32 @@ export const NextTetromino = () => {
     }
   };
 
-  const displayNext = (tetromino: TetrominoType) => {
+  const displayNext = (tetromino: PieceType) => {
     let focalPoint = [1, 1];
-    let { shape } = tetromino;
-    const { id, letter } = tetromino;
+    const { letter } = tetromino;
 
     switch (letter) {
       case 'i':
       case 'j':
       case 'l':
-        shape = rotateShapeClockwise(shape);
+        tetromino.shape = rotateShapeClockwise(
+          tetromino.shape
+        );
         break;
       case 'o':
         focalPoint = [2, 1];
         break;
     }
 
-    const width = shape[0].length;
-    const height = shape.length;
-    const [x, y] = focalPoint;
-    const className = `${letter}-block`;
-
-    for (let i = 0; i < height; i++) {
-      for (let j = 0; j < width; j++) {
-        if (shape[i][j]) {
-          const coordinates = [x + j, y + i];
-
-          addOrRemovePixel(
-            pixelRefs,
-            //@ts-ignore
-            coordinates,
-            'add',
-            className,
-            id
-          );
-        }
-      }
-    }
+    gm.put({
+      piece: tetromino,
+      focalPoint: focalPoint,
+    });
   };
 
   React.useMemo(() => {
     if (next && !gameOver) {
-      clearBoard(pixelRefs);
+      gm.clearBoard();
       displayNext(next);
     }
   }, [next, gameOver]);
