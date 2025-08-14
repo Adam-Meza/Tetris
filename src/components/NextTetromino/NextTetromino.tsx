@@ -6,7 +6,10 @@ import {
   gameOverAtom,
 } from '../../atoms';
 import { useAtomValue } from 'jotai';
-import { rotateShapeClockwise } from '../../utilities';
+import {
+  getLetter,
+  rotateShapeClockwise,
+} from '../../utilities';
 import { makeRefMatrix } from '../../grid/utilities';
 import { GameManager } from '../../grid/GameManager';
 import type {
@@ -42,7 +45,8 @@ export const NextTetromino = () => {
 
   const displayNext = (tetromino: PieceType) => {
     let focalPoint = [1, 1] as Coord;
-    const { letter } = tetromino;
+
+    const letter = getLetter(tetromino.id!);
 
     switch (letter) {
       case 'i':

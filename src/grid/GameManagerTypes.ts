@@ -47,4 +47,5 @@ export type CallbackPayload = {
   piece: PieceType;
   pixelRefs: React.MutableRefObject<(PixelType | null)[][]>;
   focalPoint: React.MutableRefObject<Coord>;
+  direction?: Direction;
 };

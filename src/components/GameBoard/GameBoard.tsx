@@ -104,7 +104,13 @@ export const GameBoard = () => {
 
         const nextSquare = pixelRefs.current[lowerY][x];
 
-        if (!runCheck(currentSquare, nextSquare, piece))
+        if (
+          isNextSquareOccupied(
+            currentSquare,
+            nextSquare,
+            piece
+          )
+        )
           handleBlockLanding();
       }
     }
@@ -129,7 +135,6 @@ export const GameBoard = () => {
           direction,
           1
         );
-
         if (
           targetX >= BOARD_WIDTH ||
           targetY >= BOARD_HEIGHT
@@ -141,41 +146,52 @@ export const GameBoard = () => {
         const nextSquare =
           pixelRefs.current[targetY][targetX];
 
-        if (!runCheck(currentSquare, nextSquare, piece)) {
+        if (
+          isNextSquareOccupied(
+            currentSquare,
+            nextSquare,
+            piece
+          )
+        ) {
           return false;
         }
       }
     }
+
     return true;
   };
 
-  const runCheck = (
+  const isNextSquareOccupied = (
     currentSquare: PixelType | null,
     nextSquare: PixelType | null,
     tetromino: TetrominoType
   ) => {
     if (!nextSquare) return false;
-    // The following code will only check if the nextSqaure is occupied
+
     if (nextSquare.id) {
       if (
-        //first we check if the current square is occupied
-        // i.e. parts of each tetromino will have blank spaces
-        // that do not carry and ID
-        // if thats true, we make sure the
+        // is the currentSquare ID part of the piece we're moving?
         (currentSquare?.id === tetromino.id &&
+          // if so, if the next square is occupied by a different piece..
           nextSquare.id !== currentSquare?.id) ||
-        // given that the nextSquare has an id,
-        // if the tetromino in question is not the current
-        // then we check if nextSquare is occupied by anooter piece
-        // based on the given tetromino NOT the current pixelRef
+        // or if we're checking for a new/rotating piece
         (tetromino !== currentTetromino &&
+          // check based on the theoratical piece
           nextSquare.id !== tetromino.id)
       )
-        return false;
+        return true;
     }
 
-    // if none of the falsifying conditions are met
-    // move is possible, return true
+    return false;
+  };
+
+  const moveConditional = (args: CallbackPayload) => {
+    const { direction, piece } = args;
+
+    if (direction && !isMovePossible(direction, piece)) {
+      return false;
+    }
+
     return true;
   };
 
@@ -193,11 +209,10 @@ export const GameBoard = () => {
       distance: 1,
       focalPoint: focalPoint,
       onAfter: didBlockLand,
+      conditional: moveConditional,
     };
 
-    if (isMovePossible(direction, currentTetromino)) {
-      gm.playerMove(args);
-    }
+    gm.playerMove(args);
   };
 
   const moveRowsDown = () => {
@@ -283,28 +298,28 @@ export const GameBoard = () => {
     return rowsToRemove;
   };
 
-  const makeNewTetromino = () => {
-    const current = currentTetromino;
-    const [, y] = focalPointRef.current;
-
-    if (isMovePossible('down', current) && gameOver) return;
-    else if (current.shape.length + y <= 3) {
+  const putConditional = (args: CallbackPayload) => {
+    if (!isMovePossible('same', next)) {
+      console.log(args);
       setGameOver(true);
-      return;
+      return false;
     }
 
+    return true;
+  };
+
+  const makeNewTetromino = () => {
     const tetromino = randomTetromino();
 
     setNext(tetromino);
     setTetromino(next);
     focalPointRef.current = [3, 0];
 
-    if (!isMovePossible('same', next)) {
-      setGameOver(true);
-      return;
-    }
-
-    gm.put({ piece: next, focalPoint: [3, 0] });
+    gm.put({
+      piece: next,
+      focalPoint: [3, 0],
+      conditional: putConditional,
+    });
   };
 
   // could be GameManager.rotate();
@@ -381,6 +396,7 @@ export const GameBoard = () => {
   // };
 
   const startNewGame = () => {
+    console.log('we run');
     setGameOver(true);
     setGameOver(false);
     setScore(0);

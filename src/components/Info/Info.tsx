@@ -5,7 +5,7 @@ type InfoProps = {
   startNewGame: () => void;
 };
 
-const Info = ({ startNewGame }: InfoProps) => {
+const Info = () => {
   return (
     <div className='info-wrapper'>
       <p>

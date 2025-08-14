@@ -27,8 +27,15 @@ export class GameManager {
       args;
     const { shape } = piece;
 
-    if (conditional && !conditional(args)) return;
+    if (
+      conditional &&
+      !conditional({ ...args, pixelRefs: this.pixelRefs })
+    ) {
+      console.log('Put call FAIL for: ');
+      console.log(this.pixelRefs);
 
+      return;
+    }
     const width = shape[0].length;
     const height = shape.length;
 
@@ -123,19 +130,22 @@ export class GameManager {
     } = args;
 
     const [x, y] = this.focalPoint.current;
-
-    if (conditional && !conditional(args)) return;
-
-    this.delete({
-      piece: piece,
-      focalPoint: [x, y],
-    });
-
     const [targetX, targetY] = this.offsetCoord(
       [x, y],
       direction,
       distance
     );
+
+    if (
+      (conditional && !conditional(args)) ||
+      this.isOutOfBounds([targetX, targetY])
+    )
+      return;
+
+    this.delete({
+      piece: piece,
+      focalPoint: [x, y],
+    });
 
     this.focalPoint.current = [targetX, targetY];
 
@@ -220,6 +230,16 @@ export class GameManager {
       case 'same':
         return [x, y];
     }
+  }
+
+  isOutOfBounds(coordinates: Coord) {
+    const [x, y] = coordinates;
+    return (
+      y < 0 ||
+      y > this.pixelRefs.current.length ||
+      x < 0 ||
+      x > this.pixelRefs.current[0].length
+    );
   }
 }
 
