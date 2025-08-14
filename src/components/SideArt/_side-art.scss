@@ -1,13 +1,5 @@
 @import '../../styles/mixins';
 
-.gameboard-wrapper {
-  @include flex-column;
-  height: fit-content;
-  width: fit-content;
-  background-color: black;
-  border: 5px solid black;
-}
-
 #sideart {
   height: clamp(450px, 85vh, 700px);
   aspect-ratio: 1/2;

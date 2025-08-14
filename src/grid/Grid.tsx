@@ -1,6 +1,7 @@
 import React from 'react';
 import { Pixel } from './Pixel';
 import { PixelType } from './Pixel';
+import { Coord } from './GameManagerTypes';
 /**
  * Props for Grid component
  * @param width number
@@ -10,8 +11,7 @@ import { PixelType } from './Pixel';
  */
 
 type GridProps = {
-  width: number;
-  height: number;
+  dimensions: Coord;
   baseClass: string;
   setPixelRef: (pixel: PixelType) => void;
   handleKeyPress?: (ev: KeyboardEvent) => void;
@@ -21,22 +21,17 @@ type GridProps = {
  * Grid React component
  */
 export const Grid: React.FC<GridProps> = ({
-  width,
-  height,
+  dimensions,
   baseClass,
   setPixelRef,
-  handleKeyPress,
 }) => {
+  const [width, height] = dimensions;
   const style = {
     '--grid-width': width,
     '--grid-height': height,
   } as React.CSSProperties;
 
   const pixels: React.ReactNode[] = [];
-
-  // React.useCallback(() => {
-  //   window.addEventListener('keydown', handleKeyPress);
-  // }, []);
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {

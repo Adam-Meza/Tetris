@@ -4,8 +4,9 @@
   @include flex-column;
   height: fit-content;
   width: fit-content;
-  background-color: black;
-  border: 5px solid black;
+  border: 4px solid black;
+  background-color: white;
+  padding: 5px;
 }
 
 #gameboard {
@@ -18,8 +19,4 @@ main {
   @include flex-row;
   justify-content: space-evenly;
   width: 80vw;
-
-  :focus {
-    outline: none;
-  }
 }

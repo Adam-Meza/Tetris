@@ -10,13 +10,13 @@ import type {
 
 export class GameManager {
   pixelRefs: React.MutableRefObject<(PixelType | null)[][]>;
-  focalPoint: React.MutableRefObject<number[]>;
+  focalPoint: React.MutableRefObject<Coord>;
 
   constructor(
     pixelRefs: React.MutableRefObject<
       (PixelType | null)[][]
     >,
-    focalPoint: React.MutableRefObject<number[]>
+    focalPoint: React.MutableRefObject<Coord>
   ) {
     this.pixelRefs = pixelRefs;
     this.focalPoint = focalPoint;

@@ -10,7 +10,6 @@ import {
   rotateShapeClockwise,
   getLetter,
 } from '../../utilities';
-import { useAtom } from 'jotai';
 import {
   scoreAtom,
   gameOverAtom,
@@ -18,11 +17,11 @@ import {
   nextTetrominoAtom,
   lineCountAtom,
 } from '../../atoms';
-import Info from '../Info/Info';
 import { makeRefMatrix } from '../../grid/utilities';
 import TopDisplay from '../TopDisplay/TopDisplay';
 import {
   CallbackPayload,
+  Coord,
   Direction,
 } from '../../grid/GameManagerTypes';
 import { GameManager } from '../../grid/GameManager';
@@ -53,13 +52,13 @@ export const GameBoard = () => {
   /**
    * Focal point determining the coordinates on the Grid that pieces are placed/oriented with.
    */
-  const focalPointRef = React.useRef<number[]>([3, 0]);
+  const focalPointRef = React.useRef<Coord>([3, 0]);
 
   /**
    * Mutable ref object that will be used as the point of truth for game state logic.
    */
   const pixelRefs = React.useRef<(PixelType | null)[][]>(
-    makeRefMatrix(BOARD_HEIGHT, BOARD_WIDTH)
+    makeRefMatrix([BOARD_WIDTH, BOARD_HEIGHT])
   );
 
   /**
@@ -186,7 +185,7 @@ export const GameBoard = () => {
     const focalPoint = [
       focalPointRef.current[0],
       focalPointRef.current[1],
-    ];
+    ] as Coord;
 
     const args = {
       piece: currentTetromino,
@@ -404,8 +403,7 @@ export const GameBoard = () => {
         <div className='grid-wrapper' id='gameboard'>
           <Grid
             setPixelRef={setPixelRef}
-            width={BOARD_WIDTH}
-            height={BOARD_HEIGHT}
+            dimensions={[BOARD_WIDTH, BOARD_HEIGHT]}
             baseClass={'tetromino'}
             // handleKeyPress={handleKeyPress}
           />

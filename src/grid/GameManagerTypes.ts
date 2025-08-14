@@ -15,7 +15,7 @@ export type ShapeMatrix = ReadonlyArray<
 
 type BasicActionArgs = {
   piece: PieceType;
-  focalPoint: number[];
+  focalPoint: Coord;
   conditional?: (args: any) => boolean;
   onAfter?: (args: CallbackPayload) => any;
 };
@@ -46,5 +46,5 @@ export type MoveArgs = BasicActionArgs & {
 export type CallbackPayload = {
   piece: PieceType;
   pixelRefs: React.MutableRefObject<(PixelType | null)[][]>;
-  focalPoint: React.MutableRefObject<number[]>;
+  focalPoint: React.MutableRefObject<Coord>;
 };

@@ -13,10 +13,9 @@
 
   .top-display-bottom-wrapper {
     @include flex-row;
-    height: 90px;
     width: 100%;
     justify-content: space-between;
-    height: fit-content;
+    height: clamp(95px, fit-content 130px);
   }
 }
 
@@ -26,6 +25,13 @@
   color: white;
   justify-content: center;
   align-items: center;
+  height: 100%;
+
+  > * {
+    @include flex-column;
+    justify-content: center;
+    align-items: center;
+  }
 
   :nth-child(1) {
     font-size: clamp(15px, 3vh, 20px);

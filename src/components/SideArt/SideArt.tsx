@@ -13,7 +13,10 @@ import {
 } from '../../atoms';
 import { makeRefMatrix } from '../../grid/utilities';
 import { GameManager } from '../../grid/GameManager';
-import { Direction } from '../../grid/GameManagerTypes';
+import {
+  Coord,
+  Direction,
+} from '../../grid/GameManagerTypes';
 
 /**
  * Tetris GameBoard Component -
@@ -35,15 +38,13 @@ export const SideArt = () => {
   /**
    * Focal point determining the coordinates on the Grid that pieces are placed/oriented with.
    */
-  const focalPointRef = React.useRef<[number, number]>([
-    3, 0,
-  ]);
+  const focalPointRef = React.useRef<Coord>([3, 0]);
 
   /**
    * Mutable ref object that will be used as the point of truth for game state logic.
    */
   const pixelRefs = React.useRef<(PixelType | null)[][]>(
-    makeRefMatrix(BOARD_HEIGHT, BOARD_WIDTH)
+    makeRefMatrix([BOARD_HEIGHT, BOARD_WIDTH])
   );
 
   const gm = new GameManager(pixelRefs, focalPointRef);
@@ -137,7 +138,7 @@ export const SideArt = () => {
     const focalPoint = [
       focalPointRef.current[0],
       focalPointRef.current[1],
-    ];
+    ] as Coord;
 
     const args = {
       piece: currentTetromino,
@@ -258,9 +259,8 @@ export const SideArt = () => {
       <section className='gameboard-wrapper'>
         <div className='grid-wrapper' id='sideart'>
           <Grid
+            dimensions={[BOARD_WIDTH, BOARD_HEIGHT]}
             setPixelRef={setPixelRef}
-            width={BOARD_WIDTH}
-            height={BOARD_HEIGHT}
             baseClass={'tetromino'}
           />
         </div>

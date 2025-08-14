@@ -9,7 +9,10 @@ import { useAtomValue } from 'jotai';
 import { rotateShapeClockwise } from '../../utilities';
 import { makeRefMatrix } from '../../grid/utilities';
 import { GameManager } from '../../grid/GameManager';
-import type { PieceType } from '../../grid/GameManagerTypes';
+import type {
+  Coord,
+  PieceType,
+} from '../../grid/GameManagerTypes';
 
 export const NextTetromino = () => {
   const BOARD_WIDTH = 6;
@@ -19,9 +22,9 @@ export const NextTetromino = () => {
   const gameOver = useAtomValue(gameOverAtom);
 
   const pixelRefs = React.useRef<(PixelType | null)[][]>(
-    makeRefMatrix(BOARD_HEIGHT, BOARD_WIDTH)
+    makeRefMatrix([BOARD_HEIGHT, BOARD_WIDTH])
   );
-  const focalPoint = React.useRef<number[]>([0, 0]);
+  const focalPoint = React.useRef<Coord>([0, 0]);
 
   const gm = new GameManager(pixelRefs, focalPoint);
 
@@ -38,7 +41,7 @@ export const NextTetromino = () => {
   };
 
   const displayNext = (tetromino: PieceType) => {
-    let focalPoint = [1, 1];
+    let focalPoint = [1, 1] as Coord;
     const { letter } = tetromino;
 
     switch (letter) {
@@ -70,8 +73,7 @@ export const NextTetromino = () => {
   return (
     <div className='next-tetromino-wrapper grid-wrapper'>
       <Grid
-        width={BOARD_WIDTH}
-        height={BOARD_HEIGHT}
+        dimensions={[BOARD_WIDTH, BOARD_HEIGHT]}
         setPixelRef={setPixelRef}
         baseClass='tetromino'
       />
