@@ -12,6 +12,9 @@
 
 * {
   overflow: hidden;
+  :focus {
+    outline: none;
+  }
 }
 body {
   margin: 0px;
@@ -24,10 +27,4 @@ body {
   justify-content: flex-start;
   align-items: center;
   overflow: hidden;
-}
-
-main {
-  @include flex-row;
-  justify-content: space-evenly;
-  width: 80vw;
 }

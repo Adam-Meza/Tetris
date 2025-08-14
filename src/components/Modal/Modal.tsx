@@ -14,15 +14,17 @@ export const GameModal = ({ startNewGame }: ModalProps) => {
   return (
     <Modal
       isOpen={isOpen}
-      title={'Modal'}
+      title={''}
       onClose={() => setIsOpen(false)}
+      isDismissible={false}
     >
       <ModalContent>
-        Lorem ipsum dolor sit amet, consectetur adipiscing
-        elit, sed do eiusmod tempor incididunt ut labore et
-        dolore magna aliqua. Ut enim ad minim veniam, quis
-        nostrud exercitation ullamco laboris nisi ut aliquip
-        ex ea commodo consequat.
+        <div id='modal'>
+          <h2>!!!TETRIS!!!</h2>
+          You know it!
+          <br />
+          You LOVE it!
+        </div>
       </ModalContent>
       <ModalButtonBar>
         <button
@@ -32,7 +34,7 @@ export const GameModal = ({ startNewGame }: ModalProps) => {
             setIsOpen(false);
           }}
         >
-          Primary
+          Lets Play
         </button>
       </ModalButtonBar>
     </Modal>

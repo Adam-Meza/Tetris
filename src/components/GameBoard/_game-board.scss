@@ -13,3 +13,13 @@
   aspect-ratio: 1/2;
   border: white solid 1px;
 }
+
+main {
+  @include flex-row;
+  justify-content: space-evenly;
+  width: 80vw;
+
+  :focus {
+    outline: none;
+  }
+}

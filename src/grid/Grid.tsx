@@ -14,6 +14,7 @@ type GridProps = {
   height: number;
   baseClass: string;
   setPixelRef: (pixel: PixelType) => void;
+  handleKeyPress?: (ev: KeyboardEvent) => void;
 };
 
 /**
@@ -24,6 +25,7 @@ export const Grid: React.FC<GridProps> = ({
   height,
   baseClass,
   setPixelRef,
+  handleKeyPress,
 }) => {
   const style = {
     '--grid-width': width,
@@ -31,6 +33,10 @@ export const Grid: React.FC<GridProps> = ({
   } as React.CSSProperties;
 
   const pixels: React.ReactNode[] = [];
+
+  // React.useCallback(() => {
+  //   window.addEventListener('keydown', handleKeyPress);
+  // }, []);
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {

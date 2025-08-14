@@ -19,7 +19,7 @@ makign a back end to track data of users and allow
  */
 function App() {
   return (
-    <ThemeProvider>
+    <ThemeProvider includeCss={false}>
       <div className='App'>
         <Header />
         {/* <SideArt /> */}

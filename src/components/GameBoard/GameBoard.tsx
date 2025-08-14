@@ -1,4 +1,5 @@
 import React from 'react';
+import * as Jotai from 'jotai';
 import { Grid } from '../../grid/Grid';
 import { GameModal } from '../Modal/Modal';
 import { TetrominoType } from '../Tetromino/Tetromino';
@@ -35,14 +36,19 @@ export const GameBoard = () => {
   // console.log('Gameboard Render');
   const BOARD_WIDTH = 10;
   const BOARD_HEIGHT = 20;
+  const mainRef = React.useRef<HTMLElement | null>(null);
 
-  const [currentTetromino, setTetromino] = useAtom(
+  const [currentTetromino, setTetromino] = Jotai.useAtom(
     currentTetrominoAtom
   );
-  const [gameOver, setGameOver] = useAtom(gameOverAtom);
-  const [score, setScore] = useAtom(scoreAtom);
-  const [next, setNext] = useAtom(nextTetrominoAtom);
-  const [lineCount, setCount] = useAtom(lineCountAtom);
+
+  const [score, setScore] = Jotai.useAtom(scoreAtom);
+  const [next, setNext] = Jotai.useAtom(nextTetrominoAtom);
+
+  const [gameOver, setGameOver] =
+    Jotai.useAtom(gameOverAtom);
+  const [lineCount, setCount] =
+    Jotai.useAtom(lineCountAtom);
 
   /**
    * Focal point determining the coordinates on the Grid that pieces are placed/oriented with.
@@ -339,10 +345,14 @@ export const GameBoard = () => {
     return () => clearInterval(interval);
   });
 
+  React.useCallback(() => {
+    mainRef.current?.focus();
+  }, []);
+
   const handleKeyPress = (
-    e: React.KeyboardEvent<HTMLElement>
+    ev: React.KeyboardEvent<HTMLElement>
   ) => {
-    const { key, repeat } = e;
+    const { key, repeat } = ev;
     const [x, y] = focalPointRef.current;
 
     let direction;
@@ -377,14 +387,18 @@ export const GameBoard = () => {
     setScore(0);
     setCount(0);
     makeNewTetromino();
+
+    requestAnimationFrame(() => mainRef.current?.focus());
   };
 
   return (
     <main
       tabIndex={0}
       onKeyDown={(event) => handleKeyPress(event)}
+      ref={mainRef}
     >
       <GameModal startNewGame={startNewGame} />
+
       <section className='gameboard-wrapper'>
         <TopDisplay />
         <div className='grid-wrapper' id='gameboard'>
@@ -393,6 +407,7 @@ export const GameBoard = () => {
             width={BOARD_WIDTH}
             height={BOARD_HEIGHT}
             baseClass={'tetromino'}
+            // handleKeyPress={handleKeyPress}
           />
         </div>
       </section>
