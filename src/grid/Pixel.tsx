@@ -35,7 +35,7 @@ export const Pixel = (props: PixelProps) => {
 
   const pixelRef = React.useRef<HTMLSpanElement>(null);
 
-  React.useMemo(() => {
+  React.useEffect(() => {
     setPixelRef({
       x,
       y,

@@ -1,7 +1,7 @@
 import React from 'react';
 import ScoreBoard from './ScoreBoard';
 import { NextTetromino } from '../NextTetromino/NextTetromino';
-import { lineCountAtom } from '../../atoms';
+import { lineCountAtom } from '../../../atoms';
 import { useAtomValue } from 'jotai';
 
 const TopDisplay = () => {

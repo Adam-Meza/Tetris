@@ -31,11 +31,9 @@ export class GameManager {
       conditional &&
       !conditional({ ...args, pixelRefs: this.pixelRefs })
     ) {
-      console.log('Put call FAIL for: ');
-      console.log(this.pixelRefs);
-
       return;
     }
+
     const width = shape[0].length;
     const height = shape.length;
 

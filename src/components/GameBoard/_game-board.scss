@@ -1,8 +1,10 @@
 @import '../../styles/mixins';
+@import './NextTetromino/next-tetromino';
+@import './TopDisplay/top-display';
 
 .gameboard-wrapper {
   @include flex-column;
-  height: fit-content;
+  height: clamp(300px, 80vh, 800px);
   width: fit-content;
   border: 4px solid black;
   background-color: white;
@@ -18,5 +20,5 @@
 main {
   @include flex-row;
   justify-content: space-evenly;
-  width: 80vw;
+  width: 100%;
 }

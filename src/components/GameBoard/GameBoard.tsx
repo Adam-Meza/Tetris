@@ -1,7 +1,6 @@
 import React from 'react';
 import * as Jotai from 'jotai';
 import { Grid } from '../../grid/Grid';
-import { GameModal } from '../Modal/Modal';
 import { TetrominoType } from '../Tetromino/Tetromino';
 import { PixelType } from '../../grid/Pixel';
 import {
@@ -18,13 +17,14 @@ import {
   lineCountAtom,
 } from '../../atoms';
 import { makeRefMatrix } from '../../grid/utilities';
-import TopDisplay from '../TopDisplay/TopDisplay';
+import TopDisplay from './TopDisplay/TopDisplay';
 import {
   CallbackPayload,
   Coord,
   Direction,
 } from '../../grid/GameManagerTypes';
 import { GameManager } from '../../grid/GameManager';
+import { LeaderBoard } from '../LeaderBoard/LeaderBoard';
 
 /**
  * Tetris GameBoard Component -
@@ -36,6 +36,7 @@ export const GameBoard = () => {
   const BOARD_WIDTH = 10;
   const BOARD_HEIGHT = 20;
   const mainRef = React.useRef<HTMLElement | null>(null);
+  const [gamePause, setGamePause] = React.useState(false);
 
   const [currentTetromino, setTetromino] = Jotai.useAtom(
     currentTetrominoAtom
@@ -64,21 +65,17 @@ export const GameBoard = () => {
   /**
    * GameManager in charge of manipulating DOM
    */
-  const gm = new GameManager(pixelRefs, focalPointRef);
+  const gm = React.useMemo(
+    () => new GameManager(pixelRefs, focalPointRef),
+    []
+  );
   /**
    * Sets the individual pixel ref objects and is responsible for effecting change on the DOM.
    */
 
   const setPixelRef = (pixel: PixelType) => {
     const { x, y } = pixel;
-    if (
-      y >= 0 &&
-      y < BOARD_HEIGHT &&
-      x >= 0 &&
-      x < BOARD_WIDTH
-    ) {
-      pixelRefs.current[y][x] = pixel;
-    }
+    pixelRefs.current[y][x] = pixel;
   };
 
   const didBlockLand = (args: CallbackPayload) => {
@@ -188,7 +185,10 @@ export const GameBoard = () => {
   const moveConditional = (args: CallbackPayload) => {
     const { direction, piece } = args;
 
-    if (direction && !isMovePossible(direction, piece)) {
+    if (
+      (direction && !isMovePossible(direction, piece)) ||
+      gamePause
+    ) {
       return false;
     }
 
@@ -300,7 +300,6 @@ export const GameBoard = () => {
 
   const putConditional = (args: CallbackPayload) => {
     if (!isMovePossible('same', next)) {
-      console.log(args);
       setGameOver(true);
       return false;
     }
@@ -309,21 +308,21 @@ export const GameBoard = () => {
   };
 
   const makeNewTetromino = () => {
-    const tetromino = randomTetromino();
+    const promoted = next ?? randomTetromino();
 
-    setNext(tetromino);
-    setTetromino(next);
+    setTetromino(promoted);
     focalPointRef.current = [3, 0];
 
     gm.put({
-      piece: next,
+      piece: promoted,
       focalPoint: [3, 0],
       conditional: putConditional,
     });
+
+    const queued = randomTetromino();
+    setNext(queued);
   };
 
-  // could be GameManager.rotate();
-  // would need piece,
   const rotateTetromino = () => {
     const rotated = {
       ...currentTetromino,
@@ -350,6 +349,16 @@ export const GameBoard = () => {
     }
   };
 
+  const startNewGame = () => {
+    setGameOver(true);
+    setGameOver(false);
+    setScore(0);
+    setCount(0);
+    makeNewTetromino();
+
+    requestAnimationFrame(() => mainRef.current?.focus());
+  };
+
   React.useEffect(() => {
     const interval = setInterval(() => {
       if (currentTetromino && !gameOver)
@@ -359,7 +368,8 @@ export const GameBoard = () => {
     return () => clearInterval(interval);
   });
 
-  React.useCallback(() => {
+  React.useEffect(() => {
+    startNewGame();
     mainRef.current?.focus();
   }, []);
 
@@ -385,6 +395,9 @@ export const GameBoard = () => {
       case 'Shift':
         rotateTetromino();
         return;
+      case 'Enter':
+        setGamePause(!gamePause);
+        return;
     }
   };
 
@@ -395,25 +408,12 @@ export const GameBoard = () => {
   //   console.log('focal point', focalPointRef.current);
   // };
 
-  const startNewGame = () => {
-    console.log('we run');
-    setGameOver(true);
-    setGameOver(false);
-    setScore(0);
-    setCount(0);
-    makeNewTetromino();
-
-    requestAnimationFrame(() => mainRef.current?.focus());
-  };
-
   return (
     <main
       tabIndex={0}
       onKeyDown={(event) => handleKeyPress(event)}
       ref={mainRef}
     >
-      <GameModal startNewGame={startNewGame} />
-
       <section className='gameboard-wrapper'>
         <TopDisplay />
         <div className='grid-wrapper' id='gameboard'>
@@ -425,6 +425,8 @@ export const GameBoard = () => {
           />
         </div>
       </section>
+
+      <LeaderBoard />
     </main>
   );
 };

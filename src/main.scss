@@ -3,12 +3,12 @@
 @import './components/Info/info';
 @import './components/Tetromino/tetromino';
 @import './components/GameBoard/game-board';
-@import './components/NextTetromino/next-tetromino';
-@import './components/TopDisplay/top-display';
 @import './components//Header/header';
 @import './components/SideArt/side-art';
 @import './components/Modal/modal';
 @import './styles/mixins';
+@import './components/LeaderBoard/leader-board';
+@import './components/LeaderBoard/leader-board';
 
 * {
   overflow: hidden;
@@ -16,16 +16,18 @@
     outline: none;
   }
 }
+
 body {
   margin: 0px;
+  background-color: white;
 }
 
 .App {
   height: 100vh;
   width: 100vw;
   @include flex-column;
-  justify-content: flex-start;
-  align-items: center;
+  justify-content: center;
+  align-items: space-evenly;
   overflow: hidden;
   background-color: white;
 }

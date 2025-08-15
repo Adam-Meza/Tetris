@@ -1,6 +1,6 @@
 @use 'sass:map';
-@import '../../styles/mixins';
-@import '../../styles/variables';
+@import '../../../styles/mixins';
+@import '../../../styles/variables';
 
 .top-display {
   @include flex-column;

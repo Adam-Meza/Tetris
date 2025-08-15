@@ -4,12 +4,14 @@ import {
   ModalContent,
   ModalButtonBar,
 } from '@itwin/itwinui-react';
+import * as Jotai from 'jotai';
+import { gameOverAtom } from '../../atoms';
+import * as ReactRouter from 'react-router-dom';
 
-type ModalProps = {
-  startNewGame: () => void;
-};
-export const GameModal = ({ startNewGame }: ModalProps) => {
+export const GameModal = () => {
   const [isOpen, setIsOpen] = React.useState(true);
+  const setGameOver = Jotai.useSetAtom(gameOverAtom);
+  const nav = ReactRouter.useNavigate();
 
   return (
     <Modal
@@ -30,7 +32,8 @@ export const GameModal = ({ startNewGame }: ModalProps) => {
         <button
           className='new-game-button'
           onClick={() => {
-            startNewGame();
+            nav('/play');
+            setGameOver(false);
             setIsOpen(false);
           }}
         >
