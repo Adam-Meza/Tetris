@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { ACCESS_TOKEN } from './constants';
 
+const baseURL = import.meta.env.VITE_API_URL;
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: baseURL,
 });
 
 api.interceptors.request.use(
@@ -19,5 +21,15 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+export const login = async (
+  username: string,
+  password: string
+) => {
+  return axios.post(`${baseURL}/tetris_api/token/`, {
+    username,
+    password,
+  });
+};
 
 export default api;

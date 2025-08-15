@@ -3,6 +3,10 @@ import * as Jotai from 'jotai';
 import { Grid } from '../../grid/Grid';
 import { TetrominoType } from '../Tetromino/Tetromino';
 import { PixelType } from '../../grid/Pixel';
+import { GameManager } from '../../grid/GameManager';
+import { LeaderBoard } from '../LeaderBoard/LeaderBoard';
+import { makeRefMatrix } from '../../grid/utilities';
+import TopDisplay from './TopDisplay/TopDisplay';
 import {
   randomTetromino,
   calculateScore,
@@ -16,15 +20,11 @@ import {
   nextTetrominoAtom,
   lineCountAtom,
 } from '../../atoms';
-import { makeRefMatrix } from '../../grid/utilities';
-import TopDisplay from './TopDisplay/TopDisplay';
 import {
   CallbackPayload,
   Coord,
   Direction,
 } from '../../grid/GameManagerTypes';
-import { GameManager } from '../../grid/GameManager';
-import { LeaderBoard } from '../LeaderBoard/LeaderBoard';
 
 /**
  * Tetris GameBoard Component -
@@ -95,7 +95,7 @@ export const GameBoard = () => {
         );
 
         if (lowerY >= BOARD_HEIGHT)
-          return handleBlockLanding();
+          return handleBlockLanding(args);
 
         const currentSquare = pixelRefs.current[y][x];
 
@@ -108,7 +108,7 @@ export const GameBoard = () => {
             piece
           )
         )
-          handleBlockLanding();
+          handleBlockLanding(args);
       }
     }
 
@@ -215,7 +215,8 @@ export const GameBoard = () => {
     gm.playerMove(args);
   };
 
-  const moveRowsDown = () => {
+  const moveRowsDown = (args: CallbackPayload) => {
+    const { pixelRefs } = args;
     // check every row...
     for (let i = BOARD_HEIGHT - 1; i >= 0; i--) {
       const row = pixelRefs.current[i];
@@ -248,13 +249,13 @@ export const GameBoard = () => {
     }
   };
 
-  const handleBlockLanding = () => {
+  const handleBlockLanding = (args: CallbackPayload) => {
     // setTimeout(() => {
-    const completedRowIndexes = findCompletedRows();
+    const completedRowIndexes = findCompletedRows(args);
 
     if (completedRowIndexes) {
       removeRows(completedRowIndexes);
-      moveRowsDown();
+      moveRowsDown(args);
 
       const newScore = calculateScore(
         completedRowIndexes.length,
@@ -285,8 +286,11 @@ export const GameBoard = () => {
     });
   };
 
-  const findCompletedRows = (): number[] | null => {
+  const findCompletedRows = (
+    args: CallbackPayload
+  ): number[] | null => {
     let rowsToRemove = [] as number[];
+    const { pixelRefs } = args;
 
     pixelRefs.current.forEach((row, index) => {
       if (row.every((pixel) => pixel?.id)) {
@@ -421,7 +425,6 @@ export const GameBoard = () => {
             setPixelRef={setPixelRef}
             dimensions={[BOARD_WIDTH, BOARD_HEIGHT]}
             baseClass={'tetromino'}
-            // handleKeyPress={handleKeyPress}
           />
         </div>
       </section>

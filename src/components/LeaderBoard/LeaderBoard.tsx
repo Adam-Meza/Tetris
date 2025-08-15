@@ -6,6 +6,7 @@ export const LeaderBoard = () => {
     2234234, 3524542, 4425245, 522342, 523423423, 234324,
     9999999999, 1,
   ];
+
   const cards = scores
     .sort()
     .reverse()

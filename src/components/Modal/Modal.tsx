@@ -20,26 +20,32 @@ export const GameModal = () => {
       onClose={() => setIsOpen(false)}
       isDismissible={false}
     >
-      <ModalContent>
-        <div id='modal'>
-          <h2>!!!TETRIS!!!</h2>
-          You know it!
-          <br />
-          You LOVE it!
-        </div>
-      </ModalContent>
-      <ModalButtonBar>
+      <div className='modal-wrapper'>
+        <ModalContent>
+          <span>!!!TETRIS!!!</span>
+        </ModalContent>
         <button
-          className='new-game-button'
+          className='modal-button'
+          onClick={() => {
+            nav('/log-in');
+            setGameOver(false);
+            setIsOpen(false);
+          }}
+        >
+          Log In
+        </button>
+        or
+        <button
+          className='modal-button'
           onClick={() => {
             nav('/play');
             setGameOver(false);
             setIsOpen(false);
           }}
         >
-          Lets Play
+          Play as Guest
         </button>
-      </ModalButtonBar>
+      </div>
     </Modal>
   );
 };

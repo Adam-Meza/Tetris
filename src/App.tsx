@@ -15,6 +15,7 @@ import {
 // import NotFound from './pages/NotFound';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 import { GameModal } from './components/Modal/Modal';
+import { LogInForm } from './components/Modal/LogInForm';
 
 function Logout() {
   localStorage.clear();
@@ -37,6 +38,10 @@ function App() {
           <Route
             path='/side-art'
             element={<ProtectedRoute child={<SideArt />} />}
+          />
+          <Route
+            path='/log-in'
+            element={<LogInForm method='login' />}
           />
           {/* <Route path='/logout' element={<Logout />} /> */}
           <Route path='/info' element={<Info />} />
