@@ -267,8 +267,8 @@ export const GameBoard = () => {
       setCount(lineCount + completedRowIndexes.length);
       setScore(newScore);
     }
+
     makeNewTetromino();
-    // }, 80);
   };
 
   const removeRows = (rows: number[]) => {
@@ -304,15 +304,6 @@ export const GameBoard = () => {
     return rowsToRemove;
   };
 
-  const putConditional = (args: CallbackPayload) => {
-    if (!isMovePossible('same', next)) {
-      setGameOver(true);
-      return false;
-    }
-
-    return true;
-  };
-
   const makeNewTetromino = () => {
     const promoted = next ?? randomTetromino();
 
@@ -322,7 +313,23 @@ export const GameBoard = () => {
     gm.put({
       piece: promoted,
       focalPoint: [3, 0],
-      conditional: putConditional,
+      //Before we make a new piece, we ask
+      // can we?
+      conditional: (args: CallbackPayload) => {
+        if (!isMovePossible('same', next)) {
+          setGameOver(true);
+          return false;
+        }
+
+        return true;
+      },
+      // and once we make it we ask,
+      // can we go anywhere?
+      onAfter: () => {
+        if (!isMovePossible('down', next)) {
+          setGameOver(true);
+        }
+      },
     });
 
     const queued = randomTetromino();
@@ -405,18 +412,21 @@ export const GameBoard = () => {
       case 'n':
         startNewGame();
         return;
+      case 'c':
+        consoleLogData();
+        return;
       case 'Enter':
         setGamePause(!gamePause);
         return;
     }
   };
 
-  // const consoleLogData = () => {
-  //   console.log('currentTetromino:', currentTetromino);
-  //   console.log('pixelrefs:', pixelRefs.current);
-  //   console.log('gameOver', gameOver);
-  //   console.log('focal point', focalPointRef.current);
-  // };
+  const consoleLogData = () => {
+    console.log('currentTetromino:', currentTetromino);
+    console.log('pixelrefs:', pixelRefs.current);
+    console.log('gameOver', gameOver);
+    console.log('focal point', focalPointRef.current);
+  };
 
   return (
     <main
