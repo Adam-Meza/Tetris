@@ -3,13 +3,21 @@ import { Modal, ModalContent } from '@itwin/itwinui-react';
 import * as Jotai from 'jotai';
 import { gameOverAtom, scoreAtom } from '../../atoms';
 import * as ReactRouter from 'react-router-dom';
+import { lineCountAtom } from '../../atoms';
 
-const GameOverModal = (props) => {
+interface GameOverModalProps {
+  startNewGame: () => void;
+}
+
+const GameOverModal: React.FC<GameOverModalProps> = (
+  props
+) => {
   const { startNewGame } = props;
   const [isOpen, setIsOpen] = React.useState(true);
   const [gameOver, setGameOver] =
     Jotai.useAtom(gameOverAtom);
   const score = Jotai.useAtomValue(scoreAtom);
+  const count = Jotai.useAtomValue(lineCountAtom);
 
   const nav = ReactRouter.useNavigate();
 
@@ -36,8 +44,8 @@ const GameOverModal = (props) => {
       <ModalContent>
         <div className='modal-wrapper'>
           <h2>GAME OVER!</h2>
-          <span>you scored</span>
           <span>{score}</span>
+          <span>line count: {count}</span>
 
           <button
             className='modal-button'

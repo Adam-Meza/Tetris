@@ -28,7 +28,17 @@ export const LeaderBoard = () => {
   const cards = scores
     .sort()
     .reverse()
-    .map((score) => <ScoreCard score={score} />);
+    .map((score, i) => {
+      const medals = ['gold', 'silver', 'bronze'];
+
+      return (
+        <ScoreCard
+          key={i}
+          score={score}
+          medal={i < 3 ? medals[i] : ''}
+        />
+      );
+    });
 
   return (
     <div className='leader-board'>

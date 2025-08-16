@@ -5,16 +5,16 @@
 .top-display {
   @include flex-column;
   justify-content: flex-start;
+  align-items: center;
   height: 170px;
   width: 100%;
-  font-family: 'Jersey 10', sans-serif;
   margin: 5px 0px;
   gap: clamp(5px, 1vh, 10px);
 
   .top-display-bottom-wrapper {
     @include flex-row;
     width: 100%;
-    justify-content: space-between;
+    justify-content: space-around;
     height: clamp(95px, fit-content 130px);
   }
 }
@@ -47,6 +47,6 @@
 }
 
 .score-board-wrapper {
-  width: 100%;
+  width: 235px;
   background-color: map.get($tetromino-colors, 'j');
 }

@@ -1,4 +1,9 @@
+@use 'sass:map';
 @import '../../styles/mixins';
+@import '../../styles/variables';
+
+$green: map.get($tetromino-colors, 's');
+$pink: map.get($tetromino-colors, 'z');
 
 $medal-colors: (
   gold: #e3c322,
@@ -6,28 +11,36 @@ $medal-colors: (
   bronze: #b99314,
 );
 
-@each $medal, $color in $medal-colors {
-  .#{$medal} {
-    background-color: $color;
-    color: white;
-  }
-}
-
 .leader-board {
   @include flex-column;
   justify-content: flex-start;
   align-items: center;
   aspect-ratio: 2/3;
   border: black solid 1px;
+  padding: 5px;
 
   h2 {
+    width: 100%;
+    background-color: $green;
+    color: white;
     font-size: 50px;
+    text-align: center;
   }
 }
 
 .scorecard-wrapper {
   width: 100%;
-  height: fit-content;
+  height: calc(fit-content + 20px);
+  display: flex;
+  @include flex-column;
+  gap: 5px;
+
+  @each $medal, $color in $medal-colors {
+    .#{$medal} {
+      background-color: $color;
+      color: white;
+    }
+  }
 }
 
 .scorecard {
@@ -36,11 +49,11 @@ $medal-colors: (
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: clamp(30px, 10vh, 60px);
-  border: red solid 1px;
-  font-size: 25px;
+  height: clamp(30px, 8vh, 60px);
+  color: $pink;
+  font-size: 30px;
 
   :nth-child(2) {
-    font-size: 40px;
+    font-size: 50px;
   }
 }
