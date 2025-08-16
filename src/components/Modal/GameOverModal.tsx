@@ -1,9 +1,16 @@
 import * as React from 'react';
 import { Modal, ModalContent } from '@itwin/itwinui-react';
 import * as Jotai from 'jotai';
-import { gameOverAtom, scoreAtom } from '../../atoms';
+import {
+  currentPlayerAtom,
+  gameOverAtom,
+  gamesAtom,
+  scoreAtom,
+} from '../../atoms';
 import * as ReactRouter from 'react-router-dom';
 import { lineCountAtom } from '../../atoms';
+import api from '../../api';
+import { getAll } from '../../api';
 
 interface GameOverModalProps {
   startNewGame: () => void;
@@ -16,30 +23,60 @@ const GameOverModal: React.FC<GameOverModalProps> = (
   const [isOpen, setIsOpen] = React.useState(true);
   const [gameOver, setGameOver] =
     Jotai.useAtom(gameOverAtom);
+  const setGames = Jotai.useSetAtom(gamesAtom);
   const score = Jotai.useAtomValue(scoreAtom);
   const count = Jotai.useAtomValue(lineCountAtom);
+  const currentPlayer = Jotai.useAtomValue(
+    currentPlayerAtom
+  );
+
+  React.useEffect(() => {
+    if (gameOver) handleSubimt();
+  });
 
   const nav = ReactRouter.useNavigate();
 
   // if there's no player we offer to make one
   // we form the new game no matter what
   /*
-  
+   */
+
   const newGame = {
-    player: {
-        id: string,
-        name: string,
-    },
-    score: number,
-    lineCount: number,
-  }
-  */
+    score: score,
+    line_count: count,
+  };
+
+  const getNotes = () => {
+    console.log('running fetch in leaderboard');
+
+    getAll()
+      .then((res) => res.data)
+      .then((data) => {
+        console.log(data);
+        setGames(data);
+      })
+      .catch((error) => alert(error));
+  };
+
+  const handleSubimt = async () => {
+    try {
+      api
+        .post('/tetris_api/games/', newGame)
+        .then((res) => {
+          if (res.status === 201) alert('Game  Created!');
+          else alert('failed to make ');
+        });
+    } catch (error) {
+      alert(error);
+      getNotes();
+    }
+  };
+
   return (
     <Modal
       isOpen={gameOver}
       title={''}
       isDismissible={false}
-      onClose={() => {}}
     >
       <ModalContent>
         <div className='modal-wrapper'>

@@ -1,10 +1,11 @@
 import React from 'react';
 import { ScoreCard } from './ScoreCard';
 import { getAll } from '../../api';
+import { gamesAtom } from '../../atoms';
+import * as Jotai from 'jotai';
 
 export const LeaderBoard = () => {
-  const [games, setGames] = React.useState([]);
-  const [content, setContent] = React.useState('');
+  const [games, setGames] = Jotai.useAtom(gamesAtom);
 
   const getNotes = () => {
     getAll()

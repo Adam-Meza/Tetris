@@ -9,9 +9,7 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom';
-// import Login from './pages/Login';
 import { Register } from './components/Modal/Register';
-// import Home from './pages/Home';
 // import NotFound from './pages/NotFound';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 import { GameModal } from './components/Modal/Modal';

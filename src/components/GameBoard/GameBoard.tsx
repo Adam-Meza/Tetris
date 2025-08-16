@@ -26,7 +26,6 @@ import {
   Direction,
 } from '../../grid/GameManagerTypes';
 import GameOverModal from '../Modal/GameOverModal';
-import { start } from 'repl';
 
 /**
  * Tetris GameBoard Component -

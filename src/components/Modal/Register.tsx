@@ -9,7 +9,7 @@ import {
 import { Modal, ModalContent } from '@itwin/itwinui-react';
 import { gameOverAtom } from '../../atoms';
 
-//@ts-ignore
+///@ts-ignore
 export const Register = ({ method }) => {
   const [userName, setUserName] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -27,6 +27,8 @@ export const Register = ({ method }) => {
     setLoading(true);
     e.preventDefault();
     if (password === confirmation) {
+      console.log('running fetch in register');
+
       try {
         const res = await register(userName, password);
 

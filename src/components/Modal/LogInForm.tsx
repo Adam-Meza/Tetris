@@ -6,12 +6,11 @@ import {
   ACCESS_TOKEN,
   REFRESH_TOKEN,
 } from '../../constants';
+import { Modal, ModalContent } from '@itwin/itwinui-react';
 import {
-  Modal,
-  ModalContent,
-  ModalButtonBar,
-} from '@itwin/itwinui-react';
-import { gameOverAtom } from '../../atoms';
+  currentPlayerAtom,
+  gameOverAtom,
+} from '../../atoms';
 
 //@ts-ignore
 export const LogInForm = ({ method }) => {
@@ -20,19 +19,22 @@ export const LogInForm = ({ method }) => {
   const [loading, setLoading] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(true);
   const setGameOver = Jotai.useSetAtom(gameOverAtom);
+  const setPlayer = Jotai.useSetAtom(currentPlayerAtom);
   const nav = ReactRouter.useNavigate();
-
-  const route = 'tetris_api/token/';
 
   const handleSubimt = async (e: React.FormEvent) => {
     setLoading(true);
     e.preventDefault();
     try {
       const res = await login(userName, password);
-      console.log(res.data);
 
       localStorage.setItem(ACCESS_TOKEN, res.data.access);
       localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
+
+      //   setPlayer({
+      //     username: userName,
+      //   });
+
       setGameOver(false);
       setIsOpen(false);
       nav('/play');
@@ -70,23 +72,16 @@ export const LogInForm = ({ method }) => {
           />
           PASSWORD
           <input
-            autoComplete='false'
+            autoComplete='off'
             name='password'
             className='form-input'
-            type='text'
+            type='password'
             value={password}
-            //@ts-ignore
-            onChange={(e: KeyboardEvent<Element>) =>
-              setPassword(e.target.value)
-            }
-            onSubmit={handleSubimt}
+            onChange={(
+              e: React.ChangeEvent<HTMLInputElement>
+            ) => setPassword(e.target.value)}
           />
-          <button
-            className='modal-button'
-            onClick={handleSubimt}
-          >
-            LOG IN
-          </button>
+          <button className='modal-button'>LOG IN</button>
         </form>
       </ModalContent>
     </Modal>
