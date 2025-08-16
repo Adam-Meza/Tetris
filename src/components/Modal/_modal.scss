@@ -26,7 +26,7 @@
   color: white;
   font-size: 40px;
 
-  button:hover {
+  :hover {
     background-color: rgb(233, 146, 212);
   }
 }
@@ -42,5 +42,12 @@
 
   .form-input:nth-last-of-type(1) {
     margin-bottom: 20px;
+  }
+}
+
+.register-form {
+  @extend .log-in-form;
+  .form-input:nth-last-of-type(1) {
+    margin: 20px;
   }
 }

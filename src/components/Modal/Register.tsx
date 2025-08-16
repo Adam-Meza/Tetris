@@ -1,45 +1,52 @@
 import React from 'react';
-import api, { login } from '../../api';
+import api, { register } from '../../api';
 import * as ReactRouter from 'react-router-dom';
 import * as Jotai from 'jotai';
 import {
   ACCESS_TOKEN,
   REFRESH_TOKEN,
 } from '../../constants';
-import {
-  Modal,
-  ModalContent,
-  ModalButtonBar,
-} from '@itwin/itwinui-react';
+import { Modal, ModalContent } from '@itwin/itwinui-react';
 import { gameOverAtom } from '../../atoms';
 
 //@ts-ignore
-export const LogInForm = ({ method }) => {
+export const Register = ({ method }) => {
   const [userName, setUserName] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [confirmation, setConfirmation] =
+    React.useState('');
+
   const [loading, setLoading] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(true);
   const setGameOver = Jotai.useSetAtom(gameOverAtom);
   const nav = ReactRouter.useNavigate();
 
-  const route = 'tetris_api/token/';
+  const route = 'tetris_api/user/register';
 
   const handleSubimt = async (e: React.FormEvent) => {
     setLoading(true);
     e.preventDefault();
-    try {
-      const res = await login(userName, password);
-      console.log(res);
+    if (password === confirmation) {
+      try {
+        const res = await register(userName, password);
 
-      localStorage.setItem(ACCESS_TOKEN, res.data.access);
-      localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-      setGameOver(false);
-      setIsOpen(false);
-      nav('/play');
-    } catch (error) {
-      alert(error);
-    } finally {
-      setLoading(false);
+        console.log(res);
+
+        localStorage.setItem(ACCESS_TOKEN, res.data.access);
+        localStorage.setItem(
+          REFRESH_TOKEN,
+          res.data.refresh
+        );
+        setGameOver(false);
+        setIsOpen(false);
+        nav('/play');
+      } catch (error) {
+        alert(error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      console.log('they dont match');
     }
   };
 
@@ -53,9 +60,9 @@ export const LogInForm = ({ method }) => {
       <ModalContent>
         <form
           onSubmit={handleSubimt}
-          className='log-in-form'
+          className='register-form'
         >
-          <span>Log In</span>
+          <span>REGISTER</span>
           USERNAME
           <input
             autoComplete='false'
@@ -81,11 +88,23 @@ export const LogInForm = ({ method }) => {
             }
             onSubmit={handleSubimt}
           />
+          <input
+            autoComplete='false'
+            name='password-confirmation'
+            className='form-input'
+            type='text'
+            value={confirmation}
+            //@ts-ignore
+            onChange={(e: KeyboardEvent<Element>) =>
+              setConfirmation(e.target.value)
+            }
+            onSubmit={handleSubimt}
+          />
           <button
             className='modal-button'
             onClick={handleSubimt}
           >
-            LOG IN
+            REGISTER
           </button>
         </form>
       </ModalContent>

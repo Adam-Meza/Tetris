@@ -10,7 +10,7 @@ import {
   Navigate,
 } from 'react-router-dom';
 // import Login from './pages/Login';
-// import Register from './pages/Register';
+import { Register } from './components/Modal/Register';
 // import Home from './pages/Home';
 // import NotFound from './pages/NotFound';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
@@ -45,6 +45,10 @@ function App() {
           />
           {/* <Route path='/logout' element={<Logout />} /> */}
           <Route path='/info' element={<Info />} />
+          <Route
+            path='/register'
+            element={<Register method='register' />}
+          />
           {/* <Route path='*' element={<NotFound />}></Route> */}
         </Routes>
       </BrowserRouter>

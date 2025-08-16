@@ -22,11 +22,25 @@ api.interceptors.request.use(
   }
 );
 
+export const getAll = async () => {
+  return axios.get(`${baseURL}/tetris_api/games`);
+};
+
 export const login = async (
   username: string,
   password: string
 ) => {
   return axios.post(`${baseURL}/tetris_api/token/`, {
+    username,
+    password,
+  });
+};
+
+export const register = async (
+  username: string,
+  password: string
+) => {
+  return axios.post(`${baseURL}/user/register/`, {
     username,
     password,
   });

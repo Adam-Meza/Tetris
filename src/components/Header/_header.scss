@@ -2,10 +2,6 @@
 @import '../../styles/variables';
 @import '../../styles/mixins';
 
-$pink: map.get($tetromino-colors, 'z');
-$green: map.get($tetromino-colors, 's');
-$blue: map.get($tetromino-colors, 'j');
-
 $color-list: map-values($tetromino-colors);
 
 @for $i from 1 through length($color-list) {

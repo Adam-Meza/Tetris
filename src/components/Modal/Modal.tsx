@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  Modal,
-  ModalContent,
-  ModalButtonBar,
-} from '@itwin/itwinui-react';
+import { Modal, ModalContent } from '@itwin/itwinui-react';
 import * as Jotai from 'jotai';
 import { gameOverAtom } from '../../atoms';
 import * as ReactRouter from 'react-router-dom';
@@ -33,6 +29,15 @@ export const GameModal = () => {
           }}
         >
           Log In
+        </button>
+        or
+        <button
+          className='modal-button'
+          onClick={() => {
+            nav('/register');
+          }}
+        >
+          REGISTER
         </button>
         or
         <button
