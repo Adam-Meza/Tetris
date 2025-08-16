@@ -9,20 +9,20 @@ export const LeaderBoard = () => {
   const getNotes = () => {
     getAll()
       .then((res) => res.data)
-      .then((data) => setGames(data));
+      .then((data) => {
+        console.log(data);
+        setGames(data);
+      })
+      .catch((error) => alert(error));
   };
 
-  //   React.useEffect(()=> {
-  //     try {
-  //         getNotes()
-
-  //         })
-  //     }
-  //   },[])
+  React.useEffect(() => {
+    getNotes();
+  }, []);
 
   const scores = [
     2234234, 3524542, 4425245, 522342, 523423423, 234324,
-    9999999999, 1,
+    9999999999, 1, 345, 345346,
   ];
 
   const cards = scores

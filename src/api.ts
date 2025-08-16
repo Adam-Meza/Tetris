@@ -23,7 +23,7 @@ api.interceptors.request.use(
 );
 
 export const getAll = async () => {
-  return axios.get(`${baseURL}/tetris_api/games`);
+  return axios.get(`${baseURL}/tetris_api/games/`);
 };
 
 export const login = async (

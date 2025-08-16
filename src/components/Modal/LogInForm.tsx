@@ -29,7 +29,7 @@ export const LogInForm = ({ method }) => {
     e.preventDefault();
     try {
       const res = await login(userName, password);
-      console.log(res);
+      console.log(res.data);
 
       localStorage.setItem(ACCESS_TOKEN, res.data.access);
       localStorage.setItem(REFRESH_TOKEN, res.data.refresh);

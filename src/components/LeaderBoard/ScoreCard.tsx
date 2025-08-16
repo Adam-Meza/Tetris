@@ -14,6 +14,7 @@ export const ScoreCard: React.FC<ScoreBoardProps> = (
     <div className='scorecard'>
       <span>test</span>
       <span>{score}</span>
+      <span>line count: 80</span>
     </div>
   );
 };

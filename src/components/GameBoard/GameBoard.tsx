@@ -25,6 +25,8 @@ import {
   Coord,
   Direction,
 } from '../../grid/GameManagerTypes';
+import GameOverModal from '../Modal/GameOverModal';
+import { start } from 'repl';
 
 /**
  * Tetris GameBoard Component -
@@ -354,6 +356,7 @@ export const GameBoard = () => {
   };
 
   const startNewGame = () => {
+    gm.clearBoard();
     setGameOver(true);
     setGameOver(false);
     setScore(0);
@@ -399,6 +402,9 @@ export const GameBoard = () => {
       case 'Shift':
         rotateTetromino();
         return;
+      case 'n':
+        startNewGame();
+        return;
       case 'Enter':
         setGamePause(!gamePause);
         return;
@@ -428,8 +434,8 @@ export const GameBoard = () => {
           />
         </div>
       </section>
-
       <LeaderBoard />
+      <GameOverModal startNewGame={startNewGame} />
     </main>
   );
 };

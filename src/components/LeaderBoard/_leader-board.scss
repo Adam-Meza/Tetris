@@ -1,11 +1,28 @@
 @import '../../styles/mixins';
 
+$medal-colors: (
+  gold: #e3c322,
+  silver: #999998,
+  bronze: #b99314,
+);
+
+@each $medal, $color in $medal-colors {
+  .#{$medal} {
+    background-color: $color;
+    color: white;
+  }
+}
+
 .leader-board {
   @include flex-column;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: center;
   aspect-ratio: 2/3;
   border: black solid 1px;
+
+  h2 {
+    font-size: 50px;
+  }
 }
 
 .scorecard-wrapper {
@@ -15,9 +32,15 @@
 
 .scorecard {
   @include flex-row;
-  justify-content: space-evenly;
+  padding: 10px;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   height: clamp(30px, 10vh, 60px);
   border: red solid 1px;
+  font-size: 25px;
+
+  :nth-child(2) {
+    font-size: 40px;
+  }
 }
