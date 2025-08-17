@@ -21,30 +21,6 @@ export const LeaderBoard = () => {
       .then((res) => res.data)
       .then((data) => {
         setGames(data);
-
-        const scoreCards = data
-          .sort(
-            (a: GameType, b: GameType) => a.score - b.score
-          )
-          .reverse()
-          .map((game: any, i: number) => {
-            const { owner, line_count, score } = game;
-
-            const medals = ['gold', 'silver', 'bronze'];
-
-            return (
-              <ScoreCard
-                key={i}
-                score={score}
-                lineCount={line_count}
-                name={owner.username}
-                medal={i < 3 ? medals[i] : ''}
-              />
-            );
-          })
-          .slice(0, 10);
-
-        setCards(scoreCards);
       })
       .catch((error) => {
         console.log('stemmed from getGames in LeaderBoard');
@@ -55,6 +31,30 @@ export const LeaderBoard = () => {
   React.useEffect(() => {
     getGames();
   }, []);
+
+  React.useEffect(() => {
+    const scoreCards = games
+      .sort((a: GameType, b: GameType) => a.score - b.score)
+      .reverse()
+      .map((game: any, i: number) => {
+        const { owner, line_count, score } = game;
+
+        const medals = ['gold', 'silver', 'bronze'];
+
+        return (
+          <ScoreCard
+            key={i}
+            score={score}
+            lineCount={line_count}
+            name={owner.username}
+            medal={i < 3 ? medals[i] : ''}
+          />
+        );
+      })
+      .slice(0, 10);
+
+    setCards(scoreCards);
+  }, [games]);
 
   return (
     <div className='leader-board'>

@@ -308,10 +308,12 @@ export const GameBoard = () => {
     focalPointRef.current = [3, 0];
 
     gm.put({
+      // What are we placing?
       piece: promoted,
+      // Where are we placing it?
       focalPoint: [3, 0],
-      //Before we make a new piece, we ask
-      // can we?
+      // Before we place the piece,
+      // Let's check if we can...
       conditional: (args: CallbackPayload) => {
         if (!isMovePossible('same', next)) {
           setGameOver(true);
@@ -320,7 +322,7 @@ export const GameBoard = () => {
 
         return true;
       },
-      // and once we make it we ask,
+      // and once we place it, we ask,
       // can we go anywhere?
       onAfter: () => {
         if (!isMovePossible('down', next)) {
@@ -434,6 +436,7 @@ export const GameBoard = () => {
     >
       <section className='gameboard-wrapper'>
         <TopDisplay />
+
         <div className='grid-wrapper' id='gameboard'>
           <Grid
             setPixelRef={setPixelRef}

@@ -7,18 +7,32 @@ const api = axios.create({
   baseURL,
 });
 
+declare module 'axios' {
+  export interface InternalAxiosRequestConfig {
+    skipAuth?: boolean;
+  }
+}
+
 api.interceptors.request.use((config) => {
+  config.headers = config.headers ?? {};
+
+  if ('X-Skip-Auth' in config.headers) {
+    delete (config.headers as any)['X-Skip-Auth'];
+    return config;
+  }
   const token = localStorage.getItem(ACCESS_TOKEN);
 
   if (token)
-    config.headers.Authorization = `Bearer ${token}`;
-
+    (config.headers as any).Authorization =
+      `Bearer ${token}`;
+  else delete (config.headers as any).Authorization;
   return config;
 });
 
-export const getAll = async () => {
-  return api.get(`/tetris_api/games/all/`);
-};
+export const getAll = () =>
+  api.get('/tetris_api/games/all/', {
+    headers: { 'X-Skip-Auth': '1' },
+  });
 
 export const login = async (
   username: string,
