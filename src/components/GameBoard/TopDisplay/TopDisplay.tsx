@@ -1,19 +1,15 @@
-import React from 'react';
 import ScoreBoard from './ScoreBoard';
 import { NextTetromino } from '../NextTetromino/NextTetromino';
-import { lineCountAtom } from '../../../atoms';
-import { useAtomValue } from 'jotai';
+
+import { LineCount } from './LineCount';
 
 const TopDisplay = () => {
-  const lineCount = useAtomValue(lineCountAtom);
   return (
     <div className='top-display'>
+      <span className='player-title'> PLAYER: "test"</span>
       <ScoreBoard />
       <div className='top-display-bottom-wrapper'>
-        <div className='line-count-wrapper'>
-          <span>Line Count:</span>
-          <span> {lineCount}</span>
-        </div>
+        <LineCount />
         <NextTetromino />
       </div>
     </div>

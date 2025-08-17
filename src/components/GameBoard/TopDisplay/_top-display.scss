@@ -4,18 +4,17 @@
 
 .top-display {
   @include flex-column;
-  justify-content: flex-start;
+  justify-content: space-around;
   align-items: center;
-  height: 170px;
-  width: 100%;
-  margin: 5px 0px;
+  height: clamp(100px, 33%, 300px);
+  width: 90%;
   gap: clamp(5px, 1vh, 10px);
 
   .top-display-bottom-wrapper {
     @include flex-row;
     width: 100%;
-    justify-content: space-around;
-    height: clamp(95px, fit-content 130px);
+    justify-content: space-between;
+    height: clamp(95px, 40%, 130px);
   }
 }
 
@@ -25,7 +24,6 @@
   color: white;
   justify-content: center;
   align-items: center;
-  height: 100%;
 
   > * {
     @include flex-column;
@@ -43,10 +41,20 @@
 
 .line-count-wrapper {
   background-color: map.get($tetromino-colors, 'l');
-  width: 40%;
+  height: 100%;
+  width: 60%;
 }
 
 .score-board-wrapper {
-  width: 235px;
+  width: 100%;
   background-color: map.get($tetromino-colors, 'j');
+}
+
+.player-title {
+  @include flex-column;
+  justify-content: center;
+  align-items: center;
+  background-color: map.get($tetromino-colors, 'o');
+  font-size: clamp(20px, 4vh, 30px);
+  width: 100%;
 }
