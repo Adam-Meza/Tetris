@@ -1,11 +1,11 @@
 import React from 'react';
 import { Grid } from '../../grid/Grid';
-import { TetrominoType } from '../Tetromino/Tetromino';
+import { TetrominoType } from '../Play/GameBoard/Tetromino/Tetromino';
 import { PixelType } from '../../grid/Pixel';
 import {
   randomTetromino,
   rotateShapeClockwise,
-} from '../../utilities';
+} from '../Play/GameBoard/utilities';
 import * as Jotai from 'jotai';
 import {
   currentTetrominoAtom,

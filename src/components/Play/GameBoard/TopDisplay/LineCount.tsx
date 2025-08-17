@@ -1,5 +1,5 @@
 import * as Jotai from 'jotai';
-import { lineCountAtom } from '../../../atoms';
+import { lineCountAtom } from '../../../../atoms';
 
 export const LineCount = () => {
   const lineCount = Jotai.useAtomValue(lineCountAtom);

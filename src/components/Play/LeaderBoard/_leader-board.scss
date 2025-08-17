@@ -1,6 +1,6 @@
 @use 'sass:map';
-@import '../../styles/mixins';
-@import '../../styles/variables';
+@import '../../../styles/mixins';
+@import '../../../styles/variables';
 
 $green: map.get($tetromino-colors, 's');
 $pink: map.get($tetromino-colors, 'z');

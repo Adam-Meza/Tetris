@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScoreCard } from './ScoreCard';
-import { getAll } from '../../api';
-import { gamesAtom } from '../../atoms';
+import { getAll } from '../../../api';
+import { gamesAtom } from '../../../atoms';
 import * as Jotai from 'jotai';
 
 type GameType = {
@@ -52,7 +52,7 @@ export const LeaderBoard = () => {
         );
       })
       .slice(0, 10);
-
+    // @ts-ignore
     setCards(scoreCards);
   }, [games]);
 

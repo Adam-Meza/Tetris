@@ -1,5 +1,5 @@
 import { PixelType } from './Pixel';
-import { getLetter } from '../utilities';
+import { getLetter } from '../components/Play/GameBoard/utilities';
 import type {
   PutPropsType,
   DeleteArgsType,

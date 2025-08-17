@@ -7,9 +7,10 @@ $blue: map.get($tetromino-colors, 'i');
 
 .info-wrapper {
   @include flex-column;
-  width: 50%;
   justify-content: space-between;
   align-items: center;
+  width: 80%;
+  height: 90%;
 
   .link-wrapper {
     @include flex-row;
@@ -43,6 +44,7 @@ $blue: map.get($tetromino-colors, 'i');
   }
 
   p {
+    width: 90%;
     font-weight: 100;
     font-style: normal;
     font-size: 30px;

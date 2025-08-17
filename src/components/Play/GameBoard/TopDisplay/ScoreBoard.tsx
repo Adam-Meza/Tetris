@@ -1,6 +1,6 @@
 import { useAtomValue } from 'jotai';
 import React from 'react';
-import { scoreAtom } from '../../../atoms';
+import { scoreAtom } from '../../../../atoms';
 
 const ScoreBoard = () => {
   const score = useAtomValue(scoreAtom);

@@ -1,20 +1,20 @@
 import React from 'react';
-import { Grid } from '../../../grid/Grid';
-import type { PixelType } from '../../../grid/Pixel';
+import { Grid } from '../../../../grid/Grid';
+import type { PixelType } from '../../../../grid/Pixel';
 import { useAtomValue } from 'jotai';
 import {
   nextTetrominoAtom,
   gameOverAtom,
-} from '../../../atoms';
+} from '../../../../atoms';
 import {
   getLetter,
   rotateShapeClockwise,
-} from '../../../utilities';
-import { GameManager } from '../../../grid/GameManager';
+} from '../utilities';
+import { GameManager } from '../../../../grid/GameManager';
 import type {
   Coord,
   PieceType,
-} from '../../../grid/GameManagerTypes';
+} from '../../../../grid/GameManagerTypes';
 
 export const NextTetromino = () => {
   const BOARD_WIDTH = 6;

@@ -1,27 +1,27 @@
 @use 'sass:map';
-@import '../../../styles/mixins';
-@import '../../../styles/variables';
+@import '../../../../styles/mixins';
+@import '../../../../styles/variables';
 
 .top-display {
   @include flex-column;
+  color: white;
+
   justify-content: space-around;
   align-items: center;
   height: clamp(100px, 33%, 300px);
-  width: 90%;
-  gap: clamp(5px, 1vh, 10px);
+  width: 95%;
 
   .top-display-bottom-wrapper {
     @include flex-row;
     width: 100%;
     justify-content: space-between;
-    height: clamp(95px, 40%, 130px);
+    height: clamp(80px, 30%, 130px);
   }
 }
 
 .line-count-wrapper,
 .score-board-wrapper {
   @include flex-column;
-  color: white;
   justify-content: center;
   align-items: center;
 
@@ -46,6 +46,7 @@
 }
 
 .score-board-wrapper {
+  height: 35%;
   width: 100%;
   background-color: map.get($tetromino-colors, 'j');
 }

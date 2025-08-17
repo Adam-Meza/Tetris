@@ -1,31 +1,31 @@
 import React from 'react';
 import * as Jotai from 'jotai';
-import { Grid } from '../../grid/Grid';
-import { TetrominoType } from '../Tetromino/Tetromino';
-import { PixelType } from '../../grid/Pixel';
-import { GameManager } from '../../grid/GameManager';
+import { Grid } from '../../../grid/Grid';
+import { TetrominoType } from './Tetromino/Tetromino';
+import { PixelType } from '../../../grid/Pixel';
+import { GameManager } from '../../../grid/GameManager';
 import { LeaderBoard } from '../LeaderBoard/LeaderBoard';
-import { makeRefMatrix } from '../../grid/utilities';
+import { makeRefMatrix } from '../../../grid/utilities';
 import TopDisplay from './TopDisplay/TopDisplay';
 import {
   randomTetromino,
   calculateScore,
   rotateShapeClockwise,
   getLetter,
-} from '../../utilities';
+} from './utilities';
 import {
   scoreAtom,
   gameOverAtom,
   currentTetrominoAtom,
   nextTetrominoAtom,
   lineCountAtom,
-} from '../../atoms';
+} from '../../../atoms';
 import {
   CallbackPayload,
   Coord,
   Direction,
-} from '../../grid/GameManagerTypes';
-import GameOverModal from '../Modal/GameOverModal';
+} from '../../../grid/GameManagerTypes';
+import GameOverModal from '../../Modal/GameOverModal';
 
 /**
  * Tetris GameBoard Component -

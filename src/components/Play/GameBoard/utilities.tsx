@@ -1,6 +1,6 @@
-import { blocks } from './components/Tetromino/Tetromino';
-import { TetrominoType } from './components/Tetromino/Tetromino';
-import { ShapeMatrix } from './grid/GameManagerTypes';
+import { blocks } from '../GameBoard/Tetromino/Tetromino';
+import { TetrominoType } from './Tetromino/Tetromino';
+import { ShapeMatrix } from '../../../grid/GameManagerTypes';
 
 export const randomTetromino = (): TetrominoType => {
   const block =
