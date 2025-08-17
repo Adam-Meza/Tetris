@@ -14,6 +14,8 @@ export const Header = () => {
       </h1>
 
       <nav className='nav button-container'>
+        <button>ABOUT</button>
+        <button>LOG IN</button>
         <button>about</button>
       </nav>
     </header>

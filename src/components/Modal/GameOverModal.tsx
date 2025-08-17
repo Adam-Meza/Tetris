@@ -31,8 +31,8 @@ const GameOverModal: React.FC<GameOverModalProps> = (
   );
 
   React.useEffect(() => {
-    if (gameOver) handleSubimt();
-  });
+    if (gameOver && score > 0) handleSubimt();
+  }, []);
 
   const nav = ReactRouter.useNavigate();
 

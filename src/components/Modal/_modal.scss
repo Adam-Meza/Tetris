@@ -24,8 +24,8 @@
   color: white;
   font-size: 40px;
 
-  :hover {
-    background-color: rgb(233, 146, 212);
+  &:hover {
+    background-color: lighten($color: $pink, $amount: 10);
   }
 }
 

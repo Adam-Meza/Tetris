@@ -13,6 +13,7 @@ $medal-colors: (
 
 .leader-board {
   @include flex-column;
+  height: 95%;
   justify-content: flex-start;
   align-items: center;
   aspect-ratio: 2/3;
@@ -49,7 +50,7 @@ $medal-colors: (
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: clamp(30px, 8vh, 60px);
+  height: clamp(25px, 6.5vh, 60px);
   color: $pink;
   font-size: 30px;
 

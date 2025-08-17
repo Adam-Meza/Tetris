@@ -2,6 +2,7 @@
 @import '../../styles/variables';
 @import '../../styles/mixins';
 
+$purple: map.get($tetromino-colors, 't');
 $color-list: map-values($tetromino-colors);
 
 @for $i from 1 through length($color-list) {
@@ -17,9 +18,35 @@ header {
   height: 65px;
   justify-content: space-between;
   width: 100%;
-  position: absolute;
-  top: 0;
-  position: -webkit-sticky;
+
+  .button-container {
+    @include flex-row;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-around;
+    font-family: 'Jersey 10', sans-serif;
+    margin: 10px;
+
+    button {
+      border: 0px;
+      padding: 12px;
+      font-size: 18px;
+      color: white;
+      background-color: $purple;
+      font-family: 'Jersey 10', sans-serif;
+
+      &:hover {
+        background-color: lighten(
+          $color: $purple,
+          $amount: 10
+        );
+      }
+    }
+
+    span {
+      font-size: 50px;
+    }
+  }
 }
 
 h1 {

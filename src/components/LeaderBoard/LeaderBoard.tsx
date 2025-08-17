@@ -6,6 +6,7 @@ import * as Jotai from 'jotai';
 
 export const LeaderBoard = () => {
   const [games, setGames] = Jotai.useAtom(gamesAtom);
+  const [cards, setCards] = React.useState([]);
 
   const getNotes = () => {
     getAll()
@@ -13,6 +14,28 @@ export const LeaderBoard = () => {
       .then((data) => {
         console.log(data);
         setGames(data);
+
+        const scoreCards = data
+          .sort()
+          .reverse()
+          .map((game: any, i: number) => {
+            const { owner, line_count, score } = game;
+
+            const medals = ['gold', 'silver', 'bronze'];
+
+            return (
+              <ScoreCard
+                key={i}
+                score={score}
+                lineCount={line_count}
+                name={owner.username}
+                medal={i < 3 ? medals[i] : ''}
+              />
+            );
+          })
+          .slice(0, 10);
+
+        setCards(scoreCards);
       })
       .catch((error) => alert(error));
   };
@@ -20,26 +43,6 @@ export const LeaderBoard = () => {
   React.useEffect(() => {
     getNotes();
   }, []);
-
-  const scores = [
-    2234234, 3524542, 4425245, 522342, 523423423, 234324,
-    9999999999, 1, 345, 345346,
-  ];
-
-  const cards = scores
-    .sort()
-    .reverse()
-    .map((score, i) => {
-      const medals = ['gold', 'silver', 'bronze'];
-
-      return (
-        <ScoreCard
-          key={i}
-          score={score}
-          medal={i < 3 ? medals[i] : ''}
-        />
-      );
-    });
 
   return (
     <div className='leader-board'>
