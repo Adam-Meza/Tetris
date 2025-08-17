@@ -3,9 +3,7 @@ import { Pixel } from './Pixel';
 import { PixelType } from './Pixel';
 import { Coord } from './GameManagerTypes';
 /**
- * Props for Grid component
- * @param width number
- * @param height number (optional)
+ * Props for Grid component(optional)
  * @param setPixelRef React.RefObject<HTMLSpanElement>
   ) => void;
  */

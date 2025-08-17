@@ -15,7 +15,7 @@ export const Register = () => {
   const [password, setPassword] = React.useState('');
   const [confirmation, setConfirmation] =
     React.useState('');
-
+  // SHOULD WE HAVE A LOADING COMPONENT????
   const [loading, setLoading] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(true);
   const setGameOver = Jotai.useSetAtom(gameOverAtom);
@@ -43,6 +43,9 @@ export const Register = () => {
         setLoading(false);
       }
     } else {
+      /*
+         THIS SHOULD UP DATE THE DOM WITH AN ERROR MESSAGE
+         */
       console.log('they dont match');
     }
   };

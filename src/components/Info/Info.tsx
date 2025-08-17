@@ -22,9 +22,8 @@ const Info = () => {
         {/* ive always wanted to make games so antoher big part
         was figuringout a system for moving game pieces
         across a digital grid. i wanted to reduce */}
-      </p>{' '}
+      </p>
       <>
-        {' '}
         <div className='link-wrapper'>
           <a href='https://www.linkedin.com/in/adam-meza'>
             <FaLinkedin />

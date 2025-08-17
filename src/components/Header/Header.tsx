@@ -1,6 +1,9 @@
 import React from 'react';
+import * as ReactRouter from 'react-router-dom';
 
 export const Header = () => {
+  const nav = ReactRouter.useNavigate();
+
   return (
     <header id='header'>
       <h1>
@@ -14,7 +17,7 @@ export const Header = () => {
       </h1>
 
       <nav className='nav button-container'>
-        <button>ABOUT</button>
+        <button onClick={() => nav('/about')}>ABOUT</button>
         <button>LOG IN</button>
         <button>about</button>
       </nav>

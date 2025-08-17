@@ -28,8 +28,9 @@ function RegisterAndLogout() {
 function App() {
   return (
     <div className='App'>
-      <Header />
       <BrowserRouter>
+        <Header />
+
         <Routes>
           <Route path='/' element={<GameModal />} />
           <Route path='/play' element={<GameBoard />} />
@@ -39,7 +40,7 @@ function App() {
           />
           <Route path='/log-in' element={<LogInForm />} />
           {/* <Route path='/logout' element={<Logout />} /> */}
-          <Route path='/info' element={<Info />} />
+          <Route path='/about' element={<Info />} />
           <Route path='/register' element={<Register />} />
           {/* <Route path='*' element={<NotFound />}></Route> */}
         </Routes>

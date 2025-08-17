@@ -31,8 +31,6 @@ const GameOverModal: React.FC<GameOverModalProps> = (
   );
 
   React.useEffect(() => {
-    console.log(gameOver);
-    console.log(score);
     if (gameOver && score > 0) handleSubimt();
   }, [gameOver]);
 
@@ -44,13 +42,17 @@ const GameOverModal: React.FC<GameOverModalProps> = (
   };
 
   const handleSubimt = async () => {
-    console.log('we run');
     try {
       api
         .post('/tetris_api/games/', newGame)
         .then((res) => {
-          if (res.status === 201) alert('Game  Created!');
-          else alert('failed to make ');
+          if (res.status === 201) {
+            getAll()
+              .then((res) => res.data)
+              .then((data) => {
+                setGames(data);
+              });
+          } else alert('failed to make ');
         });
     } catch (error) {
       alert(error);
@@ -68,7 +70,6 @@ const GameOverModal: React.FC<GameOverModalProps> = (
           <h2>GAME OVER!</h2>
           <span>{score}</span>
           <span>line count: {count}</span>
-
           <button
             className='modal-button'
             onClick={() => {

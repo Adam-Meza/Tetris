@@ -17,7 +17,7 @@ api.interceptors.request.use((config) => {
 });
 
 export const getAll = async () => {
-  return api.get(`/tetris_api/games/`);
+  return api.get(`/tetris_api/games/all/`);
 };
 
 export const login = async (

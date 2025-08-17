@@ -16,11 +16,10 @@ export const LeaderBoard = () => {
   const [games, setGames] = Jotai.useAtom(gamesAtom);
   const [cards, setCards] = React.useState([]);
 
-  const getNotes = () => {
+  const getGames = () => {
     getAll()
       .then((res) => res.data)
       .then((data) => {
-        console.log(data);
         setGames(data);
 
         const scoreCards = data
@@ -47,11 +46,14 @@ export const LeaderBoard = () => {
 
         setCards(scoreCards);
       })
-      .catch((error) => alert(error));
+      .catch((error) => {
+        console.log('stemmed from getGames in LeaderBoard');
+        alert(error);
+      });
   };
 
   React.useEffect(() => {
-    getNotes();
+    getGames();
   }, []);
 
   return (

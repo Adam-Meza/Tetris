@@ -70,10 +70,10 @@ export const GameBoard = () => {
     () => new GameManager(pixelRefs, focalPointRef),
     []
   );
+
   /**
    * Sets the individual pixel ref objects and is responsible for effecting change on the DOM.
    */
-
   const setPixelRef = (pixel: PixelType) => {
     const { x, y } = pixel;
     pixelRefs.current[y][x] = pixel;
@@ -183,19 +183,6 @@ export const GameBoard = () => {
     return false;
   };
 
-  const moveConditional = (args: CallbackPayload) => {
-    const { direction, piece } = args;
-
-    if (
-      (direction && !isMovePossible(direction, piece)) ||
-      gamePause
-    ) {
-      return false;
-    }
-
-    return true;
-  };
-
   const moveTetromino = (direction: Direction) => {
     if (!currentTetromino) return;
 
@@ -210,7 +197,18 @@ export const GameBoard = () => {
       distance: 1,
       focalPoint: focalPoint,
       onAfter: didBlockLand,
-      conditional: moveConditional,
+      conditional: (args: CallbackPayload) => {
+        const { direction, piece } = args;
+
+        if (
+          (direction &&
+            !isMovePossible(direction, piece)) ||
+          gamePause
+        )
+          return false;
+
+        return true;
+      },
     };
 
     gm.playerMove(args);
@@ -381,6 +379,7 @@ export const GameBoard = () => {
     return () => clearInterval(interval);
   });
 
+  //LOOK INTO CHANGING THIS USEFEFFECT TO SOMETHING ELSE
   React.useEffect(() => {
     startNewGame();
     mainRef.current?.focus();

@@ -13,7 +13,7 @@ $medal-colors: (
 
 .leader-board {
   @include flex-column;
-  height: 95%;
+  height: 85%;
   justify-content: flex-start;
   align-items: center;
   aspect-ratio: 2/3;
