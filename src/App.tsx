@@ -7,18 +7,11 @@ import {
   BrowserRouter,
   Routes,
   Route,
-  Navigate,
 } from 'react-router-dom';
 import { Register } from './components/Modal/Register';
-// import NotFound from './pages/NotFound';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 import { GameModal } from './components/Modal/Modal';
 import { LogInForm } from './components/Modal/LogInForm';
-
-function Logout() {
-  localStorage.clear();
-  return <Navigate to='/login' />;
-}
 
 function RegisterAndLogout() {
   localStorage.clear();

@@ -362,14 +362,16 @@ export const GameBoard = () => {
   };
 
   const startNewGame = () => {
+    setGameOver(false);
+    makeNewTetromino();
+    requestAnimationFrame(() => mainRef.current?.focus());
+  };
+
+  const endGame = () => {
     gm.clearBoard();
     setGameOver(true);
-    setGameOver(false);
     setScore(0);
     setCount(0);
-    makeNewTetromino();
-
-    requestAnimationFrame(() => mainRef.current?.focus());
   };
 
   React.useEffect(() => {
@@ -383,6 +385,7 @@ export const GameBoard = () => {
 
   //LOOK INTO CHANGING THIS USEFEFFECT TO SOMETHING ELSE
   React.useEffect(() => {
+    endGame();
     startNewGame();
     mainRef.current?.focus();
   }, []);
@@ -410,22 +413,13 @@ export const GameBoard = () => {
         rotateTetromino();
         return;
       case 'n':
+        endGame();
         startNewGame();
-        return;
-      case 'c':
-        consoleLogData();
         return;
       case 'Enter':
         setGamePause(!gamePause);
         return;
     }
-  };
-
-  const consoleLogData = () => {
-    console.log('currentTetromino:', currentTetromino);
-    console.log('pixelrefs:', pixelRefs.current);
-    console.log('gameOver', gameOver);
-    console.log('focal point', focalPointRef.current);
   };
 
   return (
@@ -446,7 +440,10 @@ export const GameBoard = () => {
         </div>
       </section>
       <LeaderBoard />
-      <GameOverModal startNewGame={startNewGame} />
+      <GameOverModal
+        startNewGame={startNewGame}
+        endGame={endGame}
+      />
     </main>
   );
 };

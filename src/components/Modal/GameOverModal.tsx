@@ -14,12 +14,13 @@ import {
 
 interface GameOverModalProps {
   startNewGame: () => void;
+  endGame: () => void;
 }
 
 const GameOverModal: React.FC<GameOverModalProps> = (
   props
 ) => {
-  const { startNewGame } = props;
+  const { startNewGame, endGame } = props;
   const [isOpen, setIsOpen] = React.useState(true);
   const [gameOver, setGameOver] =
     Jotai.useAtom(gameOverAtom);
@@ -36,15 +37,13 @@ const GameOverModal: React.FC<GameOverModalProps> = (
 
   const nav = ReactRouter.useNavigate();
 
-  const newGame = {
-    score: score,
-    line_count: count,
-  };
-
   const handleSubimt = async () => {
     try {
       api
-        .post('/tetris_api/games/', newGame)
+        .post('/tetris_api/games/', {
+          score: score,
+          line_count: count,
+        })
         .then((res) => {
           if (res.status === 201) {
             getAll()
@@ -70,13 +69,25 @@ const GameOverModal: React.FC<GameOverModalProps> = (
           <h2>GAME OVER!</h2>
           <span>{score}</span>
           <span>line count: {count}</span>
+          {currentPlayer.userName === 'GUEST' ? (
+            <>
+              <button
+                className='modal-button'
+                onClick={() => nav('/log-in')}
+              >
+                LOG IN TO SAVE GAME
+              </button>
+              <span>or</span>
+            </>
+          ) : null}
           <button
             className='modal-button'
             onClick={() => {
+              endGame();
               startNewGame();
             }}
           >
-            Play Again?
+            ???PLAY AGAIN???
           </button>
         </div>
       </ModalContent>
