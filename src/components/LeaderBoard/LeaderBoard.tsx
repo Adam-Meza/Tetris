@@ -4,6 +4,14 @@ import { getAll } from '../../api';
 import { gamesAtom } from '../../atoms';
 import * as Jotai from 'jotai';
 
+type GameType = {
+  line_count: number;
+  score: number;
+  owner: {
+    ownener_id: string;
+  };
+};
+
 export const LeaderBoard = () => {
   const [games, setGames] = Jotai.useAtom(gamesAtom);
   const [cards, setCards] = React.useState([]);
@@ -16,7 +24,9 @@ export const LeaderBoard = () => {
         setGames(data);
 
         const scoreCards = data
-          .sort()
+          .sort(
+            (a: GameType, b: GameType) => a.score - b.score
+          )
           .reverse()
           .map((game: any, i: number) => {
             const { owner, line_count, score } = game;

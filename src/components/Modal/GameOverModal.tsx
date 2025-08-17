@@ -31,34 +31,20 @@ const GameOverModal: React.FC<GameOverModalProps> = (
   );
 
   React.useEffect(() => {
+    console.log(gameOver);
+    console.log(score);
     if (gameOver && score > 0) handleSubimt();
-  }, []);
+  }, [gameOver]);
 
   const nav = ReactRouter.useNavigate();
-
-  // if there's no player we offer to make one
-  // we form the new game no matter what
-  /*
-   */
 
   const newGame = {
     score: score,
     line_count: count,
   };
 
-  const getNotes = () => {
-    console.log('running fetch in leaderboard');
-
-    getAll()
-      .then((res) => res.data)
-      .then((data) => {
-        console.log(data);
-        setGames(data);
-      })
-      .catch((error) => alert(error));
-  };
-
   const handleSubimt = async () => {
+    console.log('we run');
     try {
       api
         .post('/tetris_api/games/', newGame)
@@ -68,7 +54,6 @@ const GameOverModal: React.FC<GameOverModalProps> = (
         });
     } catch (error) {
       alert(error);
-      getNotes();
     }
   };
 
