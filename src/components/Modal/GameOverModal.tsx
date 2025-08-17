@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { Modal, ModalContent } from '@itwin/itwinui-react';
 import * as Jotai from 'jotai';
+import * as ReactRouter from 'react-router-dom';
+import api from '../../api';
+import { getAll } from '../../api';
+import { Modal, ModalContent } from '@itwin/itwinui-react';
 import {
   currentPlayerAtom,
   gameOverAtom,
   gamesAtom,
   scoreAtom,
+  lineCountAtom,
 } from '../../atoms';
-import * as ReactRouter from 'react-router-dom';
-import { lineCountAtom } from '../../atoms';
-import api from '../../api';
-import { getAll } from '../../api';
 
 interface GameOverModalProps {
   startNewGame: () => void;

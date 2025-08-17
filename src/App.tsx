@@ -37,16 +37,10 @@ function App() {
             path='/side-art'
             element={<ProtectedRoute child={<SideArt />} />}
           />
-          <Route
-            path='/log-in'
-            element={<LogInForm method='login' />}
-          />
+          <Route path='/log-in' element={<LogInForm />} />
           {/* <Route path='/logout' element={<Logout />} /> */}
           <Route path='/info' element={<Info />} />
-          <Route
-            path='/register'
-            element={<Register method='register' />}
-          />
+          <Route path='/register' element={<Register />} />
           {/* <Route path='*' element={<NotFound />}></Route> */}
         </Routes>
       </BrowserRouter>

@@ -1,7 +1,7 @@
 import React from 'react';
-import api, { login } from '../../api';
 import * as ReactRouter from 'react-router-dom';
 import * as Jotai from 'jotai';
+import api, { login } from '../../api';
 import {
   ACCESS_TOKEN,
   REFRESH_TOKEN,
@@ -11,9 +11,9 @@ import {
   currentPlayerAtom,
   gameOverAtom,
 } from '../../atoms';
+import { FormInput } from './FormInput';
 
-//@ts-ignore
-export const LogInForm = ({ method }) => {
+export const LogInForm = () => {
   const [userName, setUserName] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [loading, setLoading] = React.useState(false);
@@ -31,9 +31,9 @@ export const LogInForm = ({ method }) => {
       localStorage.setItem(ACCESS_TOKEN, res.data.access);
       localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
 
-      //   setPlayer({
-      //     username: userName,
-      //   });
+      setPlayer({
+        userName: userName,
+      });
 
       setGameOver(false);
       setIsOpen(false);
@@ -59,27 +59,16 @@ export const LogInForm = ({ method }) => {
         >
           <span>Log In</span>
           USERNAME
-          <input
-            autoComplete='false'
+          <FormInput
             name='username'
-            className='form-input'
-            type='text'
             value={userName}
-            //@ts-ignore
-            onChange={(e: KeyboardEvent<Element>) =>
-              setUserName(e.target.value)
-            }
+            setter={setUserName}
           />
           PASSWORD
-          <input
-            autoComplete='off'
+          <FormInput
             name='password'
-            className='form-input'
-            type='password'
             value={password}
-            onChange={(
-              e: React.ChangeEvent<HTMLInputElement>
-            ) => setPassword(e.target.value)}
+            setter={setPassword}
           />
           <button className='modal-button'>LOG IN</button>
         </form>

@@ -7,6 +7,6 @@ export const currentTetrominoAtom = atom(randomTetromino());
 export const nextTetrominoAtom = atom(randomTetromino());
 export const lineCountAtom = atom(0);
 export const currentPlayerAtom = atom({
-  name: 'test',
+  userName: 'test',
 });
 export const gamesAtom = atom([]);
