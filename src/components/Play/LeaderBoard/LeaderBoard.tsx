@@ -36,6 +36,7 @@ export const LeaderBoard = () => {
     const scoreCards = games
       .sort((a: GameType, b: GameType) => a.score - b.score)
       .reverse()
+      .slice(0, 10)
       .map((game: any, i: number) => {
         const { owner, line_count, score } = game;
 
@@ -50,8 +51,7 @@ export const LeaderBoard = () => {
             medal={i < 3 ? medals[i] : ''}
           />
         );
-      })
-      .slice(0, 10);
+      });
     // @ts-ignore
     setCards(scoreCards);
   }, [games]);

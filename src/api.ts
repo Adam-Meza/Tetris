@@ -30,7 +30,7 @@ api.interceptors.request.use((config) => {
 });
 
 export const getAll = () =>
-  api.get('/tetris_api/games/all/', {
+  api.get(`${baseURL}/tetris_api/games/all/`, {
     headers: { 'X-Skip-Auth': '1' },
   });
 
@@ -48,10 +48,13 @@ export const register = async (
   username: string,
   password: string
 ) => {
-  return axios.post(`tetris_api/user/register/`, {
-    username,
-    password,
-  });
+  return axios.post(
+    `${baseURL}/tetris_api/user/register/`,
+    {
+      username,
+      password,
+    }
+  );
 };
 
 export default api;

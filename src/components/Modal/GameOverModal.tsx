@@ -21,7 +21,6 @@ const GameOverModal: React.FC<GameOverModalProps> = (
   props
 ) => {
   const { startNewGame, endGame } = props;
-  const [isOpen, setIsOpen] = React.useState(true);
   const [gameOver, setGameOver] =
     Jotai.useAtom(gameOverAtom);
   const setGames = Jotai.useSetAtom(gamesAtom);

@@ -46,6 +46,13 @@
 .register-form {
   @extend .log-in-form;
   .form-input:nth-last-of-type(1) {
-    margin: 20px;
+    margin-top: 20px;
+    margin-bottom: 0px;
+  }
+
+  .password-error {
+    height: 30px;
+    color: red;
+    margin-bottom: 5px;
   }
 }

@@ -13,17 +13,11 @@ import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 import { GameModal } from './components/Modal/Modal';
 import { LogInForm } from './components/Modal/LogInForm';
 
-function RegisterAndLogout() {
-  localStorage.clear();
-  // return <Register />;
-}
-
 function App() {
   return (
     <div className='App'>
       <BrowserRouter>
         <Header />
-
         <Routes>
           <Route path='/' element={<GameModal />} />
           <Route path='/play' element={<GameBoard />} />
@@ -32,7 +26,6 @@ function App() {
             element={<ProtectedRoute child={<SideArt />} />}
           />
           <Route path='/log-in' element={<LogInForm />} />
-          {/* <Route path='/logout' element={<Logout />} /> */}
           <Route path='/about' element={<Info />} />
           <Route path='/register' element={<Register />} />
           {/* <Route path='*' element={<NotFound />}></Route> */}

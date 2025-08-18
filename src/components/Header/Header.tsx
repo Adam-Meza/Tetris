@@ -4,7 +4,7 @@ import { currentPlayerAtom } from '../../atoms';
 
 export const Header = () => {
   const nav = ReactRouter.useNavigate();
-  const currentPlayer = Jotai.useAtomValue(
+  const [currentPlayer, setCurrentPlayer] = Jotai.useAtom(
     currentPlayerAtom
   );
 
@@ -27,7 +27,10 @@ export const Header = () => {
             if (currentPlayer.userName !== 'GUEST')
               localStorage.clear();
 
-            nav('/log-in');
+            setCurrentPlayer({
+              userName: 'GUEST',
+            });
+            nav('/');
           }}
         >
           {currentPlayer.userName === 'GUEST'

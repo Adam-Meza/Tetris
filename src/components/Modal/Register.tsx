@@ -7,7 +7,10 @@ import {
   REFRESH_TOKEN,
 } from '../../constants';
 import { Modal, ModalContent } from '@itwin/itwinui-react';
-import { gameOverAtom } from '../../atoms';
+import {
+  currentPlayerAtom,
+  gameOverAtom,
+} from '../../atoms';
 import { FormInput } from './FormInput';
 
 export const Register = () => {
@@ -16,8 +19,12 @@ export const Register = () => {
   const [confirmation, setConfirmation] =
     React.useState('');
   // SHOULD WE HAVE A LOADING COMPONENT????
+  const [passwordMatch, setMatch] = React.useState(true);
   const [loading, setLoading] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(true);
+  const setCurrentPlayer = Jotai.useSetAtom(
+    currentPlayerAtom
+  );
   const setGameOver = Jotai.useSetAtom(gameOverAtom);
   const nav = ReactRouter.useNavigate();
 
@@ -25,7 +32,7 @@ export const Register = () => {
     setLoading(true);
     e.preventDefault();
     if (password === confirmation) {
-      console.log('running fetch in register');
+      setMatch(true);
 
       try {
         const res = await register(userName, password);
@@ -34,19 +41,19 @@ export const Register = () => {
           REFRESH_TOKEN,
           res.data.refresh
         );
+
+        setCurrentPlayer({
+          userName: userName,
+        });
+
         setGameOver(false);
         setIsOpen(false);
         nav('/play');
       } catch (error) {
         alert(error);
-      } finally {
-        setLoading(false);
       }
     } else {
-      /*
-         THIS SHOULD UP DATE THE DOM WITH AN ERROR MESSAGE
-         */
-      console.log('they dont match');
+      setMatch(false);
     }
   };
 
@@ -80,6 +87,9 @@ export const Register = () => {
             setter={setConfirmation}
             value={confirmation}
           />
+          <span className='password-error'>
+            {passwordMatch ? null : 'Passwords Dont Match!'}
+          </span>
           <button className='modal-button'>REGISTER</button>
         </form>
       </ModalContent>
