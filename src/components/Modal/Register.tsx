@@ -21,9 +21,9 @@ export const Register = () => {
   const [password, setPassword] = React.useState('');
   const [confirmation, setConfirmation] =
     React.useState('');
+  const [errorMessage, setError] = React.useState('');
   // SHOULD WE HAVE A LOADING COMPONENT????
-  const [passwordMatch, setMatch] = React.useState(true);
-  const [loading, setLoading] = React.useState(false);
+  //   const [loading, setLoading] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(true);
   const setCurrentPlayer = Jotai.useSetAtom(
     currentPlayerAtom
@@ -34,12 +34,31 @@ export const Register = () => {
   const count = Jotai.useAtomValue(lineCountAtom);
   const setGames = Jotai.useSetAtom(gamesAtom);
 
-  const handleSubimt = async (e: React.FormEvent) => {
-    setLoading(true);
-    e.preventDefault();
-    if (password === confirmation) {
-      setMatch(true);
+  const handleChecks = () => {
+    if (0 < userName.length && userName.length < 3) {
+      setError('USERNAME MUST BE AT LEAST 3 LETTERS');
+      return false;
+    } else if (userName.length > 8) {
+      setError('USERNAME MUST BE LESS THAN 8 LETTERS');
+      return false;
+    } else if (
+      password &&
+      confirmation &&
+      password !== confirmation
+    ) {
+      setError('PASSWORDS MUST MATCH');
+      return false;
+    } else {
+      setError('');
+      return true;
+    }
+  };
 
+  const handleSubimt = async (e: React.FormEvent) => {
+    // setLoading(true);
+    e.preventDefault();
+
+    if (handleChecks()) {
       try {
         const res = await register(userName, password);
         localStorage.setItem(ACCESS_TOKEN, res.data.access);
@@ -48,7 +67,10 @@ export const Register = () => {
           res.data.refresh
         );
 
+        // This handles the "Log In To save Game Data" use case
+        // if there is a score..
         if (score > 0) {
+          // we try to post it
           try {
             api
               .post('/tetris_api/games/', {
@@ -56,14 +78,17 @@ export const Register = () => {
                 line_count: count,
               })
               .then((res) => {
+                // if it works we update the board. we do this other places? maybe we can combine them...
                 if (res.status === 201) {
                   getAll()
                     .then((res) => res.data)
                     .then((data) => {
                       setGames(data);
                     });
+                  // better ways to handle than alert
                 } else alert('failed to make ');
               });
+            //
           } catch (error) {
             alert(error);
           }
@@ -79,8 +104,6 @@ export const Register = () => {
       } catch (error) {
         alert(error);
       }
-    } else {
-      setMatch(false);
     }
   };
 
@@ -93,6 +116,7 @@ export const Register = () => {
     >
       <ModalContent>
         <form
+          onChange={handleChecks}
           onSubmit={handleSubimt}
           className='register-form'
         >
@@ -115,7 +139,7 @@ export const Register = () => {
             value={confirmation}
           />
           <span className='password-error'>
-            {passwordMatch ? null : 'Passwords Dont Match!'}
+            {errorMessage ? errorMessage : null}
           </span>
           <button className='modal-button'>REGISTER</button>
         </form>

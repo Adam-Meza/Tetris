@@ -25,7 +25,13 @@ type GridProps = {
    * @example
    * baseClass="tetris-board"
    */
+
+  //////// turn this into a MAP: pixelType[][]; that serves as the Map
+  // how wil this work? well we'd no make a fresh one but a new one and hwen we do the removign we instead swap it for the baseClass/ baseID
+  // class gives styling ID is aciton
   baseClass: string;
+
+  map?: string[][];
 
   /**
    * Ref collector callback invoked once per rendered `Pixel`.
@@ -80,9 +86,9 @@ type GridProps = {
 export const Grid: React.FC<GridProps> = ({
   dimensions,
   baseClass,
+  map,
   setPixelRef,
 }) => {
-  console.log('GRID RENDER');
   const [width, height] = dimensions;
   const style = {
     '--grid-width': width,
@@ -93,12 +99,18 @@ export const Grid: React.FC<GridProps> = ({
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
+      let className = baseClass;
+      let id = undefined;
+
+      if (map) className += map[y][x];
+
       pixels.push(
         <Pixel
           key={y * width + x}
-          baseClass={baseClass}
+          baseClass={className}
           x={x}
           y={y}
+          id={id}
           setPixelRef={setPixelRef}
         />
       );

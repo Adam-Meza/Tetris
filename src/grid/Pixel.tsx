@@ -33,6 +33,8 @@ export type PixelProps = {
    * };
    */
   setPixelRef: (pixel: PixelType) => void;
+
+  id?: string | undefined;
 };
 
 /**
@@ -62,7 +64,7 @@ export type PixelType = {
    * Usually redundant because `GameManager` toggles classes on the DOM node,
    * but may be useful as a cached value for debugging/logic.
    */
-  className?: string;
+  baseClass?: string;
   /**
    * Ref to the underlying `<span>` element for imperative class toggling.
    *
@@ -72,7 +74,7 @@ export type PixelType = {
 };
 
 export const Pixel = (props: PixelProps) => {
-  const { setPixelRef, x, y, baseClass } = props;
+  const { setPixelRef, x, y, baseClass, id } = props;
 
   const pixelRef = React.useRef<HTMLSpanElement>(null);
 
@@ -80,7 +82,9 @@ export const Pixel = (props: PixelProps) => {
     setPixelRef({
       x,
       y,
+      id,
       html: pixelRef,
+      baseClass: baseClass,
     });
   }, []);
 

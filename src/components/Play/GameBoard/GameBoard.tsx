@@ -57,6 +57,7 @@ export const GameBoard = () => {
 
   /**
    * Focal point determining the coordinates on the Grid that pieces are placed/oriented with.
+   *
    */
   const focalPointRef = React.useRef<Coord>([3, 0]);
 
