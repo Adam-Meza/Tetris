@@ -37,6 +37,7 @@ const GameOverModal: React.FC<GameOverModalProps> = (
   const nav = ReactRouter.useNavigate();
 
   const handleSubimt = async () => {
+    // this is the same functiuoanlity from REGISTER!!!
     try {
       api
         .post('/tetris_api/games/', {
@@ -86,7 +87,7 @@ const GameOverModal: React.FC<GameOverModalProps> = (
               startNewGame();
             }}
           >
-            ???PLAY AGAIN???
+            ??? PLAY AGAIN ???
           </button>
         </div>
       </ModalContent>

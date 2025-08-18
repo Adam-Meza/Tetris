@@ -242,7 +242,7 @@ export const GameBoard = () => {
               const letter = getLetter(id);
               const className = `${letter}-block`;
 
-              gm.removePixel(pixel, className);
+              gm.removePixel(pixel);
               gm.addPixel(id, className, [x, i]);
             });
 
@@ -282,10 +282,8 @@ export const GameBoard = () => {
         const pixel = pixelRefs.current[y][x];
 
         if (!pixel || !pixel.id) return;
-        const letter = getLetter(pixel.id);
-        const className = `${letter}-block`;
 
-        gm.removePixel(pixel, className);
+        gm.removePixel(pixel);
       }
     });
   };

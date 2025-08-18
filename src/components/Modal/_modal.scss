@@ -14,6 +14,20 @@
     font-size: 84px;
     height: fit-content;
   }
+
+  .modal-error {
+    height: 30px;
+    color: red;
+    margin-bottom: 5px;
+    font-size: 24px;
+  }
+
+  a {
+    font-size: 14px;
+
+    :focus {
+    }
+  }
 }
 
 .modal-button {
@@ -37,10 +51,6 @@
     height: 40px;
     text-align: center;
   }
-
-  .form-input:nth-last-of-type(1) {
-    margin-bottom: 20px;
-  }
 }
 
 .register-form {
@@ -48,12 +58,5 @@
   .form-input:nth-last-of-type(1) {
     margin-top: 20px;
     margin-bottom: 0px;
-  }
-
-  .password-error {
-    height: 30px;
-    color: red;
-    margin-bottom: 5px;
-    font-size: 24px;
   }
 }

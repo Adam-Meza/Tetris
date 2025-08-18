@@ -1,5 +1,4 @@
 import { PixelType } from './Pixel';
-import { getLetter } from '../components/Play/GameBoard/utilities';
 import type {
   PutPropsType,
   DeleteArgsType,
@@ -62,24 +61,24 @@ export class GameManager {
   delete(args: DeleteArgsType): void {
     const { piece, focalPoint, conditional, onAfter } =
       args;
-    const { shape, className } = piece;
+    const { shape } = piece;
 
     if (conditional && !conditional(args)) return;
 
-    const width = shape[0].length;
-    const height = shape.length;
+    const pWidth = shape[0].length;
+    const pHeight = shape.length;
 
     const [x, y] = focalPoint;
 
-    for (let i = 0; i < height; i++) {
-      for (let j = 0; j < width; j++) {
+    for (let i = 0; i < pHeight; i++) {
+      for (let j = 0; j < pWidth; j++) {
         if (shape[i][j]) {
           const targetX = x + j;
           const targetY = y + i;
           const pixel =
             this.pixelRefs.current[targetY][targetX];
 
-          if (pixel) this.removePixel(pixel, className);
+          if (pixel) this.removePixel(pixel);
         }
       }
     }
@@ -109,7 +108,7 @@ export class GameManager {
     dataRef.id = id;
   }
 
-  removePixel(pixel: PixelType, className: string): void {
+  removePixel(pixel: PixelType): void {
     const spanRef = pixel.html;
 
     if (!spanRef?.current) return;
@@ -127,8 +126,6 @@ export class GameManager {
         }
       }
     }
-
-    spanRef.current.classList.remove(className);
   }
 
   playerMove(args: MoveArgs): void {
@@ -217,8 +214,7 @@ export class GameManager {
         const pixel = this.pixelRefs.current[i][j];
 
         if (pixel?.id) {
-          const className = `${getLetter(pixel.id)}-block`;
-          this.removePixel(pixel, className);
+          this.removePixel(pixel);
         }
       }
     }

@@ -7,8 +7,11 @@ import * as ReactRouter from 'react-router-dom';
 export const GameModal = () => {
   const [isOpen, setIsOpen] = React.useState(true);
   const setGameOver = Jotai.useSetAtom(gameOverAtom);
-  const score = Jotai.useAtomValue(scoreAtom);
   const nav = ReactRouter.useNavigate();
+
+  React.useEffect(() => {
+    localStorage.clear();
+  });
 
   return (
     <Modal
@@ -36,8 +39,6 @@ export const GameModal = () => {
           className='modal-button'
           onClick={() => {
             nav('/register');
-            if (score > 0) {
-            }
           }}
         >
           REGISTER

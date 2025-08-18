@@ -60,6 +60,7 @@ export const Register = () => {
 
     if (handleChecks()) {
       try {
+        // Register a new user
         const res = await register(userName, password);
         localStorage.setItem(ACCESS_TOKEN, res.data.access);
         localStorage.setItem(
@@ -85,7 +86,7 @@ export const Register = () => {
                     .then((data) => {
                       setGames(data);
                     });
-                  // better ways to handle than alert
+                  // better ways to handle than alert!!
                 } else alert('failed to make ');
               });
             //
@@ -107,11 +108,18 @@ export const Register = () => {
     }
   };
 
+  const resetModal = () => {
+    setUserName('');
+    setPassword('');
+    setConfirmation('');
+    setIsOpen(false);
+  };
+
   return (
     <Modal
       isOpen={isOpen}
       title={''}
-      onClose={() => setIsOpen(false)}
+      onClose={() => resetModal()}
       isDismissible={false}
     >
       <ModalContent>
@@ -138,10 +146,11 @@ export const Register = () => {
             setter={setConfirmation}
             value={confirmation}
           />
-          <span className='password-error'>
+          <span className='modal-error'>
             {errorMessage ? errorMessage : null}
           </span>
           <button className='modal-button'>REGISTER</button>
+          <a href='/'> back to main</a>
         </form>
       </ModalContent>
     </Modal>

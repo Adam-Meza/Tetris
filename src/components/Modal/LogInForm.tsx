@@ -27,10 +27,27 @@ export const LogInForm = () => {
   const setGameOver = Jotai.useSetAtom(gameOverAtom);
   const setPlayer = Jotai.useSetAtom(currentPlayerAtom);
   const nav = ReactRouter.useNavigate();
+  const [errorMessage, setError] = React.useState('');
+
+  const handleChecks = () => {
+    if (!userName) {
+      setError('PLEASE ENTER USERNAME');
+      return false;
+    } else if (!password) {
+      setError('PLEASE ENTER PASSWORD');
+      return false;
+    } else {
+      setError('');
+      return true;
+    }
+  };
 
   const handleSubimt = async (e: React.FormEvent) => {
     setLoading(true);
     e.preventDefault();
+
+    if (!handleChecks) return;
+
     try {
       const res = await login(userName, password);
 
@@ -66,7 +83,7 @@ export const LogInForm = () => {
       setIsOpen(false);
       nav('/play');
     } catch (error) {
-      alert(error);
+      setError('INVALID USERNAME/PASSWORD');
     } finally {
       setLoading(false);
     }
@@ -97,7 +114,11 @@ export const LogInForm = () => {
             value={password}
             setter={setPassword}
           />
+          <span className='modal-error'>
+            {errorMessage ? errorMessage : null}{' '}
+          </span>
           <button className='modal-button'>LOG IN</button>
+          <a href='/'> back to main</a>
         </form>
       </ModalContent>
     </Modal>

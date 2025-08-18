@@ -22,7 +22,7 @@ const GamePauseModal = () => {
               setPause(false);
             }}
           >
-            !!!PLAY!!!
+            !!!!! PLAY !!!!!
           </button>
         </div>
       </ModalContent>
