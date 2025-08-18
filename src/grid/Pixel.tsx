@@ -34,7 +34,7 @@ export type PixelProps = {
    */
   setPixelRef: (pixel: PixelType) => void;
 
-  id?: string | undefined;
+  baseID?: string | undefined;
 };
 
 /**
@@ -65,6 +65,8 @@ export type PixelType = {
    * but may be useful as a cached value for debugging/logic.
    */
   baseClass?: string;
+
+  baseID?: string;
   /**
    * Ref to the underlying `<span>` element for imperative class toggling.
    *
@@ -74,7 +76,7 @@ export type PixelType = {
 };
 
 export const Pixel = (props: PixelProps) => {
-  const { setPixelRef, x, y, baseClass, id } = props;
+  const { setPixelRef, x, y, baseClass, baseID } = props;
 
   const pixelRef = React.useRef<HTMLSpanElement>(null);
 
@@ -82,7 +84,7 @@ export const Pixel = (props: PixelProps) => {
     setPixelRef({
       x,
       y,
-      id,
+      baseID,
       html: pixelRef,
       baseClass: baseClass,
     });

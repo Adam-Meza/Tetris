@@ -114,8 +114,21 @@ export class GameManager {
 
     if (!spanRef?.current) return;
 
+    const classList =
+      spanRef.current?.classList.value.split(' ');
+
+    const baseClassList = pixel.baseClass?.split(' ');
+
+    if (classList && baseClassList) {
+      for (let i = 0; i < classList.length; i++) {
+        if (!baseClassList.includes(classList[i])) {
+          spanRef.current.classList.remove(classList[i]);
+          pixel.id = pixel.baseID;
+        }
+      }
+    }
+
     spanRef.current.classList.remove(className);
-    pixel.id = undefined;
   }
 
   playerMove(args: MoveArgs): void {
@@ -204,7 +217,7 @@ export class GameManager {
         const pixel = this.pixelRefs.current[i][j];
 
         if (pixel?.id) {
-          const className = `${getLetter(pixel.id)}-block`; // THIS IS A DANGER THIS IS NOT UNIVERSAL!!!!
+          const className = `${getLetter(pixel.id)}-block`;
           this.removePixel(pixel, className);
         }
       }

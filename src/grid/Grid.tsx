@@ -110,7 +110,7 @@ export const Grid: React.FC<GridProps> = ({
           baseClass={className}
           x={x}
           y={y}
-          id={id}
+          baseID={id}
           setPixelRef={setPixelRef}
         />
       );
