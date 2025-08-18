@@ -19,13 +19,15 @@ import {
   currentTetrominoAtom,
   nextTetrominoAtom,
   lineCountAtom,
+  gamePauseAtom,
 } from '../../../atoms';
 import {
   CallbackPayload,
   Coord,
   Direction,
 } from '../../../grid/GameManagerTypes';
-import GameOverModal from '../../Modal/GameOverModal';
+import GameOverModal from '../GameOverModal';
+import GamePauseModal from '../GamePauseModal';
 
 /**
  * Tetris GameBoard Component -
@@ -37,7 +39,8 @@ export const GameBoard = () => {
   const BOARD_WIDTH = 10;
   const BOARD_HEIGHT = 20;
   const mainRef = React.useRef<HTMLElement | null>(null);
-  const [gamePause, setGamePause] = React.useState(false);
+  const [gamePause, setGamePause] =
+    Jotai.useAtom(gamePauseAtom);
 
   const [currentTetromino, setTetromino] = Jotai.useAtom(
     currentTetrominoAtom
@@ -362,6 +365,7 @@ export const GameBoard = () => {
   };
 
   const startNewGame = () => {
+    setGamePause(false);
     setGameOver(false);
     makeNewTetromino();
     requestAnimationFrame(() => mainRef.current?.focus());
@@ -444,6 +448,7 @@ export const GameBoard = () => {
         startNewGame={startNewGame}
         endGame={endGame}
       />
+      <GamePauseModal />
     </main>
   );
 };

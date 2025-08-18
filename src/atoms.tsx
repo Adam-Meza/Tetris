@@ -10,3 +10,4 @@ export const currentPlayerAtom = atom({
   userName: 'GUEST',
 });
 export const gamesAtom = atom([]);
+export const gamePauseAtom = atom(true);
