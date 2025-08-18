@@ -7,6 +7,9 @@ import { GameManager } from '../../../grid/GameManager';
 import { LeaderBoard } from '../LeaderBoard/LeaderBoard';
 import { makeRefMatrix } from '../../../grid/utilities';
 import TopDisplay from './TopDisplay/TopDisplay';
+import GameOverModal from '../GameOverModal';
+import GamePauseModal from '../GamePauseModal';
+import Info from './Info/Info';
 import {
   randomTetromino,
   calculateScore,
@@ -26,8 +29,6 @@ import {
   Coord,
   Direction,
 } from '../../../grid/GameManagerTypes';
-import GameOverModal from '../GameOverModal';
-import GamePauseModal from '../GamePauseModal';
 
 /**
  * Tetris GameBoard Component -
@@ -35,7 +36,7 @@ import GamePauseModal from '../GamePauseModal';
  * moving, placing, and deleting Tetrominos.
  */
 export const GameBoard = () => {
-  // console.log('Gameboard Render');
+  console.log('Gameboard Render');
   const BOARD_WIDTH = 10;
   const BOARD_HEIGHT = 20;
   const mainRef = React.useRef<HTMLElement | null>(null);
@@ -380,6 +381,7 @@ export const GameBoard = () => {
 
   React.useEffect(() => {
     const interval = setInterval(() => {
+      mainRef.current?.focus();
       if (currentTetromino && !gameOver)
         moveTetromino('down');
     }, 700);
@@ -391,7 +393,6 @@ export const GameBoard = () => {
   React.useEffect(() => {
     endGame();
     startNewGame();
-    mainRef.current?.focus();
   }, []);
 
   const handleKeyPress = (
@@ -432,6 +433,7 @@ export const GameBoard = () => {
       onKeyDown={(event) => handleKeyPress(event)}
       ref={mainRef}
     >
+      <Info />
       <section className='gameboard-wrapper'>
         <TopDisplay />
 
@@ -443,6 +445,7 @@ export const GameBoard = () => {
           />
         </div>
       </section>
+
       <LeaderBoard />
       <GameOverModal
         startNewGame={startNewGame}

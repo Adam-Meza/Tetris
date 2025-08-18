@@ -28,6 +28,7 @@ export const NextTetromino = () => {
       Array.from({ length: BOARD_WIDTH }, () => null)
     )
   );
+
   const focalPointRef = React.useRef<Coord>([0, 0]);
 
   const gm = React.useMemo(

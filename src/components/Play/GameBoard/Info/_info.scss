@@ -1,0 +1,35 @@
+@use 'sass:map';
+@import '../../../../styles/variables';
+
+$green: map.get($tetromino-colors, 's');
+$pink: map.get($tetromino-colors, 'z');
+$blue: map.get($tetromino-colors, 'j');
+
+.info-wrapper {
+  @include flex-column;
+  justify-content: space-around;
+  align-items: center;
+  height: clamp(600px, 90%, 900px);
+  aspect-ratio: 2/3;
+  background-color: $blue;
+  padding: 10px 25px;
+  color: white;
+
+  h2 {
+    font-size: 10vh;
+  }
+
+  span {
+    font-size: 35px;
+  }
+
+  span:nth-last-of-type() {
+    font-size: 90px;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .info-wrapper {
+    display: none;
+  }
+}

@@ -1,7 +1,7 @@
 import { GameBoard } from './components/Play/GameBoard/GameBoard';
 import { Header } from './components/Header/Header';
 import { SideArt } from './components/SideArt/SideArt';
-import Info from './components/Info/Info';
+import { About } from './components/About/About';
 import '@itwin/itwinui-react/styles.css';
 import {
   BrowserRouter,
@@ -26,7 +26,7 @@ function App() {
             element={<ProtectedRoute child={<SideArt />} />}
           />
           <Route path='/log-in' element={<LogInForm />} />
-          <Route path='/about' element={<Info />} />
+          <Route path='/about' element={<About />} />
           <Route path='/register' element={<Register />} />
           {/* <Route path='*' element={<NotFound />}></Route> */}
         </Routes>

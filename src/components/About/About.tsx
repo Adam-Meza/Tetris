@@ -1,13 +1,9 @@
 import React from 'react';
 import { FaLinkedin, FaGithub } from 'react-icons/fa';
 
-type InfoProps = {
-  startNewGame: () => void;
-};
-
-const Info = () => {
+export const About = () => {
   return (
-    <div className='info-wrapper'>
+    <div className='about-wrapper'>
       <p>
         this is a tetris app made by adam meza <br></br>
         This app was practice in DOM manipulation, using
@@ -37,5 +33,3 @@ const Info = () => {
     </div>
   );
 };
-
-export default Info;

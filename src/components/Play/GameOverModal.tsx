@@ -72,7 +72,7 @@ const GameOverModal: React.FC<GameOverModalProps> = (
             <>
               <button
                 className='modal-button'
-                onClick={() => nav('/log-in')}
+                onClick={() => nav('/')}
               >
                 LOG IN TO SAVE GAME
               </button>

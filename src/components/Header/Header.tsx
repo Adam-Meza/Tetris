@@ -4,6 +4,8 @@ import { currentPlayerAtom } from '../../atoms';
 
 export const Header = () => {
   const nav = ReactRouter.useNavigate();
+  const location = ReactRouter.useLocation();
+
   const [currentPlayer, setCurrentPlayer] = Jotai.useAtom(
     currentPlayerAtom
   );
@@ -21,7 +23,17 @@ export const Header = () => {
       </h1>
 
       <nav className='nav button-container'>
-        <button onClick={() => nav('/about')}>ABOUT</button>
+        {location.pathname.includes('play') ? (
+          <button onClick={() => nav('/about')}>
+            ABOUT
+          </button>
+        ) : (
+          <button onClick={() => nav('/play')}>
+            {' '}
+            PLAY
+          </button>
+        )}
+
         <button
           onClick={() => {
             if (currentPlayer.userName !== 'GUEST')

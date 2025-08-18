@@ -10,18 +10,21 @@ const GamePauseModal = () => {
   return (
     <Modal
       isOpen={gamePause}
-      title={'Game Paused'}
+      title={''}
       isDismissible={false}
     >
       <ModalContent>
-        <button
-          className='modal-button'
-          onClick={() => {
-            setPause(false);
-          }}
-        >
-          !!!PLAY!!!
-        </button>
+        <div className='modal-wrapper'>
+          <h2>GAME PAUSED</h2>
+          <button
+            className='modal-button'
+            onClick={() => {
+              setPause(false);
+            }}
+          >
+            !!!PLAY!!!
+          </button>
+        </div>
       </ModalContent>
     </Modal>
   );

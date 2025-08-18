@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Modal, ModalContent } from '@itwin/itwinui-react';
 import * as Jotai from 'jotai';
-import { gameOverAtom } from '../../atoms';
+import { gameOverAtom, scoreAtom } from '../../atoms';
 import * as ReactRouter from 'react-router-dom';
 
 export const GameModal = () => {
   const [isOpen, setIsOpen] = React.useState(true);
   const setGameOver = Jotai.useSetAtom(gameOverAtom);
+  const score = Jotai.useAtomValue(scoreAtom);
   const nav = ReactRouter.useNavigate();
 
   return (
@@ -35,6 +36,8 @@ export const GameModal = () => {
           className='modal-button'
           onClick={() => {
             nav('/register');
+            if (score > 0) {
+            }
           }}
         >
           REGISTER

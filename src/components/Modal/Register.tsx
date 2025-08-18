@@ -1,5 +1,5 @@
 import React from 'react';
-import api, { register } from '../../api';
+import api, { getAll, register } from '../../api';
 import * as ReactRouter from 'react-router-dom';
 import * as Jotai from 'jotai';
 import {
@@ -10,6 +10,9 @@ import { Modal, ModalContent } from '@itwin/itwinui-react';
 import {
   currentPlayerAtom,
   gameOverAtom,
+  gamesAtom,
+  lineCountAtom,
+  scoreAtom,
 } from '../../atoms';
 import { FormInput } from './FormInput';
 
@@ -27,6 +30,9 @@ export const Register = () => {
   );
   const setGameOver = Jotai.useSetAtom(gameOverAtom);
   const nav = ReactRouter.useNavigate();
+  const score = Jotai.useAtomValue(scoreAtom);
+  const count = Jotai.useAtomValue(lineCountAtom);
+  const setGames = Jotai.useSetAtom(gamesAtom);
 
   const handleSubimt = async (e: React.FormEvent) => {
     setLoading(true);
@@ -41,6 +47,27 @@ export const Register = () => {
           REFRESH_TOKEN,
           res.data.refresh
         );
+
+        if (score > 0) {
+          try {
+            api
+              .post('/tetris_api/games/', {
+                score: score,
+                line_count: count,
+              })
+              .then((res) => {
+                if (res.status === 201) {
+                  getAll()
+                    .then((res) => res.data)
+                    .then((data) => {
+                      setGames(data);
+                    });
+                } else alert('failed to make ');
+              });
+          } catch (error) {
+            alert(error);
+          }
+        }
 
         setCurrentPlayer({
           userName: userName,

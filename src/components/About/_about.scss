@@ -5,7 +5,7 @@ $green: map.get($tetromino-colors, 's');
 $pink: map.get($tetromino-colors, 'z');
 $blue: map.get($tetromino-colors, 'i');
 
-.info-wrapper {
+.about-wrapper {
   @include flex-column;
   justify-content: space-between;
   align-items: center;

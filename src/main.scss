@@ -1,5 +1,5 @@
 @import './grid/grid';
-@import './components/Info/info';
+@import './components/Play/GameBoard/Info/info';
 @import './components/Play/GameBoard//Tetromino/tetromino';
 @import './components/Play/GameBoard/game-board';
 @import './components//Header/header';
@@ -8,13 +8,14 @@
 @import './styles/mixins';
 @import './components/Play/LeaderBoard/leader-board';
 @import './components/Play/LeaderBoard/leader-board';
+@import './components/About/about';
 
 * {
+  font-family: 'Jersey 10', sans-serif;
   overflow: hidden;
   :focus {
     outline: none;
   }
-  font-family: 'Jersey 10', sans-serif;
 }
 
 body {
@@ -23,12 +24,11 @@ body {
 }
 
 .App {
-  height: 100vh;
-  width: 100vw;
   @include flex-column;
   justify-content: flex-start;
   align-items: space-evenly;
-  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
   background-color: white;
 }
 
