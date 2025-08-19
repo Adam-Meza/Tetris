@@ -91,44 +91,6 @@ export class GameManager {
     });
   }
 
-  private addPixel(
-    id: string | undefined,
-    className: string,
-    coordinates: number[]
-  ): void {
-    const [x, y] = coordinates;
-    const dataRef = this.pixelRefs.current[y][
-      x
-    ] as PixelType;
-
-    const spanRef = dataRef.html;
-
-    if (!spanRef?.current) return;
-
-    spanRef.current?.classList.add(className);
-    dataRef.id = id;
-  }
-
-  private clearPixel(pixel: PixelType): void {
-    const spanRef = pixel.html;
-
-    if (!spanRef?.current) return;
-
-    const classList =
-      spanRef.current?.classList.value.split(' ');
-
-    const baseClassList = pixel.baseClass?.split(' ');
-
-    if (classList && baseClassList) {
-      for (let i = 0; i < classList.length; i++) {
-        if (!baseClassList.includes(classList[i])) {
-          spanRef.current.classList.remove(classList[i]);
-          pixel.id = pixel.baseID;
-        }
-      }
-    }
-  }
-
   playerMove(args: MoveArgs): void {
     const {
       piece,
@@ -175,11 +137,12 @@ export class GameManager {
       piece,
       direction,
       distance,
+      focalPoint,
       conditional,
       onAfter,
     } = args;
 
-    const [x, y] = this.focalPoint.current;
+    const [x, y] = focalPoint;
 
     if (conditional && !conditional(args)) return;
 
@@ -270,6 +233,44 @@ export class GameManager {
 
         if (pixel?.id) {
           this.clearPixel(pixel);
+        }
+      }
+    }
+  }
+
+  private addPixel(
+    id: string | undefined,
+    className: string,
+    coordinates: number[]
+  ): void {
+    const [x, y] = coordinates;
+    const dataRef = this.pixelRefs.current[y][
+      x
+    ] as PixelType;
+
+    const spanRef = dataRef.html;
+
+    if (!spanRef?.current) return;
+
+    spanRef.current?.classList.add(className);
+    dataRef.id = id;
+  }
+
+  private clearPixel(pixel: PixelType): void {
+    const spanRef = pixel.html;
+
+    if (!spanRef?.current) return;
+
+    const classList =
+      spanRef.current?.classList.value.split(' ');
+
+    const baseClassList = pixel.baseClass?.split(' ');
+
+    if (classList && baseClassList) {
+      for (let i = 0; i < classList.length; i++) {
+        if (!baseClassList.includes(classList[i])) {
+          spanRef.current.classList.remove(classList[i]);
+          pixel.id = pixel.baseID;
         }
       }
     }

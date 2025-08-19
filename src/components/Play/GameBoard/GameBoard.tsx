@@ -240,23 +240,17 @@ export const GameBoard = () => {
               const { x, y, id } = pixel;
               const letter = getLetter(id);
               const className = `${letter}-block`;
+              const distance = i - y;
 
-              gm.delete({
+              gm.move({
                 piece: {
                   className: className,
                   shape: [[letter]],
                   id: id,
                 },
                 focalPoint: [x, y],
-              });
-
-              gm.put({
-                piece: {
-                  className: className,
-                  shape: [[letter]],
-                  id: id,
-                },
-                focalPoint: [x, i],
+                direction: 'down',
+                distance: distance,
               });
             });
 
@@ -267,6 +261,7 @@ export const GameBoard = () => {
     }
   };
 
+  //figure out how to make this async without messing everythign up
   const handleBlockLanding = (args: CallbackPayload) => {
     // setTimeout(() => {
     const completedRowIndexes = findCompletedRows(args);
@@ -370,8 +365,10 @@ export const GameBoard = () => {
         return isMovePossible('same', piece);
       },
 
-      onAfter: ({ piece }: CallbackPayload) => {
+      onAfter: (args: CallbackPayload) => {
+        const { piece } = args;
         setTetromino(piece);
+        didBlockLand(args);
       },
     });
   };
@@ -428,10 +425,10 @@ export const GameBoard = () => {
       case 'Shift':
         rotateTetromino();
         return;
-      case 'n':
-        endGame();
-        startNewGame();
-        return;
+      // case 'n':
+      //   endGame();
+      //   startNewGame();
+      //   return;
       case 'Enter':
         setGamePause(!gamePause);
         return;
