@@ -5,6 +5,7 @@ import type {
   MoveArgs,
   Direction,
   Coord,
+  ShapeMatrix,
 } from './GameManagerTypes';
 
 export class GameManager {
@@ -78,7 +79,7 @@ export class GameManager {
           const pixel =
             this.pixelRefs.current[targetY][targetX];
 
-          if (pixel) this.removePixel(pixel);
+          if (pixel) this.clearPixel(pixel);
         }
       }
     }
@@ -90,7 +91,7 @@ export class GameManager {
     });
   }
 
-  addPixel(
+  private addPixel(
     id: string | undefined,
     className: string,
     coordinates: number[]
@@ -108,7 +109,7 @@ export class GameManager {
     dataRef.id = id;
   }
 
-  removePixel(pixel: PixelType): void {
+  private clearPixel(pixel: PixelType): void {
     const spanRef = pixel.html;
 
     if (!spanRef?.current) return;
@@ -205,6 +206,60 @@ export class GameManager {
     });
   }
 
+  rotate(args: PutPropsType): void {
+    const { piece, focalPoint, conditional, onAfter } =
+      args;
+    const { shape } = piece;
+
+    const rotateShapeClockwise = (shape: ShapeMatrix) => {
+      const transposedShape = shape[0]
+        .map((_, colIndex) =>
+          shape.map((row) => row[colIndex])
+        )
+        .map((row) => row.reverse());
+
+      return transposedShape;
+    };
+
+    const rotated = {
+      ...piece,
+      shape: rotateShapeClockwise(shape),
+    };
+
+    if (
+      conditional &&
+      !conditional({
+        piece: rotated,
+        focalPoint,
+        pixelRefs: this.pixelRefs,
+      })
+    )
+      return;
+
+    const tetrominoLength = rotated.shape[0].length;
+
+    if (
+      this.isOutOfBounds([
+        tetrominoLength + focalPoint[0],
+        focalPoint[1],
+      ])
+    )
+      return;
+
+    this.delete({
+      piece: piece,
+      focalPoint: focalPoint,
+    });
+
+    this.put({ piece: rotated, focalPoint: focalPoint });
+
+    onAfter?.({
+      piece: rotated,
+      focalPoint: this.focalPoint,
+      pixelRefs: this.pixelRefs,
+    });
+  }
+
   clearBoard(): void {
     const height = this.pixelRefs.current.length;
     const width = this.pixelRefs.current[0].length;
@@ -214,7 +269,7 @@ export class GameManager {
         const pixel = this.pixelRefs.current[i][j];
 
         if (pixel?.id) {
-          this.removePixel(pixel);
+          this.clearPixel(pixel);
         }
       }
     }
@@ -227,15 +282,15 @@ export class GameManager {
   ): Coord {
     switch (direction) {
       case 'down':
-        return [x, y + distance];
+        return [x, y + distance] as Coord;
       case 'left':
-        return [x - distance, y];
+        return [x - distance, y] as Coord;
       case 'right':
-        return [x + distance, y];
+        return [x + distance, y] as Coord;
       case 'up':
-        return [x, y - distance];
+        return [x, y - distance] as Coord;
       case 'same':
-        return [x, y];
+        return [x, y] as Coord;
     }
   }
 

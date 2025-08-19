@@ -62,10 +62,7 @@ export const Register = () => {
       try {
         // Register a new user
         const res = await register(userName, password);
-        console.log('test');
         nav('/log-in');
-
-        console.log(res);
 
         // This handles the "Log In To save Game Data" use case
         // if there is a score..

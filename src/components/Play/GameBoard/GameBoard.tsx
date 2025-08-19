@@ -49,7 +49,6 @@ export const GameBoard = () => {
 
   const [score, setScore] = Jotai.useAtom(scoreAtom);
   const [next, setNext] = Jotai.useAtom(nextTetrominoAtom);
-
   const [gameOver, setGameOver] =
     Jotai.useAtom(gameOverAtom);
   const [lineCount, setCount] =
@@ -238,12 +237,27 @@ export const GameBoard = () => {
             newRow.forEach((pixel) => {
               if (!pixel?.id) return;
 
-              const { x, id } = pixel;
+              const { x, y, id } = pixel;
               const letter = getLetter(id);
               const className = `${letter}-block`;
 
-              gm.removePixel(pixel);
-              gm.addPixel(id, className, [x, i]);
+              gm.delete({
+                piece: {
+                  className: className,
+                  shape: [[letter]],
+                  id: id,
+                },
+                focalPoint: [x, y],
+              });
+
+              gm.put({
+                piece: {
+                  className: className,
+                  shape: [[letter]],
+                  id: id,
+                },
+                focalPoint: [x, i],
+              });
             });
 
             break;
@@ -258,7 +272,7 @@ export const GameBoard = () => {
     const completedRowIndexes = findCompletedRows(args);
 
     if (completedRowIndexes) {
-      removeRows(completedRowIndexes);
+      removeRows(args, completedRowIndexes);
       moveRowsDown(args);
 
       const newScore = calculateScore(
@@ -273,17 +287,27 @@ export const GameBoard = () => {
     makeNewTetromino();
   };
 
-  const removeRows = (rows: number[]) => {
-    if (!rows) return;
+  const removeRows = (
+    args: CallbackPayload,
+    rows: number[]
+  ) => {
+    const { pixelRefs } = args;
 
-    rows.forEach((y) => {
+    rows.forEach((y: number) => {
       for (let i = 0; i < BOARD_WIDTH; i++) {
         const x = i;
         const pixel = pixelRefs.current[y][x];
 
         if (!pixel || !pixel.id) return;
 
-        gm.removePixel(pixel);
+        const { id } = pixel;
+        const letter = getLetter(id);
+        const className = `${letter}-block`;
+
+        gm.delete({
+          piece: { shape: [['l']], id, className },
+          focalPoint: [x, y],
+        });
       }
     });
   };
@@ -339,29 +363,17 @@ export const GameBoard = () => {
   };
 
   const rotateTetromino = () => {
-    const rotated = {
-      ...currentTetromino,
-      shape: rotateShapeClockwise(currentTetromino.shape),
-    };
+    gm.rotate({
+      piece: currentTetromino,
+      focalPoint: focalPointRef.current,
+      conditional: ({ piece }: CallbackPayload) => {
+        return isMovePossible('same', piece);
+      },
 
-    const tetrominoLength = rotated.shape[0].length;
-
-    if (
-      tetrominoLength + focalPointRef.current[0] <=
-        BOARD_WIDTH &&
-      isMovePossible('same', rotated)
-    ) {
-      const [x, y] = focalPointRef.current;
-
-      gm.delete({
-        piece: currentTetromino,
-        focalPoint: [x, y],
-      });
-
-      setTetromino(rotated);
-
-      gm.put({ piece: rotated, focalPoint: [x, y] });
-    }
+      onAfter: ({ piece }: CallbackPayload) => {
+        setTetromino(piece);
+      },
+    });
   };
 
   const startNewGame = () => {

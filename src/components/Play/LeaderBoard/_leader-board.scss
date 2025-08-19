@@ -47,7 +47,7 @@ $medal-colors: (
 .scorecard {
   @include flex-row;
   padding: 10px;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   width: 100%;
   height: clamp(25px, 6.5vh, 60px);
