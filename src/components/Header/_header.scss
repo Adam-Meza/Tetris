@@ -1,0 +1,64 @@
+@use 'sass:map';
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+$purple: map.get($tetromino-colors, 't');
+$color-list: map-values($tetromino-colors);
+
+@for $i from 1 through length($color-list) {
+  $color: nth($color-list, $i);
+  h1 span:nth-child(#{$i}) {
+    background-color: $color;
+    color: white;
+  }
+}
+
+header {
+  @include flex-row;
+  height: 65px;
+  justify-content: space-between;
+  width: 100%;
+
+  .button-container {
+    @include flex-row;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-around;
+    font-family: 'Jersey 10', sans-serif;
+    margin: 10px;
+
+    button {
+      border: 0px;
+      padding: 12px;
+      font-size: 18px;
+      color: white;
+      background-color: $purple;
+      font-family: 'Jersey 10', sans-serif;
+
+      &:hover {
+        background-color: lighten(
+          $color: $purple,
+          $amount: 10
+        );
+      }
+    }
+
+    span {
+      font-size: 50px;
+    }
+  }
+}
+
+h1 {
+  font-family: 'Bytesized', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 60px;
+  margin: 0px;
+  color: white;
+  margin-left: 20px;
+}
+
+.nav {
+  width: fit-content;
+}

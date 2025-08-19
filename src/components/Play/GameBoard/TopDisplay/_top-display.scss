@@ -1,0 +1,61 @@
+@use 'sass:map';
+@import '../../../../styles/mixins';
+@import '../../../../styles/variables';
+
+.top-display {
+  @include flex-column;
+  color: white;
+
+  justify-content: space-around;
+  align-items: center;
+  height: clamp(100px, 35%, 300px);
+  width: 95%;
+
+  .top-display-bottom-wrapper {
+    @include flex-row;
+    width: 100%;
+    justify-content: space-between;
+    height: clamp(80px, 30%, 130px);
+  }
+}
+
+.line-count-wrapper,
+.score-board-wrapper {
+  @include flex-column;
+  justify-content: center;
+  align-items: center;
+
+  > * {
+    @include flex-column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  :nth-child(1) {
+    font-size: clamp(15px, 3vh, 20px);
+  }
+  :nth-child(2) {
+    font-size: clamp(40px, 6.5vh, 50px);
+  }
+}
+
+.line-count-wrapper {
+  background-color: map.get($tetromino-colors, 'l');
+  height: 100%;
+  width: 60%;
+}
+
+.score-board-wrapper {
+  height: 35%;
+  width: 100%;
+  background-color: map.get($tetromino-colors, 'j');
+}
+
+.player-title {
+  @include flex-column;
+  justify-content: center;
+  align-items: center;
+  background-color: map.get($tetromino-colors, 'o');
+  font-size: clamp(20px, 3.5vh, 30px);
+  width: 100%;
+}

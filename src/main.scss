@@ -1,32 +1,37 @@
 @import './grid/grid';
-@import './components/ControlPanel/button';
-@import './components/Info/info';
-@import './components/Tetromino/tetromino';
-@import './components/GameBoard/game-board';
-@import './components/NextTetromino/next-tetromino';
-@import './components/TopDisplay/top-display';
+@import './components/Play/GameBoard/Info/info';
+@import './components/Play/GameBoard//Tetromino/tetromino';
+@import './components/Play/GameBoard/game-board';
+@import './components//Header/header';
+@import './components/SideArt/side-art';
+@import './components/Modal/modal';
 @import './styles/mixins';
+@import './components/Play/LeaderBoard/leader-board';
+@import './components/Play/LeaderBoard/leader-board';
+@import './components/About/about';
 
 * {
+  font-family: 'Jersey 10', sans-serif;
   overflow: hidden;
+  :focus {
+    outline: none;
+  }
+}
+
+body {
+  margin: 0px;
+  background-color: white;
 }
 
 .App {
-  font-family: 'Roboto', serif;
-  font-optical-sizing: auto;
-  font-weight: 300;
-  font-style: normal;
-  font-variation-settings: 'wdth' 100;
+  @include flex-column;
+  justify-content: flex-start;
+  align-items: space-evenly;
   height: 100vh;
   width: 100vw;
-  @include flex-row;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
+  background-color: white;
 }
 
-main {
-  @include flex-row;
-  justify-content: space-evenly;
-  width: 80vw;
+h2 {
+  margin: 0px;
 }

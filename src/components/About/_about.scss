@@ -1,0 +1,52 @@
+@use 'sass:map';
+@import '../../styles/variables';
+
+$green: map.get($tetromino-colors, 's');
+$pink: map.get($tetromino-colors, 'z');
+$blue: map.get($tetromino-colors, 'i');
+
+.about-wrapper {
+  @include flex-column;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+  height: 90%;
+
+  .link-wrapper {
+    @include flex-row;
+    justify-content: space-evenly;
+    gap: 10;
+    width: 100%;
+
+    svg {
+      height: 50px;
+      width: 60px;
+      background-color: white;
+    }
+
+    svg:nth-child(1) {
+      color: $green;
+    }
+
+    svg:nth-child(2) {
+      color: $blue;
+    }
+
+    a,
+    a:visited {
+      text-decoration: none;
+      color: black;
+    }
+
+    a:hover {
+      color: grey;
+    }
+  }
+
+  p {
+    width: 90%;
+    font-weight: 100;
+    font-style: normal;
+    font-size: 30px;
+  }
+}

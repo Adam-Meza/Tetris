@@ -7,3 +7,5 @@ $tetromino-colors: (
   o: #d9b111,
   i: #0ca3a5,
 );
+
+$color-list: map-values($tetromino-colors);

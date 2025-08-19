@@ -1,21 +1,36 @@
-import { GameBoard } from './components/GameBoard/GameBoard';
+import { GameBoard } from './components/Play/GameBoard/GameBoard';
+import { Header } from './components/Header/Header';
+import { SideArt } from './components/SideArt/SideArt';
+import { About } from './components/About/About';
+import '@itwin/itwinui-react/styles.css';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from 'react-router-dom';
+import { Register } from './components/Modal/Register';
+import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
+import { GameModal } from './components/Modal/Modal';
+import { LogInForm } from './components/Modal/LogInForm';
 
-/*
- 
-Give this some routing
-- game
-- about
-- welcome?
-- leader board?
-modals for user log in ?
-oauth?
-makign a back end to track data of users and allow
-
- */
 function App() {
   return (
     <div className='App'>
-      <GameBoard />
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path='/' element={<GameModal />} />
+          <Route path='/play' element={<GameBoard />} />
+          <Route
+            path='/side-art'
+            element={<ProtectedRoute child={<SideArt />} />}
+          />
+          <Route path='/log-in' element={<LogInForm />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/register' element={<Register />} />
+          {/* <Route path='*' element={<NotFound />}></Route> */}
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

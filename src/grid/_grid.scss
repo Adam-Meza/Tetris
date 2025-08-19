@@ -5,12 +5,14 @@
   container-type: size;
   display: grid;
   place-items: center;
-  width: fit-content;
-  height: fit-content;
+  aspect-ratio: calc(
+    var(--grid-width) / var(--grid-height)
+  );
 }
 
 .grid {
   display: grid;
+
   --cell-size: min(
     calc(100cqw / var(--grid-width)),
     calc(100cqh / var(--grid-height))
@@ -25,6 +27,8 @@
     var(--cell-size)
   );
 
-  inline-size: calc(var(--cell-size) * var(--grid-width));
-  block-size: calc(var(--cell-size) * var(--grid-height));
+  span {
+    grid-row: span 1;
+    grid-column: span 1;
+  }
 }
