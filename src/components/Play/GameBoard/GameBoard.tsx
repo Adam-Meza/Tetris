@@ -13,7 +13,6 @@ import Info from './Info/Info';
 import {
   randomTetromino,
   calculateScore,
-  rotateShapeClockwise,
   getLetter,
 } from './utilities';
 import {

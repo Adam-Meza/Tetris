@@ -28,13 +28,3 @@ export const calculateScore = (
 
   return newScore;
 };
-
-export const rotateShapeClockwise = (
-  shape: ShapeMatrix
-) => {
-  const transposedShape = shape[0]
-    .map((_, colIndex) => shape.map((row) => row[colIndex]))
-    .map((row) => row.reverse());
-
-  return transposedShape;
-};

@@ -28,10 +28,7 @@ export const Header = () => {
             ABOUT
           </button>
         ) : (
-          <button onClick={() => nav('/play')}>
-            {' '}
-            PLAY
-          </button>
+          <button onClick={() => nav('/play')}>PLAY</button>
         )}
 
         <button
@@ -49,7 +46,6 @@ export const Header = () => {
             ? 'LOG IN'
             : 'LOG OUT'}
         </button>
-        {/* <button>about</button> */}
       </nav>
     </header>
   );
