@@ -90,6 +90,7 @@ export const GameBoard = () => {
 
     for (let i = 0; i < tetrominoHeight; i++) {
       for (let j = 0; j < tetrominoWidth; j++) {
+        // @ts-ignore
         const x = j + focalPoint.current[0];
         const y = i + focalPoint.current[1];
 

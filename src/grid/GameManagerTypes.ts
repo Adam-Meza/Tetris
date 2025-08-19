@@ -129,9 +129,11 @@ export type CallbackPayload = {
   /**
    * Mutable focal point ref used as the piece's origin.
    */
-  focalPoint: React.MutableRefObject<Coord>;
+  focalPoint: React.MutableRefObject<Coord> | Coord;
   /**
    * Direction involved in the action (if applicable, e.g., move).
    */
   direction?: Direction;
 };
+
+export type PlayerMoveArgs = {};

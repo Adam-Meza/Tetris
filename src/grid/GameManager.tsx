@@ -1,4 +1,5 @@
 import { PixelType } from './Pixel';
+import { makeRefMatrix } from './utilities';
 import type {
   PutPropsType,
   DeleteArgsType,
@@ -64,7 +65,11 @@ export class GameManager {
       args;
     const { shape } = piece;
 
-    if (conditional && !conditional(args)) return;
+    if (
+      conditional &&
+      !conditional({ ...args, pixelRefs: this.pixelRefs })
+    )
+      return;
 
     const pWidth = shape[0].length;
     const pHeight = shape.length;
@@ -101,6 +106,7 @@ export class GameManager {
     } = args;
 
     const [x, y] = this.focalPoint.current;
+
     const [targetX, targetY] = this.offsetCoord(
       [x, y],
       direction,
@@ -126,7 +132,7 @@ export class GameManager {
     });
 
     onAfter?.({
-      piece: piece,
+      ...args,
       pixelRefs: this.pixelRefs,
       focalPoint: this.focalPoint,
     });
@@ -144,7 +150,11 @@ export class GameManager {
 
     const [x, y] = focalPoint;
 
-    if (conditional && !conditional(args)) return;
+    if (
+      conditional &&
+      !conditional({ ...args, pixelRefs: this.pixelRefs })
+    )
+      return;
 
     this.delete({
       piece: piece,
