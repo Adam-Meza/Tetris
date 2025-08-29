@@ -34,8 +34,7 @@ export const LeaderBoard = () => {
 
   React.useEffect(() => {
     const scoreCards = games
-      .sort((a: GameType, b: GameType) => a.score - b.score)
-      .reverse()
+      .sort((a: GameType, b: GameType) => b.score - a.score)
       .slice(0, 10)
       .map((game: any, i: number) => {
         const { owner, line_count, score } = game;
