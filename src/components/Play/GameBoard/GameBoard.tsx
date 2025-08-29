@@ -333,7 +333,7 @@ export const GameBoard = () => {
     gm.put({
       piece: promoted,
       focalPoint: [3, 0],
-      conditional: (args: CallbackPayload) => {
+      conditional: () => {
         if (!isMovePossible('same', next)) {
           setGameOver(true);
           return false;
