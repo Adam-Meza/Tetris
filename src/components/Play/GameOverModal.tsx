@@ -17,7 +17,7 @@ interface GameOverModalProps {
   endGame: () => void;
 }
 
-const GameOverModal: React.FC<GameOverModalProps> = (
+export const GameOverModal: React.FC<GameOverModalProps> = (
   props
 ) => {
   const { startNewGame, endGame } = props;
@@ -89,5 +89,3 @@ const GameOverModal: React.FC<GameOverModalProps> = (
     </Modal>
   );
 };
-
-export default GameOverModal;
