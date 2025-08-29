@@ -61,6 +61,7 @@ export const Register = () => {
     if (handleChecks()) {
       try {
         const post = await register(userName, password);
+        console.log(post);
         nav('/log-in');
 
         if (score > 0) {
