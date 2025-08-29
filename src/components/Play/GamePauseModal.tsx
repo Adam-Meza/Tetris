@@ -1,4 +1,3 @@
-import React from 'react';
 import { Modal, ModalContent } from '@itwin/itwinui-react';
 import { gamePauseAtom } from '../../atoms';
 import * as Jotai from 'jotai';

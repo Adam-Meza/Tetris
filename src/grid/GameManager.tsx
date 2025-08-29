@@ -1,5 +1,4 @@
 import { PixelType } from './Pixel';
-import { makeRefMatrix } from './utilities';
 import type {
   PutPropsType,
   DeleteArgsType,
