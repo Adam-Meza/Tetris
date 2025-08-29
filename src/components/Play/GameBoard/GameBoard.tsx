@@ -91,6 +91,7 @@ export const GameBoard = () => {
       for (let j = 0; j < tetrominoWidth; j++) {
         // @ts-ignore
         const x = j + focalPoint.current[0];
+        // @ts-ignore
         const y = i + focalPoint.current[1];
 
         const [, lowerY] = gm.offsetCoord(
@@ -330,12 +331,8 @@ export const GameBoard = () => {
     focalPointRef.current = [3, 0];
 
     gm.put({
-      // What are we placing?
       piece: promoted,
-      // Where are we placing it?
       focalPoint: [3, 0],
-      // Before we place the piece,
-      // Let's check if we can...
       conditional: (args: CallbackPayload) => {
         if (!isMovePossible('same', next)) {
           setGameOver(true);
@@ -344,8 +341,6 @@ export const GameBoard = () => {
 
         return true;
       },
-      // and once we place it, we ask,
-      // can we go anywhere?
       onAfter: () => {
         if (!isMovePossible('down', next)) {
           setGameOver(true);

@@ -46,7 +46,7 @@ export const LogInForm = () => {
     setLoading(true);
     e.preventDefault();
 
-    if (!handleChecks) return;
+    if (!handleChecks()) return;
 
     try {
       const res = await login(userName, password);
@@ -60,20 +60,18 @@ export const LogInForm = () => {
 
       if (score > 0) {
         try {
-          api
-            .post('/tetris_api/games/', {
-              score: score,
-              line_count: count,
-            })
-            .then((res) => {
-              if (res.status === 201) {
-                getAll()
-                  .then((res) => res.data)
-                  .then((data) => {
-                    setGames(data);
-                  });
-              } else alert('failed to make ');
-            });
+          api.post('/tetris_api/games/', {
+            score: score,
+            line_count: count,
+          });
+
+          if (res.status === 201) {
+            const data = await getAll().then(
+              (res) => res.data
+            );
+
+            setGames(data);
+          } else alert('failed to make ');
         } catch (error) {
           alert(error);
         }

@@ -60,31 +60,29 @@ export const Register = () => {
 
     if (handleChecks()) {
       try {
-        // Register a new user
-        const res = await register(userName, password);
+        const post = await register(userName, password);
         nav('/log-in');
 
-        // This handles the "Log In To save Game Data" use case
-        // if there is a score..
         if (score > 0) {
-          // we try to post it
           try {
-            api
-              .post('/tetris_api/games/', {
+            const res = await api.post(
+              '/tetris_api/games/',
+              {
                 score: score,
                 line_count: count,
-              })
-              .then((res) => {
-                // if it works we update the board. we do this other places? maybe we can combine them...
-                if (res.status === 201) {
-                  getAll()
-                    .then((res) => res.data)
-                    .then((data) => {
-                      setGames(data);
-                    });
-                  // better ways to handle than alert!!
-                } else alert('failed to make ');
-              });
+              }
+            );
+
+            if (res.status === 201) {
+              const data = await getAll().then(
+                (res) => res.data
+              );
+
+              setGames(data);
+
+              // better ways to handle than alert!!
+            } else alert('failed to make ');
+
             //
           } catch (error) {
             alert(error);
