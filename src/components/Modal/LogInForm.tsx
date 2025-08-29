@@ -19,7 +19,7 @@ import { FormInput } from './FormInput';
 export const LogInForm = () => {
   const [userName, setUserName] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [loading, setLoading] = React.useState(false);
+  const [, setLoading] = React.useState(false);
   const score = Jotai.useAtomValue(scoreAtom);
   const count = Jotai.useAtomValue(lineCountAtom);
   const setGames = Jotai.useSetAtom(gamesAtom);
@@ -60,7 +60,7 @@ export const LogInForm = () => {
 
       if (score > 0) {
         try {
-          api.post('/tetris_api/games/', {
+          const res = await api.post('/tetris_api/games/', {
             score: score,
             line_count: count,
           });

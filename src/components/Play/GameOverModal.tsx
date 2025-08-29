@@ -21,8 +21,7 @@ const GameOverModal: React.FC<GameOverModalProps> = (
   props
 ) => {
   const { startNewGame, endGame } = props;
-  const [gameOver, setGameOver] =
-    Jotai.useAtom(gameOverAtom);
+  const gameOver = Jotai.useAtomValue(gameOverAtom);
   const setGames = Jotai.useSetAtom(gamesAtom);
   const score = Jotai.useAtomValue(scoreAtom);
   const count = Jotai.useAtomValue(lineCountAtom);
@@ -37,23 +36,18 @@ const GameOverModal: React.FC<GameOverModalProps> = (
   const nav = ReactRouter.useNavigate();
 
   const handleSubimt = async () => {
-    console.log(score, count);
+    // console.log(score, count);
     // this is the same functiuoanlity from REGISTER!!!
     try {
-      api
-        .post('/tetris_api/games/', {
-          score: score,
-          line_count: count,
-        })
-        .then((res) => {
-          if (res.status === 201) {
-            getAll()
-              .then((res) => res.data)
-              .then((data) => {
-                setGames(data);
-              });
-          } else alert('failed to make ');
-        });
+      const res = await api.post('/tetris_api/games/', {
+        score: score,
+        line_count: count,
+      });
+
+      if (res.status === 201) {
+        const data = await getAll().then((res) => res.data);
+        setGames(data);
+      } else alert('failed to make ');
     } catch (error) {
       alert(error);
     }

@@ -2,10 +2,10 @@ import React from 'react';
 import api, { getAll, register } from '../../api';
 import * as ReactRouter from 'react-router-dom';
 import * as Jotai from 'jotai';
-import {
-  ACCESS_TOKEN,
-  REFRESH_TOKEN,
-} from '../../constants';
+// import {
+//   ACCESS_TOKEN,
+//   REFRESH_TOKEN,
+// } from '../../constants';
 import { Modal, ModalContent } from '@itwin/itwinui-react';
 import {
   currentPlayerAtom,
