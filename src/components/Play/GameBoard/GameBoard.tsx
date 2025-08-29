@@ -7,7 +7,7 @@ import { GameManager } from '../../../grid/GameManager';
 import { LeaderBoard } from '../LeaderBoard/LeaderBoard';
 import { makeRefMatrix } from '../../../grid/utilities';
 import TopDisplay from './TopDisplay/TopDisplay';
-import GameOverModal from '../GameOverModal';
+import { GameOverModal } from '../GameOverModal';
 import GamePauseModal from '../GamePauseModal';
 import Info from './Info/Info';
 import {

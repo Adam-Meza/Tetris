@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Modal, ModalContent } from '@itwin/itwinui-react';
 import * as Jotai from 'jotai';
-import { gameOverAtom, scoreAtom } from '../../atoms';
+import { gameOverAtom } from '../../atoms';
 import * as ReactRouter from 'react-router-dom';
 
 export const GameModal = () => {

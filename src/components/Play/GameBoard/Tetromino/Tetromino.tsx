@@ -1,7 +1,7 @@
 import {
   PieceType,
   ShapeMatrix,
-} from '../../grid/GameManagerTypes';
+} from '../../../../grid/GameManagerTypes';
 
 type TetrominoPrimative = {
   shape: ShapeMatrix;
