@@ -48,13 +48,10 @@ export const register = async (
   username: string,
   password: string
 ) => {
-  return axios.post(
-    `${baseURL}/tetris_api/user/register/`,
-    {
-      username,
-      password,
-    }
-  );
+  return api.post(`${baseURL}/tetris_api/user/register/`, {
+    username,
+    password,
+  });
 };
 
 export default api;

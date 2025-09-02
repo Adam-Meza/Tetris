@@ -17,7 +17,7 @@ import {
 import { FormInput } from './FormInput';
 
 export const Register = () => {
-  const [userName, setUserName] = React.useState('');
+  const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [confirmation, setConfirmation] =
     React.useState('');
@@ -35,11 +35,11 @@ export const Register = () => {
   const setGames = Jotai.useSetAtom(gamesAtom);
 
   const handleChecks = () => {
-    if (0 < userName.length && userName.length < 3) {
-      setError('USERNAME MUST BE AT LEAST 3 LETTERS');
+    if (0 < username.length && username.length < 3) {
+      setError('USERnAME MUST BE AT LEAST 3 LETTERS');
       return false;
-    } else if (userName.length > 8) {
-      setError('USERNAME MUST BE LESS THAN 8 LETTERS');
+    } else if (username.length > 8) {
+      setError('USERnAME MUST BE LESS THAN 8 LETTERS');
       return false;
     } else if (
       password &&
@@ -60,39 +60,17 @@ export const Register = () => {
 
     if (handleChecks()) {
       try {
-        const post = await register(userName, password);
+        const post = await api.post(
+          'tetris_api/user/register/',
+          { username, password }
+        );
+
         console.log(post);
-        nav('/log-in');
-
-        if (score > 0) {
-          try {
-            const res = await api.post(
-              '/tetris_api/games/',
-              {
-                score: score,
-                line_count: count,
-              }
-            );
-
-            if (res.status === 201) {
-              const data = await getAll().then(
-                (res) => res.data
-              );
-
-              setGames(data);
-
-              // better ways to handle than alert!!
-            } else alert('failed to make ');
-
-            //
-          } catch (error) {
-            alert(error);
-          }
-        }
-
         setCurrentPlayer({
-          userName: userName,
+          userName: username,
         });
+
+        nav('/log-in');
 
         setGameOver(false);
         setIsOpen(false);
@@ -103,7 +81,7 @@ export const Register = () => {
   };
 
   const resetModal = () => {
-    setUserName('');
+    setUsername('');
     setPassword('');
     setConfirmation('');
     setIsOpen(false);
@@ -126,8 +104,8 @@ export const Register = () => {
           USERNAME
           <FormInput
             name='username'
-            setter={setUserName}
-            value={userName}
+            setter={setUsername}
+            value={username}
           />
           PASSWORD
           <FormInput

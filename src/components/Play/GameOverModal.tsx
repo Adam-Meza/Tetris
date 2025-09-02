@@ -60,7 +60,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = (
       isDismissible={false}
     >
       <ModalContent>
-        <div className='modal-wrapper'>
+        <div className='modal-wrapper game-over'>
           <h2>GAME OVER!</h2>
           <span>{score}</span>
           <span>line count: {count}</span>

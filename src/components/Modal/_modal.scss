@@ -24,9 +24,6 @@
 
   a {
     font-size: 16px;
-
-    :focus {
-    }
   }
 }
 
@@ -58,5 +55,15 @@
   .form-input:nth-last-of-type(1) {
     margin-top: 20px;
     margin-bottom: 0px;
+  }
+}
+
+.modal-wrapper.game-over {
+  :nth-child(-n + 3) {
+    height: 10%;
+  }
+
+  h2 {
+    font-size: 60px;
   }
 }
