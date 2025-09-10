@@ -6,9 +6,9 @@ $green: map.get($tetromino-colors, 's');
 $pink: map.get($tetromino-colors, 'z');
 
 $medal-colors: (
-  gold: #e3c322,
-  silver: #999998,
-  bronze: #b99314,
+  gold-medal: #e3c322,
+  silver-medal: #999998,
+  bronze-medal: #b99314,
 );
 
 .leader-board {

@@ -1,4 +1,3 @@
-import { PixelType } from './Pixel';
 import type {
   PutPropsType,
   DeleteArgsType,
@@ -6,6 +5,7 @@ import type {
   Direction,
   Coord,
   ShapeMatrix,
+  PixelType,
 } from './GameManagerTypes';
 
 export class GameManager {

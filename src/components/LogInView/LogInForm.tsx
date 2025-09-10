@@ -15,18 +15,22 @@ import {
   scoreAtom,
 } from '../../atoms';
 import { FormInput } from './FormInput';
+import { Loading } from '../Loading/Loading';
 
 export const LogInForm = () => {
   const [userName, setUserName] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+
   const score = Jotai.useAtomValue(scoreAtom);
   const count = Jotai.useAtomValue(lineCountAtom);
   const setGames = Jotai.useSetAtom(gamesAtom);
+
   const [isOpen, setIsOpen] = React.useState(true);
   const setGameOver = Jotai.useSetAtom(gameOverAtom);
   const setPlayer = Jotai.useSetAtom(currentPlayerAtom);
   const nav = ReactRouter.useNavigate();
+
   const [errorMessage, setError] = React.useState('');
 
   const handleChecks = () => {
@@ -77,6 +81,7 @@ export const LogInForm = () => {
         }
       }
 
+      setLoading(false);
       setGameOver(false);
       setIsOpen(false);
       nav('/play');
@@ -95,29 +100,32 @@ export const LogInForm = () => {
       isDismissible={false}
     >
       <ModalContent>
-        <form
-          onSubmit={handleSubimt}
-          className='log-in-form'
-        >
-          <span>Log In</span>
-          USERNAME
-          <FormInput
-            name='username'
-            value={userName}
-            setter={setUserName}
-          />
-          PASSWORD
-          <FormInput
-            name='password'
-            value={password}
-            setter={setPassword}
-          />
-          <span className='modal-error'>
-            {errorMessage ? errorMessage : null}{' '}
-          </span>
-          <button className='modal-button'>LOG IN</button>
-          <a href='/'> back to main</a>
-        </form>
+        {loading && <Loading />}
+        {!loading && (
+          <form
+            onSubmit={handleSubimt}
+            className='log-in-form'
+          >
+            <span>Log In</span>
+            USERNAME
+            <FormInput
+              name='username'
+              value={userName}
+              setter={setUserName}
+            />
+            PASSWORD
+            <FormInput
+              name='password'
+              value={password}
+              setter={setPassword}
+            />
+            <span className='modal-error'>
+              {errorMessage ? errorMessage : null}{' '}
+            </span>
+            <button className='modal-button'>LOG IN</button>
+            <a href='/'> back to main</a>
+          </form>
+        )}
       </ModalContent>
     </Modal>
   );

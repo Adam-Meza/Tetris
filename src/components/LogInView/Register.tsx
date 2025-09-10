@@ -1,20 +1,14 @@
 import React from 'react';
-import api, { getAll, register } from '../../api';
+import api from '../../api';
 import * as ReactRouter from 'react-router-dom';
 import * as Jotai from 'jotai';
-// import {
-//   ACCESS_TOKEN,
-//   REFRESH_TOKEN,
-// } from '../../constants';
 import { Modal, ModalContent } from '@itwin/itwinui-react';
 import {
   currentPlayerAtom,
   gameOverAtom,
-  gamesAtom,
-  lineCountAtom,
-  scoreAtom,
 } from '../../atoms';
 import { FormInput } from './FormInput';
+import { Loading } from '../Loading/Loading';
 
 export const Register = () => {
   const [username, setUsername] = React.useState('');
@@ -22,17 +16,13 @@ export const Register = () => {
   const [confirmation, setConfirmation] =
     React.useState('');
   const [errorMessage, setError] = React.useState('');
-  // SHOULD WE HAVE A LOADING COMPONENT????
-  //   const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(true);
   const setCurrentPlayer = Jotai.useSetAtom(
     currentPlayerAtom
   );
   const setGameOver = Jotai.useSetAtom(gameOverAtom);
   const nav = ReactRouter.useNavigate();
-  const score = Jotai.useAtomValue(scoreAtom);
-  const count = Jotai.useAtomValue(lineCountAtom);
-  const setGames = Jotai.useSetAtom(gamesAtom);
 
   const handleChecks = () => {
     if (0 < username.length && username.length < 3) {
@@ -55,7 +45,7 @@ export const Register = () => {
   };
 
   const handleSubimt = async (e: React.FormEvent) => {
-    // setLoading(true);
+    setLoading(true);
     e.preventDefault();
 
     if (handleChecks()) {
@@ -72,6 +62,7 @@ export const Register = () => {
 
         nav('/log-in');
 
+        setLoading(false);
         setGameOver(false);
         setIsOpen(false);
       } catch (error) {
@@ -95,35 +86,40 @@ export const Register = () => {
       isDismissible={false}
     >
       <ModalContent>
-        <form
-          onChange={handleChecks}
-          onSubmit={handleSubimt}
-          className='register-form'
-        >
-          <span>REGISTER</span>
-          USERNAME
-          <FormInput
-            name='username'
-            setter={setUsername}
-            value={username}
-          />
-          PASSWORD
-          <FormInput
-            name='password'
-            setter={setPassword}
-            value={password}
-          />
-          <FormInput
-            name='password-confirmation'
-            setter={setConfirmation}
-            value={confirmation}
-          />
-          <span className='modal-error'>
-            {errorMessage ? errorMessage : null}
-          </span>
-          <button className='modal-button'>REGISTER</button>
-          <a href='/'> back to main</a>
-        </form>
+        {loading && <Loading />}
+        {!loading && (
+          <form
+            onChange={handleChecks}
+            onSubmit={handleSubimt}
+            className='register-form'
+          >
+            <span>REGISTER</span>
+            USERNAME
+            <FormInput
+              name='username'
+              setter={setUsername}
+              value={username}
+            />
+            PASSWORD
+            <FormInput
+              name='password'
+              setter={setPassword}
+              value={password}
+            />
+            <FormInput
+              name='password-confirmation'
+              setter={setConfirmation}
+              value={confirmation}
+            />
+            <span className='modal-error'>
+              {errorMessage ? errorMessage : null}
+            </span>
+            <button className='modal-button'>
+              REGISTER
+            </button>
+            <a href='/'> back to main</a>
+          </form>
+        )}
       </ModalContent>
     </Modal>
   );

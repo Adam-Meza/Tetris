@@ -1,4 +1,43 @@
-import { PixelType } from './Pixel';
+/**
+ * Runtime shape stored in the `pixelRefs` matrix.
+ *
+ * `GameManager` mutates these entries imperatively to paint/erase blocks
+ * without triggering React re-renders of the entire grid.
+ */
+export type PixelType = {
+  /**
+   * Column index (0-based).
+   */
+  x: number;
+  /**
+   * Row index (0-based).
+   */
+  y: number;
+  /**
+   * Identifier of the occupying piece, if any.
+   *
+   * Used to determine ownership and collisions. `undefined` means empty cell.
+   */
+  id?: string | undefined;
+  /**
+   * Optional class name associated with the current occupant.
+   *
+   * Usually redundant because `GameManager` toggles classes on the DOM node,
+   * but may be useful as a cached value for debugging/logic.
+   */
+  baseClass?: string;
+  /**
+   *
+   *
+   */
+  baseID?: string;
+  /**
+   * Ref to the underlying `<span>` element for imperative class toggling.
+   *
+   * `GameManager.addPixel/removePixel` rely on this to mutate the DOM.
+   */
+  html?: React.RefObject<HTMLSpanElement>;
+};
 
 /**
  * Immutable grid coordinate tuple `[x, y]`.
@@ -30,13 +69,13 @@ export type ShapeMatrix = ReadonlyArray<
 /**
  * Common args contract shared by all action operations.
  *
- * Every action accepts a piece and a focal point, and may provide:
- * - `conditional` — guard hook to decide if the action should run
+ * Every action method accepts a piece and a focal point, and provides two optional callback parameters:
+ *
+ * - `conditional` — guard hook to decide if the action should run - returns undefined.
  * - `onAfter` — callback fired after the action completes
  *
  * Note: `conditional` and `onAfter` receive a `CallbackPayload`
- * at runtime; the `conditional` type remains `any` here to preserve
- * your original flexibility.
+ * at runtime, which provides all relevent data.
  */
 type BasicActionArgs = {
   /**
@@ -56,7 +95,7 @@ type BasicActionArgs = {
    * Optional callback invoked after the action completes.
    * Receives the full runtime payload for side effects (e.g., scoring).
    */
-  onAfter?: (args: CallbackPayload) => any;
+  onAfter?: (args: CallbackPayload) => void;
 };
 
 /**

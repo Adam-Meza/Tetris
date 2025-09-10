@@ -1,5 +1,4 @@
-import type { PixelType } from './Pixel';
-import type { Coord } from './GameManagerTypes';
+import type { Coord, PixelType } from './GameManagerTypes';
 
 export const makeRefMatrix = ([width, height]: Coord) =>
   Array.from({ length: height }, () =>

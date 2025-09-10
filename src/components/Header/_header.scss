@@ -24,7 +24,6 @@ header {
     align-items: center;
     gap: 10px;
     justify-content: space-around;
-    font-family: 'Jersey 10', sans-serif;
     margin: 10px;
 
     button {
@@ -33,7 +32,6 @@ header {
       font-size: 18px;
       color: white;
       background-color: $purple;
-      font-family: 'Jersey 10', sans-serif;
 
       &:hover {
         background-color: lighten(
@@ -50,7 +48,6 @@ header {
 }
 
 h1 {
-  font-family: 'Bytesized', sans-serif;
   font-weight: 400;
   font-style: normal;
   font-size: 60px;

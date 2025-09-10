@@ -14,7 +14,9 @@ export const ScoreCard: React.FC<ScoreBoardProps> = (
 
   return (
     <div
-      className={medal ? `scorecard ${medal}` : 'scorecard'}
+      className={
+        medal ? `scorecard ${medal}-medal` : 'scorecard'
+      }
     >
       <span>{name}</span>
       <span>{score}</span>

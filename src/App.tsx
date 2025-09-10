@@ -8,16 +8,16 @@ import {
   Routes,
   Route,
 } from 'react-router-dom';
-import { Register } from './components/Modal/Register';
+import { Register } from './components/LogInView/Register';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
-import { GameModal } from './components/Modal/Modal';
-import { LogInForm } from './components/Modal/LogInForm';
+import { GameModal } from './components/LogInView/Modal';
+import { LogInForm } from './components/LogInView/LogInForm';
 
 function App() {
   return (
     <div className='App'>
       <BrowserRouter>
-        <Header />
+        <Header />{' '}
         <Routes>
           <Route path='/' element={<GameModal />} />
           <Route path='/play' element={<GameBoard />} />

@@ -2,7 +2,6 @@ import React from 'react';
 import * as Jotai from 'jotai';
 import { Grid } from '../../../grid/Grid';
 import { TetrominoType } from './Tetromino/Tetromino';
-import { PixelType } from '../../../grid/Pixel';
 import { GameManager } from '../../../grid/GameManager';
 import { LeaderBoard } from '../LeaderBoard/LeaderBoard';
 import { makeRefMatrix } from '../../../grid/utilities';
@@ -27,6 +26,7 @@ import {
   CallbackPayload,
   Coord,
   Direction,
+  PixelType,
 } from '../../../grid/GameManagerTypes';
 
 /**
@@ -117,8 +117,6 @@ export const GameBoard = () => {
           handleBlockLanding(args);
       }
     }
-
-    return false;
   };
 
   const isMovePossible = (
@@ -219,13 +217,17 @@ export const GameBoard = () => {
     gm.playerMove(args);
   };
 
+  // This function is fairly complex but essential to gameplay,
+  // thus I have left annotations describing the NEXT line of code...
+  // First we declare...
   const moveRowsDown = (args: CallbackPayload) => {
     const { pixelRefs } = args;
-    // check every row...
+
+    // then we check every row, moving bottom -> top...
     for (let i = BOARD_HEIGHT - 1; i >= 0; i--) {
       const row = pixelRefs.current[i];
 
-      //if that row is empty...
+      //if a given row is empty...
       if (row.every((pixel) => pixel?.id === undefined)) {
         // check all the rows above it...
         for (let j = i; j >= 0; j--) {
@@ -234,15 +236,18 @@ export const GameBoard = () => {
           if (
             newRow.some((pixel) => pixel?.id !== undefined)
           ) {
-            //iterate (again) through that row...
+            //iterate through that row...
             newRow.forEach((pixel) => {
+              // if the square is occupied...
               if (!pixel?.id) return;
 
               const { x, y, id } = pixel;
               const letter = getLetter(id);
               const className = `${letter}-block`;
+              //figure out how far down it needs to go,
               const distance = i - y;
 
+              //move it to the new location.
               gm.move({
                 piece: {
                   className: className,
@@ -262,11 +267,12 @@ export const GameBoard = () => {
     }
   };
 
-  //figure out how to make this async without messing everythign up
+  //figure out how to make this async without messing everything up
   const handleBlockLanding = (args: CallbackPayload) => {
     // setTimeout(() => {
     const completedRowIndexes = findCompletedRows(args);
 
+    // Only Runs if a row has been completed
     if (completedRowIndexes) {
       removeRows(args, completedRowIndexes);
       moveRowsDown(args);

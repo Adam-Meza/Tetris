@@ -44,14 +44,4 @@ export const login = async (
   });
 };
 
-export const register = async (
-  username: string,
-  password: string
-) => {
-  return api.post(`${baseURL}/tetris_api/user/register/`, {
-    username,
-    password,
-  });
-};
-
 export default api;

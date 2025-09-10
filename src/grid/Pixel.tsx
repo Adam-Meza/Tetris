@@ -1,4 +1,5 @@
 import React from 'react';
+import { PixelType } from './GameManagerTypes';
 
 /**
  * Props for a single `Pixel` cell rendered by `Grid`.
@@ -16,7 +17,9 @@ export type PixelProps = {
    */
   y: number;
   /**
-   * Base CSS class applied to the pixel element.
+   * Optional base CSS class applied to the pixel element for styling purposes.
+   *
+   * Set by GameManager Class.
    *
    * Commonly inherited from the `Grid`'s `baseClass` to theme multiple grids.
    */
@@ -35,44 +38,6 @@ export type PixelProps = {
   setPixelRef: (pixel: PixelType) => void;
 
   baseID?: string | undefined;
-};
-
-/**
- * Runtime shape stored in the `pixelRefs` matrix.
- *
- * `GameManager` mutates these entries imperatively to paint/erase blocks
- * without triggering React re-renders of the entire grid.
- */
-export type PixelType = {
-  /**
-   * Column index (0-based).
-   */
-  x: number;
-  /**
-   * Row index (0-based).
-   */
-  y: number;
-  /**
-   * Identifier of the occupying piece, if any.
-   *
-   * Used to determine ownership and collisions. `undefined` means empty cell.
-   */
-  id?: string | undefined;
-  /**
-   * Optional class name associated with the current occupant.
-   *
-   * Usually redundant because `GameManager` toggles classes on the DOM node,
-   * but may be useful as a cached value for debugging/logic.
-   */
-  baseClass?: string;
-
-  baseID?: string;
-  /**
-   * Ref to the underlying `<span>` element for imperative class toggling.
-   *
-   * `GameManager.addPixel/removePixel` rely on this to mutate the DOM.
-   */
-  html?: React.RefObject<HTMLSpanElement>;
 };
 
 export const Pixel = (props: PixelProps) => {

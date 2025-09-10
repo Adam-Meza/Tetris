@@ -1,0 +1,16 @@
+@use 'sass:map';
+@import '../../styles/mixins';
+@import '../../styles/variables';
+
+$pink: map.get($tetromino-colors, 'z');
+
+.loading {
+  @include flex-column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  width: clamp(350px, 50vw, 700px);
+  font-size: 90px;
+  text-decoration-line: underline;
+  text-decoration-color: $pink;
+}

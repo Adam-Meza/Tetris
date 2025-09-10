@@ -1,7 +1,6 @@
 import React from 'react';
 import { Pixel } from './Pixel';
-import { PixelType } from './Pixel';
-import { Coord } from './GameManagerTypes';
+import { Coord, PixelType } from './GameManagerTypes';
 type GridProps = {
   /**
    * Grid dimensions as `[width, height]` (in whole tiles).

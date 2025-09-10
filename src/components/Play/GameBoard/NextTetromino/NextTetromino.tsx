@@ -1,6 +1,5 @@
 import React from 'react';
 import { Grid } from '../../../../grid/Grid';
-import type { PixelType } from '../../../../grid/Pixel';
 import { useAtomValue } from 'jotai';
 import {
   nextTetrominoAtom,
@@ -14,6 +13,7 @@ import { GameManager } from '../../../../grid/GameManager';
 import type {
   Coord,
   PieceType,
+  PixelType,
 } from '../../../../grid/GameManagerTypes';
 
 export const NextTetromino = () => {
