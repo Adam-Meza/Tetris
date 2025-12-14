@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid } from '../../grid/Grid';
 import { TetrominoType } from '../Play/GameBoard/Tetromino/Tetromino';
-import { PixelType } from '../../grid/Pixel';
+import { PixelType } from '../../grid/GameManagerTypes';
 import {
   randomTetromino,
   rotateShapeClockwise,

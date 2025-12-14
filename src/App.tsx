@@ -17,7 +17,7 @@ function App() {
   return (
     <div className='App'>
       <BrowserRouter>
-        <Header />{' '}
+        <Header />
         <Routes>
           <Route path='/' element={<GameModal />} />
           <Route path='/play' element={<GameBoard />} />

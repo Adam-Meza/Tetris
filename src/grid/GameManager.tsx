@@ -172,7 +172,7 @@ export class GameManager {
     });
 
     onAfter?.({
-      piece: piece,
+      ...args,
       pixelRefs: this.pixelRefs,
       focalPoint: this.focalPoint,
     });

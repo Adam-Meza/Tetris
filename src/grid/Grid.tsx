@@ -29,8 +29,8 @@ type GridProps = {
   /**
    * Map matrix used as a base for PixelRefs
    *
-   * Useful when rendering multiple grids (e.g., main board vs. preview)
-   * that share structure but have different look-and-feel.
+   * Untested, experiemental prop. Theoretically it could be useful
+   * for rendering background images.
    *
    * @example
    * baseClass="tetris-board"
@@ -39,14 +39,8 @@ type GridProps = {
   map?: string[][];
 
   /**
-   * Ref collector callback invoked once per rendered `Pixel`.
+   * PRIVATE Ref collector callback invoked once per rendered `Pixel`.
    *
-   * Use this to build a 2D ref matrix outside the component for
-   * direct, fine-grained DOM or imperative pixel updates.
-   *
-   * @example
-   * const pixelRefs = useRef<(PixelType|null)[][]>(makeRefMatrix(h, w));
-   * const setPixelRef = (p: PixelType) => { pixelRefs.current[p.y][p.x] = p; };
    */
   setPixelRef: (pixel: PixelType) => void;
 
@@ -107,7 +101,7 @@ export const Grid: React.FC<GridProps> = ({
       let className = baseClass;
       let id = undefined;
 
-      if (map) className += map[y][x];
+      if (map) className += map[y][x]; // still untested but should theoretically add the map class
 
       pixels.push(
         <Pixel
