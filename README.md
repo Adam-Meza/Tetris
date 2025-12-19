@@ -81,7 +81,7 @@ Set up your `Grid` component and `GameManager` class with the following steps:
 
 The `GameManager` class exposes a number of methods for manipulating objects (charecters?) and pixels. Namely `put`, `delete`, `move`, `playerMove`, `rotate`, and `clearBoard`. Each one enacts a change in DM and DOM following a similar work flow: 
 
-    ```
+    
     
     const piece = {
         shape: [["A", null], // must be a 2D array of either (string or number) or null
@@ -139,7 +139,7 @@ The `GameManager` class exposes a number of methods for manipulating objects (ch
     
     gm.clearBoard();
     
-    ```
+    
 
 >[!IMPORTANT]
 >More extensive information on `GameManager` types and functionality can be found inside the `GameManager.tsx` and `GameManagerTypes.tsx` files inside of `.../grid/`
