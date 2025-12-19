@@ -10,7 +10,7 @@ This application is deployed by Vercel at:
 
 ## GameManager Class + Grid + Pixel
 >[!NOTE]
-> This is the first iteration of what I imagine will be a long journey. If you are a React/frontend developer interested in giving feedback or contributing to this project, please contact me via LinkedIn. 
+> This is the first iteration of what I imagine will be an ongoing project. If you are a React/frontend developer interested in giving feedback or contributing to this project, please contact me via [LinkedIn](https//linkedin.com/in/adam-meza). 
 
 ## Overview
 
@@ -26,7 +26,7 @@ The backbone of this application (and the main focus of the experiment) is the `
 import { makeRefMatrix } from '../../../grid/utilities';
 
 const BOARD_WIDTH = 20;
-    const BOARD_HEIGHT = 30
+const BOARD_HEIGHT = 30;
 
 const pixelRefs = React.useRef<(PixelType | null)[][]>(
     makeRefMatrix([BOARD_WIDTH, BOARD_HEIGHT])
@@ -66,7 +66,7 @@ return (
             baseClass={'tetromino'}
         />
     </div>
-)
+);
 
 ```
 
