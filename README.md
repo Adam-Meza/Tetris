@@ -71,7 +71,6 @@ Set up your `Grid` component and `GameManager` class with the following steps:
             />
         </div>
     );
-    
     ```
 
 > [!WARNING]
@@ -138,9 +137,6 @@ The `GameManager` class exposes a number of methods for manipulating objects (ch
     });
     
     gm.clearBoard();
-    
-    
-
 >[!IMPORTANT]
 >More extensive information on `GameManager` types and functionality can be found inside the `GameManager.tsx` and `GameManagerTypes.tsx` files inside of `.../grid/`
 
