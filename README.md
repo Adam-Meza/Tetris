@@ -2,13 +2,15 @@
 
 An experiement in React optimization and creating a framework that could be used for all 8-bit arcade games. Designed and built by Adam Meza.
 
-Primarily built in React with Typescript, the frontend also uses SCSS for styling, Vite for bundling, Jotai for global state management, Axios to connect to the backend (which is built using Python/Django and uses JWT tokens for authorization) and uses several smaller dependencies for various tasks.
+Primarily built in React with Typescript, the frontend also uses [SCSS](https://sass-lang.com/), [Vite](https://vite.dev/), [Jotai](https://jotai.org/), [Axios](https://axios-http.com/) to connect to the backend (which is built using [Python/Django](https://www.djangoproject.com/) and uses [JWT](https://auth0.com/docs/secure/tokens/json-web-tokens) tokens for authorization) and uses several smaller dependencies for various tasks.
 
 This application is deployed by Vercel at:
 
 ---
 
 ## GameManager Class + Grid + Pixel
+>[!NOTE]
+> This is the first iteration of what I imagine will be a long journey. If you are a React/frontend developer interested in giving feedback or contributing to this project, please contact me via LinkedIn. 
 
 ## Overview
 
