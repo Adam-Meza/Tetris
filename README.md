@@ -81,65 +81,65 @@ Set up your `Grid` component and `GameManager` class with the following steps:
 
 The `GameManager` class exposes a number of methods for manipulating objects (charecters?) and pixels. Namely `put`, `delete`, `move`, `playerMove`, `rotate`, and `clearBoard`. Each one enacts a change in DM and DOM following a similar work flow: 
 
-```
-
-const piece = {
-    shape: [["A", null], // must be a 2D array of either (string or number) or null
-            ["A", "A"]],
-    id: "piece_123", // optional, can be null
-    classname: "piece-class"
-}
-
-const conditional (arguement: any) => {
-    /*
+    ```
     
-    This function MUST return a boolean value. It will determine whether or not the desired
-    action runs. This can be extremely useful when preventing common errors. It can take in
-    one aguement of any type so any data you want to base the contional on must be bundled. 
+    const piece = {
+        shape: [["A", null], // must be a 2D array of either (string or number) or null
+                ["A", "A"]],
+        id: "piece_123", // optional, can be null
+        classname: "piece-class"
+    }
     
-    */
-}
-
-
-const onAfter (args: CallbackPayload) => {
-    /*
+    const conditional (arguement: any) => {
+        /*
+        
+        This function MUST return a boolean value. It will determine whether or not the desired
+        action runs. This can be extremely useful when preventing common errors. It can take in
+        one aguement of any type so any data you want to base the contional on must be bundled. 
+        
+        */
+    }
     
-    This function will be ran if the aciton is ran (note it will *not* run if there is
-    a conditional check that fails). It will have access to the `CallbackPayLoad` object,
-    which contains data about the action and the resulting board state. 
     
-    */
-}
-
-gm.put({
-  piece: piece,
-  focalPoint: [0,0],
-  conditional: conditional,
-  onAfter: onAfter,
-});
-
-gm.move({
-  piece: piece,
-  direction: "right",
-  distance: 2,
-  focalPoint: [3,4],
-  onAfter: onAfter,
-});
-
-gm.delete({
-  piece: piece,
-  focalPoint: [0,0],
-});
-
-// Rotate only works in a counter clockwise direction currently.
-gm.rotate({
-  piece: piece,
-  focalPoint: [0,0],
-});
-
-gm.clearBoard();
-
-```
+    const onAfter (args: CallbackPayload) => {
+        /*
+        
+        This function will be ran if the aciton is ran (note it will *not* run if there is
+        a conditional check that fails). It will have access to the `CallbackPayLoad` object,
+        which contains data about the action and the resulting board state. 
+        
+        */
+    }
+    
+    gm.put({
+      piece: piece,
+      focalPoint: [0,0],
+      conditional: conditional,
+      onAfter: onAfter,
+    });
+    
+    gm.move({
+      piece: piece,
+      direction: "right",
+      distance: 2,
+      focalPoint: [3,4],
+      onAfter: onAfter,
+    });
+    
+    gm.delete({
+      piece: piece,
+      focalPoint: [0,0],
+    });
+    
+    // Rotate only works in a counter clockwise direction currently.
+    gm.rotate({
+      piece: piece,
+      focalPoint: [0,0],
+    });
+    
+    gm.clearBoard();
+    
+    ```
 
 >[!IMPORTANT]
 >More extensive information on `GameManager` types and functionality can be found inside the `GameManager.tsx` and `GameManagerTypes.tsx` files inside of `.../grid/`
