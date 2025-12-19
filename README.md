@@ -14,7 +14,11 @@ This application is deployed by Vercel at:
 
 ## Overview
 
-The backbone of this application (and the main focus of the experiment) is the `GameManager` class which represents the first iteration of a customizable React Based system (?) that could _theoretically_ be reusable for all 8-bit Pixel Games. Typical work flow is:
+The backbone of this application (and the main focus of the experiment) is the `GameManager` class which represents the first iteration of a customizable React Based system (?) that could _theoretically_ be reusable for all 8-bit Pixel Games.
+
+### Set Up
+
+Set up your `Grid` component and `GameManager` class with the following steps: 
 
 1. Set a focal point as a `[x : number, y : number]` ref. This will typically be used to orient the Player as they move through the Grid. _ Note the `Grid` pixel refs are held as a 2D array so the coordinates are isomorphic to the natural ordering of array indexes. _ i.e. first row, second colomun = [1, 0] \*
 
@@ -73,4 +77,40 @@ return (
 > [!WARNING]
 > The Grid component is designed such that they are placed in a `div` of the `grid-wrapper` class. This wrapper simply needs to have the _correct aspect ratio_, all other styling logic will be handled inside of `grid.scss`. This ensures that the `Pixel` components will be the correct size for the given `grid-wrapper` element.
 
+### Basic Usage
 
+The `GameManager` class exposes a number of methods for manipulating objects (charecters?) and pixels. Namely `put`, `delete`, `move`, `playerMove`, `rotate`, and `clearBoard`.
+
+---
+
+`put`, `delete`, `move`, `playerMove` all follow a similar work flow. 
+```
+const piece = {
+    shape: [["A", null], // piece.shape must be a 2D array of either (string or number) or null type
+            ["A", "A"]],
+    id: "piece_123", // optional, can be null
+    classname: "piece-class
+}
+
+const conditional (arguement: any) => {
+/*
+
+This function MUST return a boolean value. It will determine whether or not the desired action runs. This can be extremely useful when preventing common errors. It can take in one aguement of any type so any data you want to base the contional on must be bundled. 
+
+*/
+}
+
+
+const onAfter (args: CallbackPayload) => {
+/*
+
+This function will be ran if the aciton is ran (note it will *not* run if there is a conditional check that fails). It will have access to the `CallbackPayLoad` object, which contains data about the action and the resulting board state. 
+
+*/
+}
+
+gm.put()
+
+
+
+```
