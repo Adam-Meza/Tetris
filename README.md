@@ -95,7 +95,9 @@ const piece = {
 const conditional (arguement: any) => {
 /*
 
-This function MUST return a boolean value. It will determine whether or not the desired action runs. This can be extremely useful when preventing common errors. It can take in one aguement of any type so any data you want to base the contional on must be bundled. 
+This function MUST return a boolean value. It will determine whether or not the desired
+action runs. This can be extremely useful when preventing common errors. It can take in
+one aguement of any type so any data you want to base the contional on must be bundled. 
 
 */
 }
@@ -104,13 +106,18 @@ This function MUST return a boolean value. It will determine whether or not the 
 const onAfter (args: CallbackPayload) => {
 /*
 
-This function will be ran if the aciton is ran (note it will *not* run if there is a conditional check that fails). It will have access to the `CallbackPayLoad` object, which contains data about the action and the resulting board state. 
+This function will be ran if the aciton is ran (note it will *not* run if there is
+a conditional check that fails). It will have access to the `CallbackPayLoad` object,
+which contains data about the action and the resulting board state. 
 
 */
 }
 
-gm.put()
-
-
+gm.put({
+  piece: piece,
+  focalPoint: [0,0],
+  conditional: conditional,
+  onAfter: onAfter,
+});
 
 ```
