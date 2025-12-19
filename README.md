@@ -22,57 +22,57 @@ Set up your `Grid` component and `GameManager` class with the following steps:
 
 1. Set a focal point as a `[x : number, y : number]` ref. This will typically be used to orient the Player as they move through the Grid. _ Note the `Grid` pixel refs are held as a 2D array so the coordinates are isomorphic to the natural ordering of array indexes. _ i.e. first row, second colomun = [1, 0] \*
 
-`const focalPointRef = React.useRef<Coord>([3, 0]);`
+    `const focalPointRef = React.useRef<Coord>([3, 0]);`
 
 2. Set a mutable ref object that will be used as the point of truth for game state logic. This will return a ref where the `ref.current` is a two by two array of `Pixel` objects.
-
-```
-import { makeRefMatrix } from '../../../grid/utilities';
-
-const BOARD_WIDTH = 20;
-const BOARD_HEIGHT = 30;
-
-const pixelRefs = React.useRef<(PixelType | null)[][]>(
-    makeRefMatrix([BOARD_WIDTH, BOARD_HEIGHT])
-);
-
-```
+    
+    ```
+    import { makeRefMatrix } from '../../../grid/utilities';
+    
+    const BOARD_WIDTH = 20;
+    const BOARD_HEIGHT = 30;
+    
+    const pixelRefs = React.useRef<(PixelType | null)[][]>(
+        makeRefMatrix([BOARD_WIDTH, BOARD_HEIGHT])
+    );
+    
+    ```
 
 3. Intiialize a `GameManager` Class with your pixel refs and focal point ref.
 
-```
-import { GameManager } from '../../../grid/GameManager';
-
-const gm = React.useMemo(
-    () => new GameManager(pixelRefs, focalPointRef), []
-);
-```
+    ```
+    import { GameManager } from '../../../grid/GameManager';
+    
+    const gm = React.useMemo(
+        () => new GameManager(pixelRefs, focalPointRef), []
+    );
+    ```
 
 4. Decalre a `setPixelRef` function which will be used to manipulate the `PixelRefs`:
 
-```
-const setPixelRef = (pixel: PixelType) => {
-    const { x, y } = pixel;
-    pixelRefs.current[y][x] = pixel;
-};
-```
+    ```
+    const setPixelRef = (pixel: PixelType) => {
+        const { x, y } = pixel;
+        pixelRefs.current[y][x] = pixel;
+    };
+    ```
 
 5. Import the `Grid` Component and pass along the necessary props:
 
-```
-import { Grid } from '../../../grid/Grid';
-
-return (
-    <div className='grid-wrapper' id='your-id-here'>
-        <Grid
-            setPixelRef={setPixelRef}
-            dimensions={[BOARD_WIDTH, BOARD_HEIGHT]}
-            baseClass={'tetromino'}
-        />
-    </div>
-);
-
-```
+    ```
+    import { Grid } from '../../../grid/Grid';
+    
+    return (
+        <div className='grid-wrapper' id='your-id-here'>
+            <Grid
+                setPixelRef={setPixelRef}
+                dimensions={[BOARD_WIDTH, BOARD_HEIGHT]}
+                baseClass={'tetromino'}
+            />
+        </div>
+    );
+    
+    ```
 
 > [!WARNING]
 > The Grid component is designed such that they are placed in a `div` of the `grid-wrapper` class. This wrapper simply needs to have the _correct aspect ratio_, all other styling logic will be handled inside of `grid.scss`. This ensures that the `Pixel` components will be the correct size for the given `grid-wrapper` element.
