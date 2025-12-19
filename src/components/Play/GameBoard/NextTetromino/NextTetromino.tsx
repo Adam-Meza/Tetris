@@ -36,9 +36,6 @@ export const NextTetromino = () => {
     []
   );
 
-  // track when all preview pixels are mounted (StrictMode-safe)
-  const totalCells = BOARD_WIDTH * BOARD_HEIGHT;
-
   const setPixelRef = (pixel: PixelType) => {
     const { x, y } = pixel;
     if (
