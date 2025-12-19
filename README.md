@@ -1,8 +1,8 @@
 # Tetris
 
-An experiement in React optimization and creating a framework that could be used for all 8-bit arcade games. Designed and built by Adam Meza.
+An experiement in React optimization and creating a class based framework that could be used for any and all 8-bit arcade games. Designed and built by Adam Meza.
 
-Primarily built in React with Typescript, the frontend also uses [SCSS](https://sass-lang.com/), [Vite](https://vite.dev/), [Jotai](https://jotai.org/), [Axios](https://axios-http.com/) to connect to the backend (which is built using [Python/Django](https://www.djangoproject.com/) and uses [JWT](https://auth0.com/docs/secure/tokens/json-web-tokens) tokens for authorization) and uses several smaller dependencies for various tasks.
+Primarily built in React with Typescript, the frontend also uses [SCSS](https://sass-lang.com/), [Vite](https://vite.dev/), [Jotai](https://jotai.org/), [iTwinUI](https://itwinui.bentley.com/), and [Axios](https://axios-http.com/) to connect to the backend (which is built using [Python/Django](https://www.djangoproject.com/) and uses [JWT](https://auth0.com/docs/secure/tokens/json-web-tokens) tokens for authorization) and uses several smaller dependencies for various tasks.
 
 This application is deployed by Vercel at:
 
