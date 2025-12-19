@@ -86,7 +86,7 @@ The `GameManager` class exposes a number of methods for manipulating objects (ch
 `put`, `delete`, `move`, `playerMove` all follow a similar work flow. 
 ```
 const piece = {
-    shape: [["A", null], // piece.shape must be a 2D array of either (string or number) or null type
+    shape: [["A", null], // must be a 2D array of either (string or number) or null
             ["A", "A"]],
     id: "piece_123", // optional, can be null
     classname: "piece-class
@@ -121,3 +121,6 @@ gm.put({
 });
 
 ```
+
+>[!IMPORTANT]
+>More extensive information on `GameManager` types and functionality can be found inside the `GameManager.tsx` and `GameManagerTypes.tsx` files inside of 
