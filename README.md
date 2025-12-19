@@ -72,3 +72,5 @@ return (
 
 > [!WARNING]
 > The Grid component is designed such that they are placed in a `div` of the `grid-wrapper` class. This wrapper simply needs to have the _correct aspect ratio_, all other styling logic will be handled inside of `grid.scss`. This ensures that the `Pixel` components will be the correct size for the given `grid-wrapper` element.
+
+
