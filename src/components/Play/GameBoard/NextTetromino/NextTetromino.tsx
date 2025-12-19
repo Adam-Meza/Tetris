@@ -38,8 +38,6 @@ export const NextTetromino = () => {
 
   // track when all preview pixels are mounted (StrictMode-safe)
   const totalCells = BOARD_WIDTH * BOARD_HEIGHT;
-  const seen = React.useRef(0);
-  const [ready, setReady] = React.useState(false);
 
   const setPixelRef = (pixel: PixelType) => {
     const { x, y } = pixel;
@@ -48,12 +46,8 @@ export const NextTetromino = () => {
       y < BOARD_HEIGHT &&
       x >= 0 &&
       x < BOARD_WIDTH
-    ) {
-      if (!pixelRefs.current[y][x]) seen.current += 1;
+    )
       pixelRefs.current[y][x] = pixel;
-      if (!ready && seen.current === totalCells)
-        setReady(true);
-    }
   };
 
   // pure helper: clone a piece without mutating the atom value
@@ -82,10 +76,10 @@ export const NextTetromino = () => {
 
   // draw whenever next changes, but only after the grid is ready
   React.useEffect(() => {
-    if (!ready || !next || gameOver) return;
+    if (!next || gameOver) return;
     // ensure DOM refs are all live this frame
     requestAnimationFrame(() => displayNext(next));
-  }, [ready, next, gameOver]);
+  }, [next, gameOver]);
 
   return (
     <div className='next-tetromino-wrapper grid-wrapper'>
