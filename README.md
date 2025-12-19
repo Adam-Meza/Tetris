@@ -10,7 +10,7 @@ This application is deployed by Vercel at:
 
 ## GameManager Class + Grid + Pixel
 >[!NOTE]
-> This is the first iteration of what I imagine will be an ongoing project. If you are a React/frontend developer interested in giving feedback or contributing to this project, please contact me via [LinkedIn](https//linkedin.com/in/adam-meza). 
+> This is the first iteration of what I imagine will be an ongoing project. If you are a React/frontend developer interested in giving feedback or contributing to this project, please contact me via [LinkedIn](https://linkedin.com/in/adam-meza). 
 
 ## Overview
 
