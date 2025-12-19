@@ -36,7 +36,6 @@ export const GameOverModal: React.FC<GameOverModalProps> = (
   const nav = ReactRouter.useNavigate();
 
   const handleSubimt = async () => {
-    // console.log(score, count);
     // this is the same functiuoanlity from REGISTER!!!
     try {
       const res = await api.post('/tetris_api/games/', {
