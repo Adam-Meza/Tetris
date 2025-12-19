@@ -83,13 +83,15 @@ The `GameManager` class exposes a number of methods for manipulating objects (ch
 
 ---
 
-`put`, `delete`, `move`, `playerMove` all follow a similar work flow. 
+`put`, `delete`, `move`, `playerMove` all follow a similar work flow: 
+
 ```
+
 const piece = {
     shape: [["A", null], // must be a 2D array of either (string or number) or null
             ["A", "A"]],
     id: "piece_123", // optional, can be null
-    classname: "piece-class
+    classname: "piece-class"
 }
 
 const conditional (arguement: any) => {
@@ -120,7 +122,22 @@ gm.put({
   onAfter: onAfter,
 });
 
+gm.move({
+  piece: piece,
+  direction: "right",
+  distance: 2,
+  focalPoint: [3,4],
+  onAfter: onAfter,
+});
+
+gm.delete({
+  piece: piece,
+  focalPoint: [0,0],
+});
+
 ```
 
 >[!IMPORTANT]
->More extensive information on `GameManager` types and functionality can be found inside the `GameManager.tsx` and `GameManagerTypes.tsx` files inside of 
+>More extensive information on `GameManager` types and functionality can be found inside the `GameManager.tsx` and `GameManagerTypes.tsx` files inside of `.../grid/`
+
+
