@@ -109,30 +109,38 @@ The `GameManager` class exposes a number of methods for manipulating objects (ch
         
         */
     }
+
+    // Let's place a piece...
     
     gm.put({
-      piece: piece,
+      piece,
       focalPoint: [0,0],
-      conditional: conditional,
-      onAfter: onAfter,
+      conditional,
+      onAfter,
     });
+
+    // Move it two spaces to the right...
     
     gm.move({
-      piece: piece,
+      piece,
       direction: "right",
       distance: 2,
-      focalPoint: [3,4],
-      onAfter: onAfter,
+      focalPoint: [0,0],
+      onAfter,
     });
+
     
-    gm.delete({
+    // Rotate the piece... (Note rotate() only works in a counter clockwise direction.)
+    
+    gm.rotate({
       piece: piece,
       focalPoint: [0,0],
     });
+
+    // Remove the piece...
     
-    // Rotate only works in a counter clockwise direction currently.
-    gm.rotate({
-      piece: piece,
+    gm.delete({
+      piece,
       focalPoint: [0,0],
     });
     
