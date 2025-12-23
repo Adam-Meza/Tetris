@@ -43,18 +43,6 @@ type GridProps = {
    *
    */
   setPixelRef: (pixel: PixelType) => void;
-
-  /**
-   * Optional keyboard handler intended for the grid container.
-   *
-   * If provided, you should attach focus to the grid elsewhere
-   * (e.g., via a wrapper) or manage focus inside `Grid` in a fork.
-   * This component does not attach it automatically.
-   *
-   * @example
-   * const onKey = (ev: KeyboardEvent) => { /* handle arrows/space};
-   */
-  handleKeyPress?: (ev: KeyboardEvent) => void;
 };
 
 /**
@@ -101,7 +89,9 @@ export const Grid: React.FC<GridProps> = ({
       let className = baseClass;
       let id = undefined;
 
-      if (map) className += map[y][x]; // still untested but should theoretically add the map class
+      // still untested but should theoretically add the map class
+      // and the default state as opposed to being blank
+      if (map) className += map[y][x];
 
       pixels.push(
         <Pixel
