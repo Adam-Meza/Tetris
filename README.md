@@ -14,7 +14,9 @@ This application is deployed using Vercel [here](https://tetris-lemon-nine.verce
 
 ## Overview
 
-The backbone of this application (and the main focus of the experiment) is the `GameManager` class which represents the first iteration of a customizable React Based system (?) that could _theoretically_ be reusable for all 8-bit Pixel Games.
+The backbone of this application (and the main focus of the experiment) is the `GameManager` class which represents the first iteration of a customizable React framework that could _theoretically_ be reusable for all 8-bit Pixel Games. 
+
+**__The guiding mentality is that all__**
 
 ### Set Up
 
