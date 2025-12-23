@@ -58,7 +58,6 @@ Set up your `Grid` component and `GameManager` class with the following steps:
         pixelRefs.current[y][x] = pixel;
     };
     ```
-
 5. Import the `Grid` Component and pass along the necessary props:
 
     ```
