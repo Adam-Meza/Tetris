@@ -177,7 +177,7 @@ export const GameBoard = () => {
           nextSquare.id !== currentSquare?.id) ||
         // or if we're checking for a new/rotating piece
         (tetromino !== currentTetromino &&
-          // check based on the theoratical piece
+          // check based on the theoretical piece
           nextSquare.id !== tetromino.id)
       )
         return true;
@@ -196,9 +196,9 @@ export const GameBoard = () => {
 
     const args = {
       piece: currentTetromino,
-      direction: direction,
       distance: 1,
-      focalPoint: focalPoint,
+      direction,
+      focalPoint,
       onAfter: didBlockLand,
       conditional: (args: CallbackPayload) => {
         const { direction, piece } = args;
@@ -256,7 +256,7 @@ export const GameBoard = () => {
                 },
                 focalPoint: [x, y],
                 direction: 'down',
-                distance: distance,
+                distance,
               });
             });
 
@@ -426,11 +426,8 @@ export const GameBoard = () => {
       case 'Shift':
         rotateTetromino();
         return;
-      // case 'n':
-      //   endGame();
-      //   startNewGame();
-      //   return;
       case 'Enter':
+      case 'Space':
         setGamePause(!gamePause);
         return;
     }
