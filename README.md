@@ -16,7 +16,7 @@ This application is deployed using Vercel [here](https://tetris-lemon-nine.verce
 
 The backbone of this application (and the main focus of the experiment) is the `GameManager` class which represents the first iteration of a customizable React framework that could _theoretically_ be reusable for all 8-bit Pixel Games. 
 
-***The Guiding Mentality*** is that all basic gameplay for 8-bit games is action/reaction of Matrices along a Cartseasn plane. By understanding this, we can build a system dynamic enough to account for whatever arcade game we want to build.
+>***The Guiding Mentality*** is that all basic gameplay for 8-bit games is action/reaction of Matrices along a Cartseasn plane. By understanding this, we can build a system dynamic enough to account for whatever arcade game we want to build.
 
 ### Set Up
 
