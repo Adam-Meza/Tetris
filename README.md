@@ -4,7 +4,7 @@ The first iterarion in an experiement in React optimization and creating a class
 
 Primarily built in React with Typescript, the frontend also uses [SCSS](https://sass-lang.com/), [Vite](https://vite.dev/), [Jotai](https://jotai.org/), [iTwinUI](https://itwinui.bentley.com/), [Axios](https://axios-http.com/) and a number of smaller dependencies. The [backend](https://github.com/Adam-Meza/Tetris-Backend) is built using [Python/Django](https://www.djangoproject.com/) and [JWT](https://auth0.com/docs/secure/tokens/json-web-tokens) tokens for authorization.
 
-This application is deployed using Vercel [here](https://tetris-lemon-nine.vercel.app/). 
+This application is deployed [here](https://tetris-lemon-nine.vercel.app/). 
 
 ---
 
